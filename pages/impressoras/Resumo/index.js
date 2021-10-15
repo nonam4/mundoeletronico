@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 
 import { Container, Header, NomeContainer, Nome, Subnome, IconContainer, Line, LineItem, LineTitle, LineText, LineSubtext } from './styles'
-import Icon from '../../../../components/Icons/MenuIcon'
+
+import Icon from '../../../components/Icons/MenuIcon'
 
 function ClienteResumo(props) {
     const { colors } = useContext(ThemeContext)

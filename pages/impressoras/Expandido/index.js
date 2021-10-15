@@ -2,11 +2,11 @@ import { useState, useEffect, useContext, memo } from 'react'
 import set from 'lodash/fp/set'
 import { ThemeContext } from 'styled-components'
 import { jsPDF } from 'jspdf'
-import { bg, font } from '../../../../utils/useRelatorio'
 
-import MenuIcon from '../../../../components/Icons/MenuIcon'
-import Select from '../../../../components/Inputs/Select'
-import TextField from '../../../../components/Inputs/SimpleTextField'
+import { bg, font } from '../../../hooks/useRelatorio'
+import MenuIcon from '../../../components/Icons/MenuIcon'
+import Select from '../../../components/Inputs/Select'
+import TextField from '../../../components/Inputs/SimpleTextField'
 import Impressoras from './Impressoras'
 
 import {

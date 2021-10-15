@@ -4,41 +4,40 @@ import { ThemeContext } from 'styled-components'
 import { useEffect, useContext } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 
-import usePersistedState from '../../utils/usePersistedState'
+import usePersistedState from '../../hooks/usePersistedState'
 
 import * as Database from '../../workers/database'
 
-import SideMenu from './SideMenu'
-import Impressoras from './Impressoras'
-import Load from '../../components/Load'
+import SideMenu from '../SideMenu'
+import Load from '../Load'
 
-export default function Index() {
-    const { colors } = useContext(ThemeContext)
-    const [ usuario, setUsuario ] = usePersistedState('usuario', undefined)
+export default function Index( { children } ) {
+    const { colors } = useContext( ThemeContext )
+    const [usuario, setUsuario] = usePersistedState( 'usuario', undefined )
     const { state, dispatch } = useDados()
 
-    useEffect(() => {
+    useEffect( () => {
         // inicialmente o usuário será undefined então espera o proximo ciclo
-        if (usuario === undefined) return
+        if ( usuario === undefined ) return
 
         // se não tiver nenhum dado do usuário salvo localmente vá para login
-        if (!usuario) return router.replace('/login')
+        if ( !usuario ) return router.replace( '/login' )
 
         // se não estiver autenticado mas tem usuário salvo tente login automático
-        if (usuario && !state.autenticado) return router.replace('/login?fallback=adm')
+        if ( usuario && !state.autenticado ) return router.replace( '/login?fallback=impressoras' )
 
         // se estiver autenticado e salvo, prepare o app
-        if (usuario && state.autenticado) return prepararApp()
-    }, [usuario])
+        if ( usuario && state.autenticado ) return prepararApp()
+    }, [usuario] )
 
     function toggleLoad() {
-        dispatch({type: 'setLoad', payload: !state.load})
+        dispatch( { type: 'setLoad', payload: !state.load } )
     }
 
     function prepararApp() {
         // primeiro tenta atualizar o usuário nas variáveis de ambiente
         // sempre que precisar buscaremos o login aqui ao invés do localstorage
-        dispatch({type: 'setUsuario', payload: usuario})
+        dispatch( { type: 'setUsuario', payload: usuario } )
 
         toggleLoad()
     }
@@ -48,13 +47,13 @@ export default function Index() {
             <Head>
                 <title>Mundo Eletrônico</title>
                 <link rel="icon" href="/icon.png" />
-                <meta name='theme-color' content={colors.background}></meta>
+                <meta name='theme-color' content={ colors.background }></meta>
             </Head>
-            {state.usuario && state.autenticado && <>
+            { state.usuario && state.autenticado && <>
+                { children }
                 <SideMenu />
-                <Impressoras />
-            </>}
-            <Load show={state.load} />
+            </> }
+            <Load show={ state.load } />
         </>
     )
 }

@@ -9,7 +9,7 @@ import Checkbox from '../../components/Inputs/Checkbox'
 import Button from '../../components/Inputs/Button'
 import Load from '../../components/Load'
 
-import usePersistedState from '../../utils/usePersistedState'
+import usePersistedState from '../../hooks/usePersistedState'
 
 import * as Notification from '../../workers/notification'
 import * as Database from '../../workers/database'
@@ -36,7 +36,7 @@ function Username() {
         if (usuario && !state.autenticado) return reautenticar()
 
         // se o usuário estiver salvo e autenticado volte para de onde parou ou para adm
-        if (usuario && state.autenticado) return router.replace(`/${router.query.fallback || 'adm'}`)
+        if (usuario && state.autenticado) return router.replace(`/${router.query.fallback || 'impressoras'}`)
     }, [usuario])
 
     function toggleLoad() {

@@ -3,7 +3,7 @@ import styled from "styled-components"
 export const Container = styled.div`
     width: 100%;
     height: 100%;
-    margin-left: ${({ expanded, desktop }) => desktop? '0px' : expanded? '-250px' : '0px'};
+    margin-left: ${( { expandido, sempreVisivel } ) => sempreVisivel ? '0px' : expandido ? '-250px' : '0px'};
     position: relative;
 `
 export const View = styled.div`
@@ -18,12 +18,12 @@ export const View = styled.div`
     align-items: flex-start;
     ::-webkit-scrollbar {
         width: 1.1rem;
-        background: ${({ theme }) => theme.colors.background};
+        background: ${( { theme } ) => theme.colors.background};
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 8px;
-        background: ${({ theme }) => theme.colors.highlight};
-        border: 0.3rem solid ${({ theme }) => theme.colors.background};
+        background: ${( { theme } ) => theme.colors.highlight};
+        border: 0.3rem solid ${( { theme } ) => theme.colors.background};
         background-clip: padding-box;
     }
 `

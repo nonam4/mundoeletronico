@@ -1,5 +1,5 @@
 export default {
-    title: 'dark',
+    title: 'escuro',
     colors: {
         switchColor: '#f2f4f8',
         background: '#101214',
@@ -18,4 +18,4 @@ export default {
         laranja: '#ff6b21',
         magenta: '#ff00ff',
     }
-  }
+}

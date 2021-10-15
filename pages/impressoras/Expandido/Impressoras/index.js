@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState, memo } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 
-import MenuIcon from '../../../../../components/Icons/MenuIcon'
-import TextField  from '../../../../..//components/Inputs/SimpleTextField'
-import Select from '../../../../../components/Inputs/Select'
+import MenuIcon from '../../../../components/Icons/MenuIcon'
+import TextField  from '../../../../components/Inputs/SimpleTextField'
+import Select from '../../../../components//Inputs/Select'
 import { Botao } from '../styles'
 
 import { Container, Titulo, TituloSubcontainer, DadosContainer, DadosSubcontainer, DadosTitulo,
