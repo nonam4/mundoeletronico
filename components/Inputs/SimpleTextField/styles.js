@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const Container = styled.div`
     position: relative;
@@ -10,7 +10,7 @@ export const Content = styled.input`
     text-align: center;
     outline: none;
     background: transparent;
-    color: ${({ theme }) => theme.colors.texts};
+    color: ${ ( { theme } ) => theme.colors.texts };
     transition: all linear 0.05s;
     font-weight: bold;
     :focus {
@@ -25,5 +25,5 @@ export const Highlight = styled.span`
     position: absolute;
     bottom: 0;
     left: 50%;
-    border-bottom: solid 2px ${({ theme }) => theme.colors.hover};
+    border-bottom: solid 2px ${ ( { theme } ) => theme.colors.hover };
 `

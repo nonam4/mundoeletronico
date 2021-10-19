@@ -5,7 +5,7 @@ export const Expansor = styled.div`
     height: 18px;
     padding: 0.5rem;
     position: absolute;
-    right: ${( { expandido } ) => expandido ? '12px' : '-46px'};
+    right: ${ ( { expandido } ) => expandido ? '12px' : '-46px' };
     top: 13px;
     cursor: pointer;
     transition: all ease 0.05s;
@@ -13,24 +13,24 @@ export const Expansor = styled.div`
     border-bottom: solid 2px transparent;
     :hover {
         path {
-            fill: ${( { theme } ) => theme.colors.hover};
+            fill: ${ ( { theme } ) => theme.colors.hover };
         };
-        border-bottom: solid 2px ${( { theme } ) => theme.colors.hover};
+        border-bottom: solid 2px ${ ( { theme } ) => theme.colors.hover };
     }
 `
 export const Container = styled.div`
     height: 100%;
     width: 250px;
-    margin-left: ${( { expandido, sempreVisivel } ) => expandido ? '0px' : '-250px'};
-    box-shadow: ${( { expandido, sempreVisivel } ) => !sempreVisivel && expandido ? '0px 0px 10px -2px black' : 'none'};
+    margin-left: ${ ( { expandido, sempreVisivel } ) => expandido ? '0px' : '-250px' };
+    box-shadow: ${ ( { expandido, sempreVisivel } ) => !sempreVisivel && expandido ? '0px 0px 10px -2px black' : 'none' };
     flex-shrink: 0;
     flex-grow: 0;
     z-index: 0;
-    background: ${( { theme } ) => theme.colors.menus};
+    background: ${ ( { theme } ) => theme.colors.menus };
     display: flex;
     flex-direction: column;
     position: relative;
-    border-right: solid 1px ${( { theme } ) => theme.colors.borders};
+    border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
     align-items: center;
     padding-top: 60px;
 `
@@ -40,9 +40,9 @@ export const Footer = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 0.5rem;
-    border-top: solid 1px ${( { theme } ) => theme.colors.borders};
+    border-top: solid 1px ${ ( { theme } ) => theme.colors.borders };
     font-size: 10px;
-    color: ${( { theme } ) => theme.colors.floating};
+    color: ${ ( { theme } ) => theme.colors.floating };
 `
 export const Logo = styled.img`
     width: 80px;
@@ -58,16 +58,16 @@ export const Text = styled.div`
     padding: 0.2rem 0.5rem;
     margin-bottom: 1px;
     border-bottom: solid 1px transparent;
-    color: ${( { theme } ) => theme.colors.texts};
+    color: ${ ( { theme } ) => theme.colors.texts };
     :hover{
-        border-bottom: solid 1px ${( { theme } ) => theme.colors.hover};
-        color: ${( { theme } ) => theme.colors.hover};
+        border-bottom: solid 1px ${ ( { theme } ) => theme.colors.hover };
+        color: ${ ( { theme } ) => theme.colors.hover };
     }
 `
 export const A = styled.a`
     text-decoration: none;
     font-size: 10px;
-    color: ${( { theme } ) => theme.colors.floating};
+    color: ${ ( { theme } ) => theme.colors.floating };
 `
 export const Actions = styled.div`
     width: 100%;
@@ -76,11 +76,11 @@ export const Actions = styled.div`
     padding-bottom: 40px;
     ::-webkit-scrollbar {
         width: 0.8rem;
-        background: ${( { theme } ) => theme.colors.menus};
+        background: ${ ( { theme } ) => theme.colors.menus };
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 6px;
-        background: ${( { theme } ) => theme.colors.highlight};
+        background: ${ ( { theme } ) => theme.colors.highlight };
         border: 0.2rem solid rgba(0, 0, 0, 0);
         background-clip: padding-box;
     }
@@ -96,7 +96,7 @@ export const MenuTitle = styled.div`
     line-height: 40px;
     padding: 0.5rem 0;
     padding: 0 1rem;
-    color: ${( { theme } ) => theme.colors.switchColor};
+    color: ${ ( { theme } ) => theme.colors.switchColor };
 `
 export const MenuItem = styled.div`
     width: 100%;
@@ -105,12 +105,12 @@ export const MenuItem = styled.div`
     cursor: pointer;
     line-height: 40px;
     padding: 0 1rem;
-    border-left: solid ${( { active } ) => active ? 4 : 0}px ${( { theme } ) => theme.colors.hover};
+    border-left: solid ${ ( { active } ) => active ? 4 : 0 }px ${ ( { theme } ) => theme.colors.hover };
     :hover {
-        border-left: solid 4px ${( { theme } ) => theme.colors.hover};
-        background: ${( { theme } ) => theme.colors.highlight};
+        border-left: solid 4px ${ ( { theme } ) => theme.colors.hover };
+        background: ${ ( { theme } ) => theme.colors.highlight };
         svg path{
-            fill: ${( { theme } ) => theme.colors.hover};
+            fill: ${ ( { theme } ) => theme.colors.hover };
         }
     }
 `

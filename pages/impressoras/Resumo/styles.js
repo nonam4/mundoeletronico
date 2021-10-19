@@ -1,19 +1,19 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const Container = styled.div`
     width: calc(25% - 0.8rem);
     min-width: 300px;
     display: flex;
     flex-direction: column;
-    background: ${({ theme }) => theme.colors.menus};
+    background: ${ ( { theme } ) => theme.colors.menus };
     border-radius: 5px;
-    border: solid 1px ${({ theme }) => theme.colors.borders};
+    border: solid 1px ${ ( { theme } ) => theme.colors.borders };
     padding: 0.8rem;
     margin: 0 0.8rem 0.8rem 0;
     cursor: pointer;
     box-shadow: 0px 0px 10px -8px black;
     :hover{
-        border-color: ${({ hoverColor }) => hoverColor};
+        border-color: ${ ( { hoverColor } ) => hoverColor };
     }
     @media only screen and (max-width: 1679px) {
         width: calc(33.33% - 0.8rem);
@@ -73,7 +73,7 @@ export const LineItem = styled.div`
 export const LineTitle = styled.div`
     width: 100%;
     font-size: 12px;
-    color: ${({ theme }) => theme.colors.floating};
+    color: ${ ( { theme } ) => theme.colors.floating };
 `
 export const LineText = styled.div`
     width: 100%;

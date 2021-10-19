@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
 
-function usePersistedState( key, initialState ) {
-    const [state, setState] = useState( initialState )
+function usePersistedState ( key, initialState ) {
+    const [ state, setState ] = useState( initialState )
 
-    function compare( value ) {
+    function compare ( value ) {
         if ( value !== null && value !== 'null' && value !== undefined && value !== 'undefined' ) return true
         return false
     }
 
-    function cleanStorage() {
+    function cleanStorage () {
         localStorage.removeItem( key )
         sessionStorage.removeItem( key )
     }
 
-    function setStorage() {
+    function setStorage () {
         if ( state.temporario ) return sessionStorage.setItem( key, JSON.stringify( state ) )
         return localStorage.setItem( key, JSON.stringify( state ) )
     }
@@ -26,9 +26,9 @@ function usePersistedState( key, initialState ) {
     useEffect( () => {
         if ( compare( state ) ) return setStorage()
         return cleanStorage()
-    }, [key, state] )
+    }, [ key, state ] )
 
-    return [state, setState]
+    return [ state, setState ]
 }
 
 export default usePersistedState

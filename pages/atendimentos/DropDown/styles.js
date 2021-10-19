@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const FilterOption = styled.div`
     width: 100%;
@@ -7,10 +7,10 @@ export const FilterOption = styled.div`
     padding: 0 1rem 0.5rem;
     cursor: default;
     :hover {
-        background: ${({ theme }) => theme.colors.highlight};
-        border-left: solid 5px ${({ theme }) => theme.colors.hover};
+        background: ${ ( { theme } ) => theme.colors.highlight };
+        border-left: solid 5px ${ ( { theme } ) => theme.colors.hover };
         svg path{
-            fill: ${({ theme }) => theme.colors.hover};
+            fill: ${ ( { theme } ) => theme.colors.hover };
         }
         span {
             left: 0;
@@ -29,7 +29,7 @@ export const FilterIndicator = styled.div`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: ${({ theme }) => theme.colors.hover};
+    background: ${ ( { theme } ) => theme.colors.hover };
     position: absolute;
     top: 10px;
     right: 0;

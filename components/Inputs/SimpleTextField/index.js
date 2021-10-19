@@ -1,11 +1,11 @@
-import { Container, Content, Highlight } from './styles'
+import * as S from './styles'
 
-function Select(props) {
+function Select ( props ) {
     return (
-        <Container>
-            <Content value={props.value} onChange={props.onChange} placeholder={'Digite aqui..'} maxLength={props.maxLength} onFocus={props.onFocus} onBlur={props.onBlur}/>
-            <Highlight />
-        </Container>
+        <S.Container>
+            <S.Content value={ props.value } onChange={ props.onChange } placeholder={ 'Digite aqui..' } maxLength={ props.maxLength } onFocus={ props.onFocus } onBlur={ props.onBlur } />
+            <S.Highlight />
+        </S.Container>
     )
 }
 

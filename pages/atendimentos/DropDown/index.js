@@ -1,23 +1,23 @@
 import Icon from '../../Icons/MenuIcon'
 import TextField from '../../Inputs/TextField'
 
-import { Dropdown, DropdownItem, Settings } from '../../Header/styles'
-import { FilterOption, FilterIndicator } from './styles'
+import * as H from '../../Header/styles'
+import * as S from './styles'
 
-function DropDown(props) {
+function DropDown ( props ) {
 
     return (
-        <Dropdown>
-            <DropdownItem>
-                {props.busca != '' && <FilterIndicator />}
-                <Icon name={'filtros'} margin={'0'} title={'Filtros'} />
-            </DropdownItem>
-            <Settings right={'-90'}>
-                <FilterOption>
-                    <TextField onChange={(e) => props.setBusca(e.target.value)} value={props.busca} placeholder={'Buscar...'} icon={'buscar'} />
-                </FilterOption>
-            </Settings>
-        </Dropdown>
+        <H.Dropdown>
+            <H.DropdownItem>
+                { props.busca != '' && <S.FilterIndicator /> }
+                <Icon name={ 'filtros' } margin={ '0' } title={ 'Filtros' } />
+            </H.DropdownItem>
+            <H.Settings right={ '-90' }>
+                <S.FilterOption>
+                    <TextField onChange={ ( e ) => props.setBusca( e.target.value ) } value={ props.busca } placeholder={ 'Buscar...' } icon={ 'buscar' } />
+                </S.FilterOption>
+            </H.Settings>
+        </H.Dropdown>
     )
 }
 

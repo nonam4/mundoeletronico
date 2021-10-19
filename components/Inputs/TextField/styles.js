@@ -9,15 +9,15 @@ export const Input = styled.input`
     width: 100%;
     height: 100%;
     background: transparent;
-    color: ${({ theme }) => theme.colors.texts};
+    color: ${ ( { theme } ) => theme.colors.texts };
     outline: none;
     border: none;
     font-size: 14px;
-    border-bottom: solid 1px ${({ theme }) => theme.colors.borders};
-    padding: ${({ icon }) => icon !== false? '22px 39px 8px 44px' : '22px 8px 8px 8px'};
+    border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    padding: ${ ( { icon } ) => icon !== false ? '22px 39px 8px 44px' : '22px 8px 8px 8px' };
     :focus + div, :not(:placeholder-shown) + div {
         label {
-            color: ${({ theme }) => theme.colors.hover};
+            color: ${ ( { theme } ) => theme.colors.hover };
             font-size: 12px;
             top: 4px;
         }
@@ -38,14 +38,14 @@ export const Content = styled.div`
 export const Label = styled.label`
     position: absolute;
     top: 15px;
-    left: ${({ icon }) => icon !== false? '45px' : '8px'};
+    left: ${ ( { icon } ) => icon !== false ? '45px' : '8px' };
 `
 export const Highlight = styled.span`
     width: 0px;
     position: absolute;
     bottom: 0;
     left: 50%;
-    border-bottom: solid 2px ${({ theme }) => theme.colors.hover};
+    border-bottom: solid 2px ${ ( { theme } ) => theme.colors.hover };
 `
 export const Viewer = styled.div`
     cursor: pointer;
@@ -55,6 +55,6 @@ export const Viewer = styled.div`
     top: 15px;
     right: 0;
     :hover path {
-        fill: ${({ theme }) => theme.colors.hover};
+        fill: ${ ( { theme } ) => theme.colors.hover };
     }
 `

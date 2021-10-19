@@ -20,16 +20,16 @@ const dash = keyframes`
 `
 
 export const Container = styled.div`
-    z-index: ${({ zindex }) => zindex};
+    z-index: ${ ( { zindex } ) => zindex };
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: ${({ theme }) => theme.colors.background};
+    background: ${ ( { theme } ) => theme.colors.background };
     position: absolute;
-    opacity: ${({ opacity }) => opacity};
+    opacity: ${ ( { opacity } ) => opacity };
     transition: all ease 0.25s;
 `
 export const Logo = styled.img`
@@ -46,12 +46,12 @@ export const Loader = styled.div`
         padding-top: 100%;
     }
 `
-export const Circle = styled.svg.attrs({ 
-    version: '1.1', 
-    xmlns: 'http://www.w3.org/2000/svg', 
+export const Circle = styled.svg.attrs( {
+    version: '1.1',
+    xmlns: 'http://www.w3.org/2000/svg',
     xmlnsXlink: 'http://www.w3.org/1999/xlink',
-})`
-    animation: ${rotate} 2s linear infinite;
+} )`
+    animation: ${ rotate } 2s linear infinite;
     height: 100%;
     transform-origin: center center;
     width: 100%;
@@ -65,7 +65,7 @@ export const Circle = styled.svg.attrs({
 export const Spinner = styled.circle`
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
-    animation: ${dash} 1.5s ease-in-out infinite;
-    stroke: ${({ theme }) => theme.colors.hover};
+    animation: ${ dash } 1.5s ease-in-out infinite;
+    stroke: ${ ( { theme } ) => theme.colors.hover };
     stroke-linecap: round;
 `

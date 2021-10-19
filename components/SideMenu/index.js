@@ -5,13 +5,13 @@ import packageInfo from '../../package.json'
 import MenuIcon from '../Icons/MenuIcon'
 import * as S from './styles'
 
-function SideMenu( props ) {
-    const [expandido, setExpandido] = useState( false )
-    const [sempreVisivel, setSempreVisivel] = useState( false )
+function SideMenu ( props ) {
+    const [ expandido, setExpandido ] = useState( false )
+    const [ sempreVisivel, setSempreVisivel ] = useState( false )
 
     // monitora redimensionamentos da tela
     useEffect( () => {
-        function handleResize() { setSempreVisivel( window.innerWidth > 833 ) }
+        function handleResize () { setSempreVisivel( window.innerWidth > 833 ) }
 
         // define se o menu está expandido ao iniciar o aplicativo
         setExpandido( window.innerWidth > 833 )
@@ -23,9 +23,9 @@ function SideMenu( props ) {
     useEffect( () => {
         if ( sempreVisivel ) setExpandido( true )
         if ( !sempreVisivel && expandido ) setExpandido( false )
-    }, [sempreVisivel] )
+    }, [ sempreVisivel ] )
 
-    function trocarListagem( listagem ) {
+    function trocarListagem ( listagem ) {
         //props.setLoad(true)
         setTimeout( () => {
             //props.setListando(listagem)
@@ -33,12 +33,12 @@ function SideMenu( props ) {
         }, 300 )
     }
 
-    function resetarCadastro( listagem ) {
+    function resetarCadastro ( listagem ) {
         //props.setEditarCadastro(false)
         trocarListagem( listagem )
     }
 
-    function active( item ) {
+    function active ( item ) {
         //return item == props.listando
     }
 

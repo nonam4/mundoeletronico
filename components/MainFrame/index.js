@@ -2,7 +2,7 @@ import router from 'next/router'
 import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
 import { useEffect, useContext } from 'react'
-import { useDados } from '../../contexts/DadosContext'
+import { useDados, ContextActions } from '../../contexts/DadosContext'
 
 import usePersistedState from '../../hooks/usePersistedState'
 
@@ -11,9 +11,9 @@ import * as Database from '../../workers/database'
 import SideMenu from '../SideMenu'
 import Load from '../Load'
 
-export default function Index( { children } ) {
+export default function Index ( { children } ) {
     const { colors } = useContext( ThemeContext )
-    const [usuario, setUsuario] = usePersistedState( 'usuario', undefined )
+    const [ usuario, setUsuario ] = usePersistedState( 'usuario', undefined )
     const { state, dispatch } = useDados()
 
     useEffect( () => {
@@ -28,16 +28,16 @@ export default function Index( { children } ) {
 
         // se estiver autenticado e salvo, prepare o app
         if ( usuario && state.autenticado ) return prepararApp()
-    }, [usuario] )
+    }, [ usuario ] )
 
-    function toggleLoad() {
-        dispatch( { type: 'setLoad', payload: !state.load } )
+    function toggleLoad () {
+        dispatch( { type: ContextActions.setLoad, payload: !state.load } )
     }
 
-    function prepararApp() {
+    function prepararApp () {
         // primeiro tenta atualizar o usuário nas variáveis de ambiente
         // sempre que precisar buscaremos o login aqui ao invés do localstorage
-        dispatch( { type: 'setUsuario', payload: usuario } )
+        dispatch( { type: ContextActions.setUsuario, payload: usuario } )
 
         toggleLoad()
     }

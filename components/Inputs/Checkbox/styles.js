@@ -1,14 +1,14 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const Container = styled.div`
-    width: ${({ width }) => width};
-    height: ${({ height }) => height};
+    width: ${ ( { width } ) => width };
+    height: ${ ( { height } ) => height };
     margin: 8px;
     padding: 0 8px;
     display: flex;
     align-items: center;
 `
-export const Input = styled.input.attrs({type: 'checkbox'})`
+export const Input = styled.input.attrs( { type: 'checkbox' } )`
     display: none;
     :checked + label::after {
         transform: rotate(-45deg) scale(1);
@@ -20,7 +20,7 @@ export const Input = styled.input.attrs({type: 'checkbox'})`
 export const Label = styled.label`
     width: 100%;
     height: 22px;
-    color: ${({ theme }) => theme.colors.texts};
+    color: ${ ( { theme } ) => theme.colors.texts };
     display: block;
     padding-left: 40px;
     position: relative;
@@ -34,7 +34,7 @@ export const Label = styled.label`
         width: 22px;
         height: 22px;
         border-radius: 3px;
-        border: 2px solid ${({ theme }) => theme.colors.hover};
+        border: 2px solid ${ ( { theme } ) => theme.colors.hover };
         transition: all ease 0.15s;
     }
     ::after {
@@ -44,7 +44,7 @@ export const Label = styled.label`
         display: block;
         width: 12px;
         height: 8px;
-        border: solid ${({ theme }) => theme.colors.hover};
+        border: solid ${ ( { theme } ) => theme.colors.hover };
         border-width: 0 0 2px 2px;
         transform: rotate(-45deg) scale(0);
         position: absolute;

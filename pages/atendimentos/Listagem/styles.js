@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const Container = styled.div`
     width: 100%;
@@ -14,7 +14,7 @@ export const Header = styled.div`
 export const HeaderName = styled.div`
     width: 100%;
     font-size: 22px;
-    color: ${({ theme }) => theme.colors.texts};
+    color: ${ ( { theme } ) => theme.colors.texts };
 `
 export const HeaderButtons = styled.div`
     display: flex;
@@ -31,7 +31,7 @@ export const Button = styled.button`
     padding: 4px;
     :hover{
         path {
-            fill: ${({ hover }) => hover};
+            fill: ${ ( { hover } ) => hover };
         }
     }
 `

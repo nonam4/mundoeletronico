@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export const Container = styled.div`
     width: 100%;
@@ -9,8 +9,8 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 0.8rem 0 0 0.8rem;
-    opacity: ${({ show }) => show ? 1 : 0};
-    background-color: ${({ theme }) => theme.colors.background};
+    opacity: ${ ( { show } ) => show ? 1 : 0 };
+    background-color: ${ ( { theme } ) => theme.colors.background };
 `
 export const Botoes = styled.div`
     width: 100%;
@@ -30,7 +30,7 @@ export const Botao = styled.button`
     padding: 4px;
     :hover{
         path {
-            fill: ${({ hover }) => hover};
+            fill: ${ ( { hover } ) => hover };
         }
     }
 `
@@ -59,15 +59,15 @@ export const Subtitulo = styled.div`
 export const DadosColetor = styled.div`
     width: 100%;
     font-size: 12px;
-    color: ${({ theme }) => theme.colors.floating};
+    color: ${ ( { theme } ) => theme.colors.floating };
 `
 export const FranquiaContainer = styled.div`
     width: calc(100% - 0.8rem);
     display: flex;
     margin-top: 0.4rem;
-    border: solid 1px ${({ theme }) => theme.colors.borders};
+    border: solid 1px ${ ( { theme } ) => theme.colors.borders };
     border-radius: 5px;
-    background-color: ${({ theme }) => theme.colors.menus};
+    background-color: ${ ( { theme } ) => theme.colors.menus };
     padding: 0 0.8rem;
     box-shadow: 0px 0px 10px -8px black;
     margin-bottom: 0.8rem;
@@ -78,21 +78,21 @@ export const FranquiaContainer = styled.div`
 export const FranquiaSubcontainer = styled.div`
     width: 100%;
     display: flex;
-    border-right: ${({ border, theme }) => border != false ? `solid 1px ${theme.colors.borders}` : 'none'};
+    border-right: ${ ( { border, theme } ) => border != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     margin: 0.8rem 0;
     @media only screen and (max-width: 1320px) {
         margin: 0;
         padding: 0.8rem 0;
         border-right: none;
-        border-top: ${({ border, theme }) => border == false ? `solid 1px ${theme.colors.borders}` : 'none'};
+        border-top: ${ ( { border, theme } ) => border == false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     }
 `
 export const FranquiaItem = styled.div`
-    width: ${({ show }) => show != false ? '100%' : '0px'};
-    opacity: ${({ show }) => show != false ? '1' : '0'};
-    z-index: ${({ show }) => show != false ? '0' : '-1'};
-    padding: ${({ show }) => show != false ? '0 0.8rem' : '0'};
-    border-right: ${({ border, theme, show }) => border != false ? show != false ? `solid 1px ${theme.colors.borders}` : 'none' : 'none'};
+    width: ${ ( { show } ) => show != false ? '100%' : '0px' };
+    opacity: ${ ( { show } ) => show != false ? '1' : '0' };
+    z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
+    padding: ${ ( { show } ) => show != false ? '0 0.8rem' : '0' };
+    border-right: ${ ( { border, theme, show } ) => border != false ? show != false ? `solid 1px ${ theme.colors.borders }` : 'none' : 'none' };
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -112,7 +112,7 @@ export const FranquiaItem = styled.div`
 export const FranquiaTitulo = styled.div`
     width: 100%;
     font-size: 12px;
-    color: ${({ theme }) => theme.colors.floating};
+    color: ${ ( { theme } ) => theme.colors.floating };
     text-align: center;
     cursor: default;
     height: 1.4rem;
@@ -138,12 +138,12 @@ export const Listagem = styled.div`
     align-items: flex-start;
     ::-webkit-scrollbar {
         width: 1.1rem;
-        background: ${({ theme }) => theme.colors.background};
+        background: ${ ( { theme } ) => theme.colors.background };
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 8px;
-        background: ${({ theme }) => theme.colors.highlight};
-        border: 0.3rem solid ${({ theme }) => theme.colors.background};
+        background: ${ ( { theme } ) => theme.colors.highlight };
+        border: 0.3rem solid ${ ( { theme } ) => theme.colors.background };
         background-clip: padding-box;
     }
 `
