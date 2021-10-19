@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
 import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useDados, ContextActions } from '../../contexts/DadosContext'
+import { useDados } from '../../contexts/DadosContext'
 
 import TextField from '../../components/Inputs/TextField'
 import Checkbox from '../../components/Inputs/Checkbox'
@@ -40,11 +40,11 @@ function Username () {
     }, [ usuario ] )
 
     function toggleLoad () {
-        dispatch( { type: ContextActions.setLoad, payload: !state.load } )
+        dispatch( { type: 'setLoad', payload: !state.load } )
     }
 
     function toggleAutenticado () {
-        dispatch( { type: ContextActions.setAutenticado, payload: !state.autenticado } )
+        dispatch( { type: 'setAutenticado', payload: !state.autenticado } )
     }
 
     function reautenticar () {

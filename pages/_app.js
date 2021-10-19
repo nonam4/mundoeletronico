@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
-import { DadosProvider, useDados, ContextActions } from '../contexts/DadosContext'
+import { DadosProvider, useDados } from '../contexts/DadosContext'
 import usePersistedState from '../hooks/usePersistedState'
 
 // notificções
@@ -29,13 +29,13 @@ function View ( { children } ) {
 
     useEffect( () => {
         // primeiro render define o tema do contexto como vazio
-        dispatch( { type: ContextActions.setTema, payload: { title: '' } } )
+        dispatch( { type: 'setTema', payload: { title: '' } } )
     }, [] )
 
     useEffect( () => {
         if ( state.tema === undefined ) return
         // se o tema do contexto for vazio define o tema local
-        if ( state.tema.title === '' ) return dispatch( { type: ContextActions.setTema, payload: theme } )
+        if ( state.tema.title === '' ) return dispatch( { type: 'setTema', payload: theme } )
     }, [ theme ] )
 
     useEffect( () => {

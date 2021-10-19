@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDados, ContextActions } from '../../contexts/DadosContext'
+import { useDados } from '../../contexts/DadosContext'
 import axios from 'axios'
 import packageInfo from '../../package.json'
 
@@ -54,7 +54,7 @@ function Impressoras () {
     }, [ busca, clientes ] )
 
     function toggleLoad () {
-        dispatch( { type: ContextActions.setLoad, payload: !state.load } )
+        dispatch( { type: 'setLoad', payload: !state.load } )
     }
 
     async function getDatabaseData () {

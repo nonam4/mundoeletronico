@@ -1,28 +1,4 @@
-import { createContext, useContext, useReducer, ReactNode } from 'react'
-
-type State = {
-    cadastros: Object
-    atendimentos: Object
-    load: true | false
-    usuario: undefined | null | Object
-    tema: undefined | Object
-    autenticado: true | false
-    menu: Object
-}
-
-type Action = {
-    type: ContextActions
-    payload: any
-}
-
-type ContextType = {
-    state: State
-    dispatch: ( action: Action ) => void
-}
-
-type ProviderProps = {
-    children: ReactNode
-}
+import { createContext, useContext, useReducer } from 'react'
 
 const initialData = {
     cadastros: {},
@@ -38,33 +14,24 @@ const initialData = {
 }
 
 // Context
-const DadosContext = createContext<ContextType | undefined>( undefined )
+const DadosContext = createContext( undefined )
 
 // Reducer
-export enum ContextActions {
-    setCadastros,
-    setAtendimentos,
-    setLoad,
-    setUsuario,
-    setTema,
-    setAutenticado,
-    setMenu
-}
-function dadosReducer( state: State, action: Action ) {
+function dadosReducer ( state, action ) {
     switch ( action.type ) {
-        case ContextActions.setCadastros:
+        case 'setCadastros':
             return { ...state, cadastros: action.payload }
-        case ContextActions.setAtendimentos:
+        case 'setAtendimentos':
             return { ...state, atendimentos: action.payload }
-        case ContextActions.setLoad:
+        case 'setLoad':
             return { ...state, load: action.payload }
-        case ContextActions.setUsuario:
+        case 'setUsuario':
             return { ...state, usuario: action.payload }
-        case ContextActions.setTema:
+        case 'setTema':
             return { ...state, tema: action.payload }
-        case ContextActions.setAutenticado:
+        case 'setAutenticado':
             return { ...state, autenticado: action.payload }
-        case ContextActions.setMenu:
+        case 'setMenu':
             return { ...state, menu: action.payload }
         default:
             return state
@@ -72,7 +39,7 @@ function dadosReducer( state: State, action: Action ) {
 }
 
 // Provider
-export function DadosProvider( { children }: ProviderProps ) {
+export function DadosProvider ( { children } ) {
     const [ state, dispatch ] = useReducer( dadosReducer, initialData )
     const value = { state, dispatch }
 
@@ -84,7 +51,7 @@ export function DadosProvider( { children }: ProviderProps ) {
 }
 
 // Context Hook
-export function useDados() {
+export function useDados () {
     const context = useContext( DadosContext )
     if ( context === undefined ) throw new Error( 'Contexto inválido' )
     return context
