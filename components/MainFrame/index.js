@@ -2,7 +2,7 @@ import router from 'next/router'
 import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
 import { useEffect, useContext } from 'react'
-import { useDados, ContextActions } from '../../contexts/DadosContext'
+import { useDados } from '../../contexts/DadosContext'
 
 import usePersistedState from '../../hooks/usePersistedState'
 
@@ -31,13 +31,13 @@ export default function Index ( { children } ) {
     }, [ usuario ] )
 
     function toggleLoad () {
-        dispatch( { type: ContextActions.setLoad, payload: !state.load } )
+        dispatch( { type: 'setLoad', payload: !state.load } )
     }
 
     function prepararApp () {
         // primeiro tenta atualizar o usuário nas variáveis de ambiente
         // sempre que precisar buscaremos o login aqui ao invés do localstorage
-        dispatch( { type: ContextActions.setUsuario, payload: usuario } )
+        dispatch( { type: 'setUsuario', payload: usuario } )
 
         toggleLoad()
     }
