@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { router } from 'next'
 import { useEffect, useState } from 'react'
 import packageInfo from '../../package.json'
 
@@ -17,6 +18,7 @@ function SideMenu ( props ) {
         setExpandido( window.innerWidth > 833 )
         handleResize()
         window.addEventListener( 'resize', handleResize )
+
         return () => window.removeEventListener( 'resize', handleResize )
     }, [] )
 
@@ -39,7 +41,7 @@ function SideMenu ( props ) {
     }
 
     function active ( item ) {
-        //return item == props.listando
+        return item == router.pathname.replace( '/', '' )
     }
 
     return (
