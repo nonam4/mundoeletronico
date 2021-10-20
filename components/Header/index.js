@@ -7,14 +7,20 @@ import * as S from './styles'
 import claro from '../../styles/temas/claro'
 import escuro from '../../styles/temas/escuro'
 
-function Header( { children } ) {
+function Header ( { children } ) {
     const { state, dispatch } = useDados() // variaveis do contexto
-    const { usuario, tema } = state
+    const { tema, usuario } = state
 
-    function toggleTema() {
+    function toggleTema () {
         // se os dados do usuário estiverem no contexto usará a preferência dele
         if ( tema.title === 'claro' ) dispatch( { type: 'setTema', payload: escuro } )
         if ( tema.title === 'escuro' ) dispatch( { type: 'setTema', payload: claro } )
+    }
+
+    function logout () {
+        // importante definir como null para o MainFrame redirecionar para o login
+        dispatch( { type: 'setAutenticado', payload: false } )
+        dispatch( { type: 'setUsuario', payload: null } )
     }
 
     return (
@@ -27,7 +33,7 @@ function Header( { children } ) {
                 <S.Settings right={ '-3' }>
                     <S.SettingsItem> <Icon name={ 'usuario_editar' } /> Perfil </S.SettingsItem>
                     <S.SettingsItem onClick={ toggleTema }> <Icon name={ 'tema' } /> Tema { tema.title === 'claro' ? 'escuro' : 'claro' } </S.SettingsItem>
-                    <S.SettingsItem onClick={ () => props.handleUserChanges( null ) }> <Icon name={ 'logout' } /> Logout </S.SettingsItem>
+                    <S.SettingsItem onClick={ () => logout() }> <Icon name={ 'logout' } /> Logout </S.SettingsItem>
                 </S.Settings>
             </S.Dropdown>
             { children }
