@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import * as H from '../../../components/Header/styles'
 import * as S from './styles'
 
+import { getDatas } from '../../../workers/database'
+
 import Icon from '../../../components/Icons/MenuIcon'
 import Select from '../../../components/Inputs/Select'
 import TextField from '../../../components/Inputs/TextField'
@@ -63,7 +65,7 @@ function DropDown ( props ) {
                     <S.FilterItem>
                         <Icon name={ 'calendario' } /> Datas
                     </S.FilterItem>
-                    <Select options={ props.getDatas() } valor={ filterDefaults ? props.filterDefaults.data : undefined } onChange={ handleDataChange } />
+                    <Select options={ getDatas } valor={ filterDefaults ? props.filterDefaults.data : undefined } onChange={ handleDataChange } />
                 </S.FilterOption>
                 <S.FilterOption>
                     <S.FilterItem>

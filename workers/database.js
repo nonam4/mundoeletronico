@@ -13,21 +13,23 @@ export async function getImpressoras ( filters ) {
     return await axios.get( '/api/getimpressoras', { params: { filters: filters || defaults } } )
 }
 
-function getDatas () {
+export function getDatas () {
     let datas = []
     let data = new Date()
     let ano = data.getFullYear()
     let mes = data.getMonth() + 1
 
-    for ( var x = 0; x < 4; x++ ) {
-        datas.push( { value: ano + '-' + ( mes < 10 ? `0${ mes }` : mes ), label: ( mes < 10 ? `0${ mes }` : mes ) + '/' + ano } )
+    for ( let x = 0; x < 4; x++ ) {
+        datas.push( { value: `${ ano }-${ ( mes < 10 ? `0${ mes }` : mes ) }`, label: `${ ( mes < 10 ? `0${ mes }` : mes ) }/${ ano }` } )
 
-        if ( mes <= 1 ) {
-            mes = 12
-            ano = ano - 1
-        } else {
+        // se o mes for maior que 1 apenas reduza um
+        if ( mes > 1 ) {
             mes--
+            continue
         }
+        // caso contrário define um novo ciclo
+        mes = 12
+        ano = ano - 1
     }
     return datas
 }
