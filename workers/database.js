@@ -8,9 +8,9 @@ export async function getAll () {
     let impressoras = await getImpressoras()
 }
 
-export async function getImpressoras ( filters ) {
-    const defaults = { listando: 'todos', data: getDatas()[ 0 ].value }
-    return await axios.get( '/api/getimpressoras', { params: { filters: filters || defaults } } )
+export async function getImpressoras ( filtros ) {
+    const defaults = { listando: 'todos', data: getDatas()[ 0 ].value, busca: '' }
+    return await axios.get( '/api/getimpressoras', { params: { filtros: filtros || defaults } } )
 }
 
 export function getDatas () {

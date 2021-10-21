@@ -7,7 +7,6 @@ import { useDados } from '../../contexts/DadosContext'
 import TextField from '../../components/Inputs/TextField'
 import Checkbox from '../../components/Inputs/Checkbox'
 import Button from '../../components/Inputs/Button'
-import Load from '../../components/Load'
 
 import usePersistedState from '../../hooks/usePersistedState'
 
@@ -112,7 +111,6 @@ function Username () {
                 <Checkbox text={ 'Ficar conectado' } changeReturn={ () => setTemporario( !temporario ) } />
                 <Button text={ 'Entrar' } onClick={ handleLogin } />
             </>
-            <Load show={ state.load } />
         </S.Container>
     )
 }

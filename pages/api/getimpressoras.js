@@ -2,7 +2,7 @@ import database from './_database.js'
 
 export default async ( req, res ) => {
 
-    const { data, listando } = JSON.parse( req.query.filters )
+    const { data, listando, busca } = JSON.parse( req.query.filtros )
 
     function getDatas () {
         let datas = []

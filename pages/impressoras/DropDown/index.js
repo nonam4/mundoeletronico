@@ -10,8 +10,15 @@ import Select from '../../../components/Inputs/Select'
 import TextField from '../../../components/Inputs/TextField'
 
 function DropDown ( props ) {
-    const [ filterIndicator, setFilterIndicator ] = useState( false )
-    const [ filterDefaults, setFilterDefaults ] = useState( false )
+    const filtroPadrao = { listando: 'todos', data: getDatas()[ 0 ].value, busca: '' }
+    // ultimo filtro aplicado com sucesso
+    const [ ultimoFiltroUsado, setUltimoFiltroUsado ] = useState( filtroPadrao )
+    // usado para definir se irá mostrar o botão de aplicar filtros
+    const [ novoFiltroUsado, setNovoFiltroUsado ] = useState( filtroPadrao )
+    // usado para definir se irá mostrar a bolinha indicadora de filtro
+    const [ usandoFiltro, setUsandoFiltro ] = useState( false )
+    // usado para definir de volta a data atual no select de datas
+    const [ usandoFiltroPadrao, setUsandoFiltroPadrao ] = useState( false )
     const [ focus, setFocus ] = useState( false )
 
     const listagens = [ {
@@ -29,43 +36,67 @@ function DropDown ( props ) {
     }, ]
 
     useEffect( () => {
-        setFilterIndicator( JSON.stringify( props.filters ) != JSON.stringify( props.filterDefaults ) || props.busca != '' )
-        setFilterDefaults( false )
-    }, [ props.filters, props.busca ] )
+        // quando os filtros ou a busca mudarem, define se estão usando os filtros padrões ou não
+        const a = JSON.stringify( novoFiltroUsado ) !== JSON.stringify( filtroPadrao )
+
+        setUsandoFiltro( a )
+        setUsandoFiltroPadrao( false )
+
+        // primeiro define que o último filtro usado é o mesmo que o novo filtro modificado
+        setUltimoFiltroUsado( props.filtros )
+    }, [ props.filtros ] )
 
     function handleDataChange ( e ) {
-        props.setFilters( { ...props.filters, data: e.target.value } )
+        setNovoFiltroUsado( { ...novoFiltroUsado, data: e.target.value } )
     }
 
     function handleListagemChange ( e ) {
-        props.setFilters( { ...props.filters, listando: e.target.value } )
+        setNovoFiltroUsado( { ...novoFiltroUsado, listando: e.target.value } )
     }
 
-    function rollbackFilters () {
-        setFilterDefaults( true )
-        props.setBusca( '' )
-        props.setFilters( props.filterDefaults )
+    function handleBuscaChange ( e ) {
+        // a busca é local então sempre que atualizar a busca atualiza o filtro controle também
+        setNovoFiltroUsado( { ...novoFiltroUsado, busca: e.target.value } )
+        props.setFiltros( { ...props.filtros, busca: e.target.value } )
+    }
+
+    function aplicarNovoFiltro () {
+        // define o filtro de busca como o novo filtro modificado
+        props.setFiltros( novoFiltroUsado )
+    }
+
+    function voltarFiltrosPadrao () {
+        // retorna o filtro novo e o filtro de controle para o padrão
+        setUsandoFiltroPadrao( true )
+        setNovoFiltroUsado( filtroPadrao )
+        setUltimoFiltroUsado( filtroPadrao )
+        props.setFiltros( filtroPadrao )
     }
 
     function toggleFocus () {
         setFocus( !focus )
     }
 
+    function mostrarBotaoAplicar () {
+        if ( JSON.stringify( novoFiltroUsado ) !== JSON.stringify( ultimoFiltroUsado ) ) return true
+        return false
+    }
+
     return (
         <H.Dropdown forceShow={ focus }>
             <H.DropdownItem>
-                { filterIndicator && <S.FilterIndicator /> }
+                { usandoFiltro && <S.FilterIndicator /> }
                 <Icon name={ 'filtros' } margin={ '0' } title={ 'Filtros' } />
             </H.DropdownItem>
             <H.Settings right={ '-90' }>
                 <S.FilterOption>
-                    <TextField useRef={ props.searchRef } onFocus={ toggleFocus } onBlur={ toggleFocus } onChange={ ( e ) => props.setBusca( e.target.value ) } value={ props.busca } placeholder={ 'Buscar...' } icon={ 'buscar' } />
+                    <TextField useRef={ props.buscaRef } onFocus={ toggleFocus } onBlur={ toggleFocus } onChange={ handleBuscaChange } value={ novoFiltroUsado.busca } placeholder={ 'Buscar...' } icon={ 'buscar' } />
                 </S.FilterOption>
                 <S.FilterOption>
                     <S.FilterItem>
                         <Icon name={ 'calendario' } /> Datas
                     </S.FilterItem>
-                    <Select options={ getDatas } valor={ filterDefaults ? props.filterDefaults.data : undefined } onChange={ handleDataChange } />
+                    <Select options={ getDatas() } valor={ usandoFiltroPadrao ? filtroPadrao.data : undefined } onChange={ handleDataChange } />
                 </S.FilterOption>
                 <S.FilterOption>
                     <S.FilterItem>
@@ -73,7 +104,8 @@ function DropDown ( props ) {
                     </S.FilterItem>
                     <Select options={ listagens } onChange={ handleListagemChange } />
                 </S.FilterOption>
-                <H.SettingsItem show={ filterIndicator } onClick={ () => rollbackFilters() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
+                <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarFiltrosPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
+                <H.SettingsItem show={ mostrarBotaoAplicar() } onClick={ () => aplicarNovoFiltro() }> <Icon name={ 'aplicar' } /> Aplicar Filtros </H.SettingsItem>
             </H.Settings>
         </H.Dropdown>
     )

@@ -19,12 +19,10 @@ function Impressoras () {
     const { state, dispatch } = useDados()
     // variaveis sobre a visibilidade do menu lateral
     const { expandido, sempreVisivel } = state.menu
-    // auto explicativo
-    const [ busca, setBusca ] = useState( '' )
     // referência do campo de busca para focar automático no ctrl + f
-    const searchRef = useRef( null )
+    const buscaRef = useRef( null )
     // filtros de listagem
-    const [ filtros, setFiltros ] = useState( { listando: 'todos', data: Database.getDatas()[ 0 ].value } )
+    const [ filtros, setFiltros ] = useState( { listando: 'todos', data: Database.getDatas()[ 0 ].value, busca: '' } )
     // controle de interfaces na tela
     const [ terminaEm, setTerminaEm ] = useState( 24 )
     // cadastros disponíveis no contexto, 
@@ -39,10 +37,10 @@ function Impressoras () {
         // adiciona os listeners do ctrl + f
         window.addEventListener( 'keydown', e => {
             // se os inputs ainda não estiverem criados não faz nada
-            if ( !searchRef || !searchRef.current ) return
+            if ( !buscaRef || !buscaRef.current ) return
             // adiciona focus ao input de busca
             if ( e.ctrlKey && e.key === 'f' ) {
-                searchRef.current.focus()
+                buscaRef.current.focus()
                 e.preventDefault()
             }
         } )
@@ -50,50 +48,52 @@ function Impressoras () {
 
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database
     useEffect( () => {
-        // sempre que for buscar algo no database mostre o load
-        toggleLoad()
         // define que só mostrarão 24 resultados a não ser que o usuário role a tela
         setTerminaEm( 24 )
         // solicita os dados ao banco de dados
         solicitarDados()
-    }, [ filtros ] )
+    }, [ filtros.listando, filtros.data ] )
 
-    // quando for alterado o campo de busca, o sistema mostrará os dados correspondentes
-    // se a busca for valida, irá filtrar localmente os dados
-
-    // se o campo de busca ou os dados dos cadastros mudarem o sistema vai
+    // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
     useEffect( () => {
-        // define o numero de interfaces na tela de volta para o padrão
+        // definir o numero de interfaces na tela de volta para o padrão
         setTerminaEm( 24 )
 
         // se a busca estiver vazia vai definir os cadastros filtrados com os dados do contexto
-        if ( busca === '' ) return setCadastrosFiltrados( cadastros )
+        if ( filtros.busca === '' ) return setCadastrosFiltrados( cadastros )
 
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
-    }, [ busca, cadastros ] )
+    }, [ filtros.busca, cadastros ] )
 
-    function toggleLoad () {
-        dispatch( { type: 'setLoad', payload: !state.load } )
+    function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setLoad', payload: valor } )
     }
 
     function setCadastros ( dados ) {
         dispatch( { type: 'setCadastros', payload: dados } )
     }
 
-    async function solicitarDados () {
-
+    function solicitarDados () {
+        // sempre que for buscar algo no database mostre o load
+        setLoad( true )
+        // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
             setCadastros( res.data )
+            // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
+            setTimeout( () => {
+                setLoad( false )
+            }, 200 )
         } ).catch( err => {
+            setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
             console.error( err )
         } )
-        toggleLoad()
     }
 
     function filtrarCadastrosPorBusca () {
-        const buscaLimpa = limparString( busca )
+        const buscaLimpa = limparString( filtros.busca )
 
         // remove caractéres especiais, pontos, virgulas, etc
         function limparString ( str ) {
@@ -188,10 +188,10 @@ function Impressoras () {
         <MainFrame>
             <S.Container expanded={ expandido } sempreVisivel={ sempreVisivel }>
                 <Header >
-                    <DropDown { ...{ filtros, setFiltros, filtrosPadrao: filtros, busca, setBusca, searchRef } } />
+                    <DropDown { ...{ filtros, setFiltros, buscaRef } } />
                 </Header>
                 <S.View onScroll={ e => rolarTela( e ) }> { renderViews() } </S.View>
-                { clienteExpandido && <Expandido { ...{ cliente: cadastros[ clienteExpandido ], cadastros, filtros, fecharExpandido, salvarExpandido } } /> }
+                {/* clienteExpandido && <Expandido { ...{ cliente: cadastros[ clienteExpandido ], cadastros, filtros, fecharExpandido, salvarExpandido } } /> */ }
             </S.Container>
         </MainFrame>
 

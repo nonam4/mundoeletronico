@@ -6,7 +6,6 @@ import { useDados } from '../../contexts/DadosContext'
 import usePersistedState from '../../hooks/usePersistedState'
 
 import SideMenu from '../SideMenu'
-import Load from '../Load'
 
 export default function Index ( { children } ) {
     const { colors } = useContext( ThemeContext )
@@ -58,7 +57,6 @@ export default function Index ( { children } ) {
                 { children }
                 <SideMenu />
             </> }
-            <Load show={ state.load } />
         </>
     )
 }

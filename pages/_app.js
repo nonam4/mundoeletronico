@@ -3,6 +3,7 @@ import { ThemeProvider } from 'styled-components'
 import { DadosProvider, useDados } from '../contexts/DadosContext'
 import usePersistedState from '../hooks/usePersistedState'
 
+import Load from '../components/Load'
 // notificções
 import ReactNotification from 'react-notifications-component'
 // estilizações
@@ -50,6 +51,7 @@ function View ( { children } ) {
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
             <ReactNotification />
+            <Load show={ state.load } />
             { children }
         </ThemeProvider>
     )
