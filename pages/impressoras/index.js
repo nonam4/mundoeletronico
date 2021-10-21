@@ -179,7 +179,7 @@ function Impressoras () {
         for ( let x = 0; x < terminaEm; x++ ) {
             let id = Object.keys( cadastrosFiltrados )[ x ]
             if ( !id ) break
-            views.push( <Resumo key={ id } cliente={ cadastrosFiltrados[ id ] } { ...{ version: packageInfo.version, expandirCliente } } /> )
+            views.push( <Resumo key={ id } cliente={ cadastrosFiltrados[ id ] } { ...{ version: packageInfo.version } } /> )
         }
         return views
     }
