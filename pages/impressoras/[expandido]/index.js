@@ -16,17 +16,12 @@ function Expandido ( props ) {
     const franquias = [ { label: 'Ilimitada', value: 'ilimitado' }, { label: 'Por página', value: 'pagina' }, { label: 'Por máquina', value: 'maquina' } ]
     //variaveis de controle de interface
     const { colors } = useContext( ThemeContext )
-    const [ show, setShow ] = useState( false )
     const [ rollback, setRollback ] = useState( false )
     //valores alteráveis pelo usuário
     const [ cliente, setCliente ] = useState( JSON.parse( JSON.stringify( props.cliente ) ) )
     const [ franquiaPagina, setFranquiaPagina ] = useState( cliente.franquia.tipo === 'pagina' ? true : false )
     const [ valorFranquiaPagina, setValorFranquiaPagina ] = useState( `${ cliente.franquia.limite } págs` )
     const [ vpe, setVpe ] = useState( cliente.franquia.vpe === 0 ? 'R$ 0,00' : `R$ ${ String( cliente.franquia.vpe ).replace( '.', ',' ) }` )
-
-    useEffect( () => {
-        setShow( true )
-    }, [] )
 
     useEffect( () => {
         setCliente( JSON.parse( JSON.stringify( props.cliente ) ) )
@@ -43,16 +38,9 @@ function Expandido ( props ) {
         setRollback( false )
     }, [ rollback ] )
 
-    function fechar () {
-        setShow( false )
-        setTimeout( () => {
-            props.fecharExpandido()
-        }, 500 )
-    }
-
     function salvar () {
-        props.salvarExpandido( cliente )
-        fechar()
+        console.log( 'salvando' )
+
     }
 
     async function gerarRelatorio () {
@@ -378,7 +366,7 @@ function Expandido ( props ) {
     }
 
     return (
-        <S.Container { ...{ show } }>
+        <S.Container>
             <S.Botoes>
                 { compareParentData() && <S.Botao onClick={ () => setRollback( true ) } hover={ colors.azul } title='Desfazer'> <MenuIcon name='desfazer' margin='0.8' /> </S.Botao> }
                 <S.Botao onClick={ () => gerarRelatorio() } hover={ colors.azul } title='Gerar Relatório'> <MenuIcon name='relatorio' margin='0.8' /> </S.Botao>
