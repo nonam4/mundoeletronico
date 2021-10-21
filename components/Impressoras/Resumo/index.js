@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { ThemeContext } from 'styled-components'
 
 import * as S from './styles'
@@ -6,31 +7,32 @@ import * as S from './styles'
 import Icon from '../../../components/Icons/MenuIcon'
 
 function ClienteResumo ( props ) {
+    const router = useRouter()
     const { colors } = useContext( ThemeContext )
     const [ hoverColor, setHoverColor ] = useState( colors.azul )
     const [ iconName, setIconName ] = useState( 'status_ok' )
     const [ iconTitle, setIconTitle ] = useState( 'Tudo Ok!' )
 
-    const cliente = props.cliente
+    const { cadastro } = props
 
     useEffect( () => {
-        if ( cliente.sistema.versao === 'N/I' ) {
+        if ( cadastro.sistema.versao === 'N/I' ) {
             setHoverColor( colors.vermelho )
             setIconName( 'status_desinstalado' )
             setIconTitle( 'Coletor não instalado' )
-        } else if ( cliente.atraso ) {
+        } else if ( cadastro.atraso ) {
             setHoverColor( colors.laranja )
             setIconName( 'status_atraso' )
             setIconTitle( 'Atraso em leituras' )
-        } else if ( cliente.sistema.versao != props.version ) {
+        } else if ( cadastro.sistema.versao != props.version ) {
             setHoverColor( colors.amarelo )
             setIconName( 'status_desatualizado' )
             setIconTitle( 'Coletor desatualizado' )
-        } else if ( Object.keys( cliente.impressoras ).length == 0 ) {
+        } else if ( Object.keys( cadastro.impressoras ).length == 0 ) {
             setHoverColor( colors.verde )
             setIconName( 'status_nenhuma' )
             setIconTitle( 'Nenhuma impressora' )
-        } else if ( cliente.abastecimento ) {
+        } else if ( cadastro.abastecimento ) {
             setHoverColor( colors.magenta )
             setIconName( 'status_abastecimento' )
             setIconTitle( 'Abastecimento necessário' )
@@ -39,35 +41,46 @@ function ClienteResumo ( props ) {
             setIconName( 'status_ok' )
             setIconTitle( 'Tudo Ok!' )
         }
-    }, [ props.cliente ] )
+    }, [ props.cadastro ] )
+
+    function expandirCadastro ( id ) {
+        router.push( `/impressoras/${ id }` )
+
+        /*
+        router.push({
+            pathname: '/impressoras/[expandido]',
+            query: { expandido: id },
+        })
+        */
+    }
 
     return (
-        <S.Container hoverColor={ hoverColor } onClick={ () => props.expandirCliente( cliente.id ) }>
+        <S.Container hoverColor={ hoverColor } onClick={ () => expandirCadastro( cadastro.id ) }>
             <S.Header>
                 <S.NomeContainer>
-                    <S.Nome>{ cliente.nomefantasia }</S.Nome>
-                    <S.Subnome>{ cliente.razaosocial }</S.Subnome>
+                    <S.Nome>{ cadastro.nomefantasia }</S.Nome>
+                    <S.Subnome>{ cadastro.razaosocial }</S.Subnome>
                 </S.NomeContainer>
                 <S.IconContainer> <Icon color={ hoverColor } name={ iconName } title={ iconTitle } /> </S.IconContainer>
             </S.Header>
             <S.Line>
                 <S.LineItem>
                     <S.LineTitle>Impresso</S.LineTitle>
-                    <S.LineText>{ cliente.impresso } págs</S.LineText>
+                    <S.LineText>{ cadastro.impresso } págs</S.LineText>
                 </S.LineItem>
                 <S.LineItem>
                     <S.LineTitle>Excedentes</S.LineTitle>
-                    <S.LineText>{ cliente.excedentes } págs</S.LineText>
+                    <S.LineText>{ cadastro.excedentes } págs</S.LineText>
                 </S.LineItem>
             </S.Line>
             <S.Line>
                 <S.LineItem>
                     <S.LineTitle>Impressoras</S.LineTitle>
-                    <S.LineSubtext>{ cliente.impressorasAtivas }</S.LineSubtext>
+                    <S.LineSubtext>{ cadastro.impressorasAtivas }</S.LineSubtext>
                 </S.LineItem>
                 <S.LineItem>
                     <S.LineTitle>Versão</S.LineTitle>
-                    <S.LineSubtext>{ cliente.sistema.versao }</S.LineSubtext>
+                    <S.LineSubtext>{ cadastro.sistema.versao }</S.LineSubtext>
                 </S.LineItem>
             </S.Line>
         </S.Container>

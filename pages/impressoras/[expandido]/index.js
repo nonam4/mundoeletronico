@@ -7,7 +7,7 @@ import { bg, font } from '../../../hooks/useRelatorio'
 import MenuIcon from '../../../components/Icons/MenuIcon'
 import Select from '../../../components/Inputs/Select'
 import TextField from '../../../components/Inputs/SimpleTextField'
-import Impressoras from './Impressoras'
+import Impressoras from '../../../components/Impressoras/Expandido/Impressoras'
 
 import * as S from './styles'
 

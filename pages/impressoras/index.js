@@ -10,9 +10,8 @@ import * as Database from '../../workers/database'
 
 import MainFrame from '../../components/MainFrame'
 import Header from '../../components/Header'
-import DropDown from './DropDown'
-import Resumo from './Resumo'
-import Expandido from './Expandido'
+import DropDown from '../../components/Impressoras/DropDown'
+import Resumo from '../../components/Impressoras/Resumo'
 
 function Impressoras () {
     // variaveis do contexto, disponível em todo o sistema
@@ -29,9 +28,6 @@ function Impressoras () {
     const { cadastros } = state
     // array de cadastros filtrados pelo campo de busca, item loca, não interfere no contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
-
-    // variaveis do cliente expandido
-    const [ clienteExpandido, setClienteExpandido ] = useState( null )
 
     useEffect( () => {
         // adiciona os listeners do ctrl + f
@@ -149,14 +145,6 @@ function Impressoras () {
         if ( final && a > b && a != b ) setTerminaEm( b )
     }
 
-    function expandirCliente ( id ) {
-        setClienteExpandido( id )
-    }
-
-    function fecharExpandido () {
-        setClienteExpandido( null )
-    }
-
     async function salvarExpandido ( cliente ) {
         let aviso = props.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
@@ -179,7 +167,7 @@ function Impressoras () {
         for ( let x = 0; x < terminaEm; x++ ) {
             let id = Object.keys( cadastrosFiltrados )[ x ]
             if ( !id ) break
-            views.push( <Resumo key={ id } cliente={ cadastrosFiltrados[ id ] } { ...{ version: packageInfo.version } } /> )
+            views.push( <Resumo key={ id } cadastro={ cadastrosFiltrados[ id ] } { ...{ version: packageInfo.version } } /> )
         }
         return views
     }

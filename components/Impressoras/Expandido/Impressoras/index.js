@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 
-import MenuIcon from '../../../../components/Icons/MenuIcon'
-import TextField from '../../../../components/Inputs/SimpleTextField'
-import Select from '../../../../components//Inputs/Select'
-import { Botao } from '../styles'
+import MenuIcon from '../../../Icons/MenuIcon'
+import TextField from '../../../Inputs/SimpleTextField'
+import Select from '../../../Inputs/Select'
+import { Botao } from '../../../../pages/impressoras/[expandido]/styles'
 
 import * as S from './styles'
 
