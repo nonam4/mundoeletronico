@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
+import { useDados } from '../../../../contexts/DadosContext'
 
 import MenuIcon from '../../../Icons/MenuIcon'
 import TextField from '../../../Inputs/SimpleTextField'
@@ -9,6 +10,7 @@ import { Botao } from '../../../../pages/impressoras/[expandido]/styles'
 import * as S from './styles'
 
 function Impressoras ( props ) {
+    const { state, dispatch } = useDados()
     const { colors } = useContext( ThemeContext )
     const capacidades = [ { label: 'Não controlado', value: 'ilimitado' }, { label: '2000 págs', value: '2000' }, { label: '5000 págs', value: '5000' },
     { label: '10000 págs', value: '10000' }, { label: '15000 págs', value: '15000' }, { label: '20000 págs', value: '20000' } ]
@@ -166,8 +168,8 @@ function Impressoras ( props ) {
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Franquia </S.DadosTitulo>
                     <S.Dados>
-                        { props.user.permissoes.clientes.financeiro && <TextField onChange={ handleDigitarFranquia } value={ franquia } onFocus={ handleFocusFranquia } onBlur={ handleBlurFranquia } /> }
-                        { !props.user.permissoes.clientes.financeiro && franquia }
+                        { state.usuario.permissoes.clientes.financeiro && <TextField onChange={ handleDigitarFranquia } value={ franquia } onFocus={ handleFocusFranquia } onBlur={ handleBlurFranquia } /> }
+                        { !state.usuario.permissoes.clientes.financeiro && franquia }
                     </S.Dados>
                 </S.DadosSubcontainer>
                 <S.DadosSubcontainer>

@@ -50,7 +50,7 @@ export default function Index ( { children } ) {
         <>
             <Head>
                 <title>Mundo Eletrônico</title>
-                <link rel="icon" href="/icon.png" />
+                <link rel='icon' href='/icon.png' />
                 <meta name='theme-color' content={ colors.background }></meta>
             </Head>
             { state.usuario && state.autenticado && <>

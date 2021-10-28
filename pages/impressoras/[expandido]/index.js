@@ -1,9 +1,13 @@
 import { useState, useEffect, useContext, memo } from 'react'
+import { useRouter } from 'next/router'
+import { useDados } from '../../../contexts/DadosContext'
+
 import set from 'lodash/fp/set'
-import { ThemeContext } from 'styled-components'
 import { jsPDF } from 'jspdf'
+import { ThemeContext } from 'styled-components'
 
 import { bg, font } from '../../../hooks/useRelatorio'
+import MainFrame from '../../../components/MainFrame'
 import MenuIcon from '../../../components/Icons/MenuIcon'
 import Select from '../../../components/Inputs/Select'
 import TextField from '../../../components/Inputs/SimpleTextField'
@@ -12,39 +16,63 @@ import Impressoras from '../../../components/Impressoras/Expandido/Impressoras'
 import * as S from './styles'
 
 function Expandido ( props ) {
+
+    const router = useRouter()
+    const { colors } = useContext( ThemeContext )
+    const { state, dispatch } = useDados()
+
+    // variável dinâmica pega da url
+    const { expandido } = router.query
+
     //valor padrão do select de tipo de franquias
     const franquias = [ { label: 'Ilimitada', value: 'ilimitado' }, { label: 'Por página', value: 'pagina' }, { label: 'Por máquina', value: 'maquina' } ]
-    //variaveis de controle de interface
-    const { colors } = useContext( ThemeContext )
+
+    // decide se irá aparecer o botão para desfazer todas as alterações feitas
     const [ rollback, setRollback ] = useState( false )
-    //valores alteráveis pelo usuário
-    const [ cliente, setCliente ] = useState( JSON.parse( JSON.stringify( props.cliente ) ) )
-    const [ franquiaPagina, setFranquiaPagina ] = useState( cliente.franquia.tipo === 'pagina' ? true : false )
-    const [ valorFranquiaPagina, setValorFranquiaPagina ] = useState( `${ cliente.franquia.limite } págs` )
-    const [ vpe, setVpe ] = useState( cliente.franquia.vpe === 0 ? 'R$ 0,00' : `R$ ${ String( cliente.franquia.vpe ).replace( '.', ',' ) }` )
+    // variável local, sem referência à variável do contexto
+    const [ cliente, setCliente ] = useState( undefined )
+    // define o tipo de franquia
+    const [ franquiaPagina, setFranquiaPagina ] = useState( false )
+    // define o valor da franquia por página
+    const [ valorFranquiaPagina, setValorFranquiaPagina ] = useState( '0 págs' )
+    // define o Valor Por Excedente
+    const [ vpe, setVpe ] = useState( 'R$ 0,00' )
 
     useEffect( () => {
-        setCliente( JSON.parse( JSON.stringify( props.cliente ) ) )
-    }, [ props.cliente ] )
+        console.log( expandido, state.cadastros[ expandido ] )
+    }, [] )
+
+    useEffect( () => {
+        let cadastro = state.cadastros[ expandido ]
+        if ( !cadastro ) return
+        // toda vez que o valor do state for alterado irá definir o cliente local
+        // transforma em string e retransforma para json para criar uma cópia sem referência
+        setCliente( JSON.parse( JSON.stringify( state.cadastros[ expandido ] ) ) )
+    }, [ state.cliente ] )
+
+    useEffect( () => {
+
+        if ( !cliente ) return
+        setFranquiaPagina( cliente.franquia.tipo === 'pagina' ? true : false )
+        setValorFranquiaPagina( `${ cliente.franquia.limite } págs` )
+        setVpe( cliente.franquia.vpe === 0 ? 'R$ 0,00' : `R$ ${ String( cliente.franquia.vpe ).replace( '.', ',' ) }` )
+
+    }, [ cliente ] )
 
     useEffect( () => {
         if ( !rollback ) return
 
-        setCliente( JSON.parse( JSON.stringify( props.cliente ) ) )
-        setFranquiaPagina( props.cliente.franquia.tipo === 'pagina' ? true : false )
-        setValorFranquiaPagina( `${ props.cliente.franquia.limite } págs` )
-        setVpe( props.cliente.franquia.vpe === 0 ? 'R$ 0,00' : `R$ ${ String( props.cliente.franquia.vpe ).replace( '.', ',' ) }` )
+        setCliente( JSON.parse( JSON.stringify( state.cadastros[ expandido ] ) ) )
 
         setRollback( false )
     }, [ rollback ] )
 
     function salvar () {
         console.log( 'salvando' )
-
     }
 
     async function gerarRelatorio () {
-        const data = props.filters.data
+        const data = state.filtros.data
         const meses = {
             '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril', '05': 'Maio', '06': 'Junho',
             '07': 'Julho', '08': 'Agosto', '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
@@ -208,7 +236,7 @@ function Expandido ( props ) {
     }
 
     function recalcularDados ( cliente ) {
-        const data = props.filters.data
+        const data = state.filtros.data
 
         function getDatas () {
             let datas = []
@@ -327,7 +355,7 @@ function Expandido ( props ) {
     }
 
     function renderImpressoras () {
-        const data = props.filters.data
+        const data = state.filtros.data
         let views = []
         let impressoras = cliente.impressoras
 
@@ -350,13 +378,13 @@ function Expandido ( props ) {
                 }
             }
 
-            views.push( <Impressoras key={ serial } { ...{ ...props, data, impressora, setObjectData, cliente, rollback, setCliente, recalcularDados } } /> )
+            views.push( <Impressoras key={ serial } { ...{ data, impressora, setObjectData, cliente, rollback, setCliente, recalcularDados } } /> )
         }
         return views
     }
 
     function compareParentData () {
-        return JSON.stringify( props.cliente ) != JSON.stringify( cliente )
+        return JSON.stringify( state.cadastros[ expandido ] ) != JSON.stringify( cliente )
     }
 
     function getFranquia ( tipo ) {
@@ -366,65 +394,69 @@ function Expandido ( props ) {
     }
 
     return (
-        <S.Container>
-            <S.Botoes>
-                { compareParentData() && <S.Botao onClick={ () => setRollback( true ) } hover={ colors.azul } title='Desfazer'> <MenuIcon name='desfazer' margin='0.8' /> </S.Botao> }
-                <S.Botao onClick={ () => gerarRelatorio() } hover={ colors.azul } title='Gerar Relatório'> <MenuIcon name='relatorio' margin='0.8' /> </S.Botao>
-                <S.Botao onClick={ () => props.editarCadastros( cliente.id, props.clientes ) } hover={ colors.azul } title='Editar Cliente'> <MenuIcon name='usuario_editar' margin='0.8' /> </S.Botao>
-                { compareParentData() && <S.Botao onClick={ () => salvar() } hover={ colors.azul } title='Salvar/Fechar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
-                <S.Botao onClick={ () => fechar() } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
-            </S.Botoes>
-            <S.TituloContainer>
-                <S.TituloSubContainer>
-                    <S.Titulo>{ cliente.nomefantasia }</S.Titulo>
-                    <S.Subtitulo>{ cliente.razaosocial }</S.Subtitulo>
-                </S.TituloSubContainer>
-                <S.TituloSubContainer>
-                    <S.DadosColetor>Chave do cliente: <b> { cliente.id } </b></S.DadosColetor>
-                    <S.DadosColetor>Pc com coletor: <b> { window.atob( cliente.sistema.local ) } </b></S.DadosColetor>
-                    <S.DadosColetor>Versão do coletor: <b>  { cliente.sistema.versao } </b></S.DadosColetor>
-                </S.TituloSubContainer>
-            </S.TituloContainer>
-            <S.Listagem>
-                <S.FranquiaContainer>
-                    <S.FranquiaSubcontainer border={ props.user.permissoes.clientes.financeiro }>
-                        <S.FranquiaItem>
-                            <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
-                            <S.FranquiaDado>
-                                { props.user.permissoes.clientes.financeiro && <Select valor={ cliente.franquia.tipo } options={ franquias } onChange={ handleFranquiaChange } /> }
-                                { !props.user.permissoes.clientes.financeiro && getFranquia( cliente.franquia.tipo ) }
-                            </S.FranquiaDado>
-                        </S.FranquiaItem>
-                        <S.FranquiaItem show={ franquiaPagina }>
-                            <S.FranquiaTitulo> Franquia </S.FranquiaTitulo>
-                            <S.FranquiaDado>
-                                <TextField onChange={ handleDigitarFranquiaPagina } value={ valorFranquiaPagina } onFocus={ handleFocusFranquiaPagina } onBlur={ handleBlurFranquiaPagina } />
-                            </S.FranquiaDado>
-                        </S.FranquiaItem>
-                        <S.FranquiaItem border={ false }>
-                            <S.FranquiaTitulo> Total impresso </S.FranquiaTitulo>
-                            <S.FranquiaDado> { cliente.impresso } págs </S.FranquiaDado>
-                        </S.FranquiaItem>
-                    </S.FranquiaSubcontainer>
-                    { props.user.permissoes.clientes.financeiro && <S.FranquiaSubcontainer border={ false }>
-                        <S.FranquiaItem>
-                            <S.FranquiaTitulo> Valor por excedente </S.FranquiaTitulo>
-                            <S.FranquiaDado>
-                                <TextField onChange={ handleDigitarVpe } value={ vpe } onBlur={ handleBlurVpe } />
-                            </S.FranquiaDado>
-                        </S.FranquiaItem>
-                        <S.FranquiaItem border={ false } bottom={ false }>
-                            <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
-                            <S.FranquiaDado>
-                                { cliente.excedentes } págs - { ( cliente.franquia.vpe * cliente.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }
-                            </S.FranquiaDado>
-                        </S.FranquiaItem>
-                    </S.FranquiaSubcontainer> }
-                </S.FranquiaContainer>
+        <MainFrame>
+            <S.Container>
+                { cliente && <>
+                    <S.Botoes>
+                        { compareParentData() && <S.Botao onClick={ () => setRollback( true ) } hover={ colors.azul } title='Desfazer'> <MenuIcon name='desfazer' margin='0.8' /> </S.Botao> }
+                        <S.Botao onClick={ () => gerarRelatorio() } hover={ colors.azul } title='Gerar Relatório'> <MenuIcon name='relatorio' margin='0.8' /> </S.Botao>
+                        <S.Botao onClick={ () => { console.log( 'editando' ) }/*() => props.editarCadastros( cliente.id, state.cadastros )*/ } hover={ colors.azul } title='Editar Cliente'> <MenuIcon name='usuario_editar' margin='0.8' /> </S.Botao>
+                        { compareParentData() && <S.Botao onClick={ () => salvar() } hover={ colors.azul } title='Salvar/Fechar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
+                        <S.Botao onClick={ () => fechar() } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
+                    </S.Botoes>
+                    <S.TituloContainer>
+                        <S.TituloSubContainer>
+                            <S.Titulo>{ cliente.nomefantasia }</S.Titulo>
+                            <S.Subtitulo>{ cliente.razaosocial }</S.Subtitulo>
+                        </S.TituloSubContainer>
+                        <S.TituloSubContainer>
+                            <S.DadosColetor>Chave do cliente: <b> { cliente.id } </b></S.DadosColetor>
+                            <S.DadosColetor>Pc com coletor: <b> { window.atob( cliente.sistema.local ) } </b></S.DadosColetor>
+                            <S.DadosColetor>Versão do coletor: <b>  { cliente.sistema.versao } </b></S.DadosColetor>
+                        </S.TituloSubContainer>
+                    </S.TituloContainer>
+                    <S.Listagem>
+                        <S.FranquiaContainer>
+                            <S.FranquiaSubcontainer border={ state.usuario.permissoes.clientes.financeiro }>
+                                <S.FranquiaItem>
+                                    <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
+                                    <S.FranquiaDado>
+                                        { state.usuario.permissoes.clientes.financeiro && <Select valor={ cliente.franquia.tipo } options={ franquias } onChange={ handleFranquiaChange } /> }
+                                        { !state.usuario.permissoes.clientes.financeiro && getFranquia( cliente.franquia.tipo ) }
+                                    </S.FranquiaDado>
+                                </S.FranquiaItem>
+                                <S.FranquiaItem show={ franquiaPagina }>
+                                    <S.FranquiaTitulo> Franquia </S.FranquiaTitulo>
+                                    <S.FranquiaDado>
+                                        <TextField onChange={ handleDigitarFranquiaPagina } value={ valorFranquiaPagina } onFocus={ handleFocusFranquiaPagina } onBlur={ handleBlurFranquiaPagina } />
+                                    </S.FranquiaDado>
+                                </S.FranquiaItem>
+                                <S.FranquiaItem border={ false }>
+                                    <S.FranquiaTitulo> Total impresso </S.FranquiaTitulo>
+                                    <S.FranquiaDado> { cliente.impresso } págs </S.FranquiaDado>
+                                </S.FranquiaItem>
+                            </S.FranquiaSubcontainer>
+                            { state.usuario.permissoes.clientes.financeiro && <S.FranquiaSubcontainer border={ false }>
+                                <S.FranquiaItem>
+                                    <S.FranquiaTitulo> Valor por excedente </S.FranquiaTitulo>
+                                    <S.FranquiaDado>
+                                        <TextField onChange={ handleDigitarVpe } value={ vpe } onBlur={ handleBlurVpe } />
+                                    </S.FranquiaDado>
+                                </S.FranquiaItem>
+                                <S.FranquiaItem border={ false } bottom={ false }>
+                                    <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
+                                    <S.FranquiaDado>
+                                        { cliente.excedentes } págs - { ( cliente.franquia.vpe * cliente.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }
+                                    </S.FranquiaDado>
+                                </S.FranquiaItem>
+                            </S.FranquiaSubcontainer> }
+                        </S.FranquiaContainer>
 
-                { !rollback && renderImpressoras() }
-            </S.Listagem>
-        </S.Container>
+                        { !rollback && renderImpressoras() }
+                    </S.Listagem>
+                </> }
+            </S.Container>
+        </MainFrame>
     )
 }
 

@@ -50,6 +50,10 @@ function Impressoras () {
         solicitarDados()
     }, [ filtros.listando, filtros.data ] )
 
+    useEffect( () => {
+        dispatch( { type: 'setFiltros', payload: filtros } )
+    }, [ filtros ] )
+
     // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
     useEffect( () => {
         // definir o numero de interfaces na tela de volta para o padrão
