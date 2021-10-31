@@ -2,11 +2,13 @@ import Link from 'next/link'
 import { router } from 'next'
 import { useEffect, useState } from 'react'
 import packageInfo from '../../package.json'
+import { useDados } from '../../contexts/DadosContext'
 
 import MenuIcon from '../Icons/MenuIcon'
 import * as S from './styles'
 
 function SideMenu ( props ) {
+    const { state, dispatch } = useDados()
     const [ expandido, setExpandido ] = useState( false )
     const [ sempreVisivel, setSempreVisivel ] = useState( false )
 
@@ -27,12 +29,14 @@ function SideMenu ( props ) {
         if ( !sempreVisivel && expandido ) setExpandido( false )
     }, [ sempreVisivel ] )
 
+    function toggleLoad () {
+        dispatch( { type: 'setLoad', payload: !state.load } )
+    }
+
     function trocarListagem ( listagem ) {
-        //props.setLoad(true)
-        setTimeout( () => {
-            //props.setListando(listagem)
-            //props.setLoad(false)
-        }, 300 )
+
+        toggleLoad()
+        //router.push( listagem )
     }
 
     function resetarCadastro ( listagem ) {

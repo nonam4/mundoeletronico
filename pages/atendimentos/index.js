@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 import * as S from './styles'
-import Header from '../Header'
-import DropDown from './DropDown'
-import Listagem from './Listagem'
+import Header from '../../components/Header'
+import DropDown from '../../components/Atendimentos/DropDown'
+import Listagem from '../../components/Atendimentos/Listagem'
 
 function Atendimentos ( props ) {
 

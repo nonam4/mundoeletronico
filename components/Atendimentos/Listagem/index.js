@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 
-import MenuIcon from '../../Icons/MenuIcon'
+import MenuIcon from '../../../components/Icons/MenuIcon'
 import * as L from '../Lists'
 import * as S from './styles'
 

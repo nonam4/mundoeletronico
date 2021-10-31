@@ -1,7 +1,7 @@
-import Icon from '../../Icons/MenuIcon'
-import TextField from '../../Inputs/TextField'
+import Icon from '../../../components/Icons'
+import TextField from '../../../components/Inputs/TextField'
 
-import * as H from '../../Header/styles'
+import * as H from '../../../components/Header/styles'
 import * as S from './styles'
 
 function DropDown ( props ) {

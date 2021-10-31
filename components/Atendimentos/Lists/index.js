@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-import MenuIcon from '../../Icons/MenuIcon'
+import MenuIcon from '../../../components/Icons/MenuIcon'
 import * as S from './styles'
 
 function getData ( timestamp ) {
