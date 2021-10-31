@@ -5,7 +5,7 @@ import { useDados } from '../../../../contexts/DadosContext'
 import MenuIcon from '../../../Icons/MenuIcon'
 import TextField from '../../../Inputs/SimpleTextField'
 import Select from '../../../Inputs/Select'
-import { Botao } from '../../../../pages/impressoras/[expandido]/styles'
+import { Botao } from '../../Expandido/styles'
 
 import * as S from './styles'
 
@@ -26,7 +26,7 @@ function Impressoras ( props ) {
         setImpressora( props.impressora )
         setFranquia( `${ props.impressora.franquia.limite } págs` )
         setSetor( props.impressora.setor )
-    }, [ props.cliente ] )
+    }, [ props.cadastro ] )
 
     function deletarImpressora () {
         if ( !impressora.contabilizar ) return props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, false )
@@ -35,7 +35,7 @@ function Impressoras ( props ) {
 
     function trocarImpressora ( serial ) {
 
-        let nova = props.cliente.impressoras[ serial ]
+        let nova = props.cadastro.impressoras[ serial ]
         let velha = impressora
 
         //define a nova com o mesmo setor e a mesma franquia
@@ -49,7 +49,7 @@ function Impressoras ( props ) {
         velha.substituida = true
         velha.substituindo = []
 
-        props.setObjectData( 'impressoras', { ...props.cliente.impressoras, [ nova.serial ]: nova, [ velha.serial ]: velha } )
+        props.setObjectData( 'impressoras', { ...props.cadastro.impressoras, [ nova.serial ]: nova, [ velha.serial ]: velha } )
     }
 
     function handleFocusFranquia () {
@@ -86,11 +86,11 @@ function Impressoras ( props ) {
     }
 
     function renderTrocas () {
-        const cliente = props.cliente
+        const cadastro = props.cadastro
         let views = []
 
         for ( let serial of impressora.substituindo ) {
-            let troca = cliente.impressoras[ serial ]
+            let troca = cadastro.impressoras[ serial ]
             if ( !troca ) continue
             let contador = troca.contadores[ props.data ]
             if ( !contador ) continue
@@ -113,7 +113,7 @@ function Impressoras ( props ) {
 
     function renderSeriaisTrocas () {
         let views = []
-        let impressoras = props.cliente.impressoras
+        let impressoras = props.cadastro.impressoras
         for ( let serial in impressoras ) {
 
             if ( !impressoras[ serial ].contabilizar || impressoras[ serial ].substituida || !impressoras[ serial ] ||
@@ -125,11 +125,11 @@ function Impressoras ( props ) {
     }
 
     return (
-        <S.Container height={ props.cliente.franquia.tipo }>
+        <S.Container height={ props.cadastro.franquia.tipo }>
             <S.Titulo>
                 { props.impressora.modelo }
                 <S.TituloSubcontainer>
-                    { props.cliente.impressorasAtivas > 1 && <S.Dropdown>
+                    { props.cadastro.impressorasAtivas > 1 && <S.Dropdown>
                         <Botao title={ 'Substituir' } hover={ colors.azul }><MenuIcon name={ 'impressora_trocar' } margin='0' /></Botao>
                         <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
                     </S.Dropdown> }
@@ -164,7 +164,7 @@ function Impressoras ( props ) {
                 </S.DadosSubcontainer>
             </S.DadosContainer>
 
-            <S.DadosContainer show={ props.cliente.franquia.tipo == 'maquina' ? true : false }>
+            <S.DadosContainer show={ props.cadastro.franquia.tipo == 'maquina' ? true : false }>
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Franquia </S.DadosTitulo>
                     <S.Dados>

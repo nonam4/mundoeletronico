@@ -29,7 +29,7 @@ function Username () {
         if ( usuario === undefined ) return
 
         // se não tiver usuário salvo mostre o formulário de login
-        if ( !usuario ) return toggleLoad()
+        if ( !usuario ) return setLoad( false )
 
         // se os dados estiverem salvos mas não estiver autenticado (quando recarregando a página por exemplo) tente login automático
         if ( usuario && !state.autenticado ) return reautenticar()
@@ -38,8 +38,8 @@ function Username () {
         if ( usuario && state.autenticado ) return router.replace( `/${ router.query.fallback || 'impressoras' }` )
     }, [ usuario ] )
 
-    function toggleLoad () {
-        dispatch( { type: 'setLoad', payload: !state.load } )
+    function setLoad ( valor ) {
+        dispatch( { type: 'setLoad', payload: valor } )
     }
 
     function toggleAutenticado () {
@@ -58,7 +58,7 @@ function Username () {
             // em caso de erro, define que não está mais autenticado
             toggleAutenticado()
             Notification.notificate( 'Erro', 'Usuário ou password incorretos!', 'danger' )
-            toggleLoad()
+            setLoad( false )
             console.error( err )
         } )
     }
@@ -68,7 +68,7 @@ function Username () {
 
         // define que está autenticado antes de tentar fazer o login
         toggleAutenticado()
-        toggleLoad()
+        setLoad( true )
 
         Database.autenticar( username, password ).then( res => {
             setUsuario( { ...res.data, password, temporario } )
@@ -76,7 +76,7 @@ function Username () {
             // em caso de erro, define que não está mais autenticado
             toggleAutenticado()
             Notification.notificate( 'Erro', 'Usuário ou password incorretos!', 'danger' )
-            toggleLoad()
+            setLoad( false )
             console.error( err )
         } )
     }

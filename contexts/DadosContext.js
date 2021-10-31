@@ -10,8 +10,7 @@ const initialData = {
     menu: {
         expandido: false,
         sempreVisivel: false
-    },
-    filtros: {}
+    }
 }
 
 // Context
@@ -34,8 +33,6 @@ function dadosReducer ( state, action ) {
             return { ...state, autenticado: action.payload }
         case 'setMenu':
             return { ...state, menu: action.payload }
-        case 'setFiltros':
-            return { ...state, filtros: action.payload }
         default:
             return state
     }

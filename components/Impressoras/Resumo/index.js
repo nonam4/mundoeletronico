@@ -44,14 +44,7 @@ function ClienteResumo ( props ) {
     }, [ props.cadastro ] )
 
     function expandirCadastro ( id ) {
-        router.push( `/impressoras/${ id }` )
-
-        /*
-        router.push({
-            pathname: '/impressoras/[expandido]',
-            query: { expandido: id },
-        })
-        */
+        props.setCadastroExpandido( id )
     }
 
     return (

@@ -12,6 +12,7 @@ import MainFrame from '../../components/MainFrame'
 import Header from '../../components/Header'
 import DropDown from '../../components/Impressoras/DropDown'
 import Resumo from '../../components/Impressoras/Resumo'
+import Expandido from '../../components/Impressoras/Expandido'
 
 function Impressoras () {
     // variaveis do contexto, disponível em todo o sistema
@@ -28,6 +29,8 @@ function Impressoras () {
     const { cadastros } = state
     // array de cadastros filtrados pelo campo de busca, item loca, não interfere no contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
+    // variável de controle do cliente que está expandido
+    const [ cadastroExpandido, setCadastroExpandido ] = useState( undefined )
 
     useEffect( () => {
         // adiciona os listeners do ctrl + f
@@ -49,10 +52,6 @@ function Impressoras () {
         // solicita os dados ao banco de dados
         solicitarDados()
     }, [ filtros.listando, filtros.data ] )
-
-    useEffect( () => {
-        dispatch( { type: 'setFiltros', payload: filtros } )
-    }, [ filtros ] )
 
     // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
     useEffect( () => {
@@ -149,18 +148,24 @@ function Impressoras () {
         if ( final && a > b && a != b ) setTerminaEm( b )
     }
 
-    async function salvarExpandido ( cliente ) {
-        let aviso = props.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
+    function salvarExpandido ( alterado ) {
+        let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
-        await axios.post( '/api/salvarcliente', { usuario: state.usuario, cliente } ).then( () => {
-            //depois que salvou atualiza os dados localmente
-            props.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
-            setCadastros( { ...cadastros, [ cliente.id ]: cliente } )
+        Database.salvarExpandido( state.usuario, alterado ).then( () => {
+
+            Notification.removeNotification( aviso )
+            Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
+            // depois que salvou atualiza os dados localmente
+            setCadastros( { ...cadastros, [ alterado.id ]: alterado } )
         } ).catch( err => {
+            Notification.removeNotification( aviso )
             console.error( err )
-            props.notificate( 'Erro', 'Usuário sem permissão para isso!', 'danger' )
+            Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
         } )
-        props.removeNotification( aviso )
+    }
+
+    function fecharExpandido () {
+        setCadastroExpandido( undefined )
     }
 
     function renderViews () {
@@ -171,19 +176,19 @@ function Impressoras () {
         for ( let x = 0; x < terminaEm; x++ ) {
             let id = Object.keys( cadastrosFiltrados )[ x ]
             if ( !id ) break
-            views.push( <Resumo key={ id } cadastro={ cadastrosFiltrados[ id ] } { ...{ version: packageInfo.version } } /> )
+            views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], setCadastroExpandido, version: packageInfo.version } } /> )
         }
         return views
     }
 
     return (
         <MainFrame>
-            <S.Container expanded={ expandido } sempreVisivel={ sempreVisivel }>
+            <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
                 <Header >
                     <DropDown { ...{ filtros, setFiltros, buscaRef } } />
                 </Header>
                 <S.View onScroll={ e => rolarTela( e ) }> { renderViews() } </S.View>
-                {/* clienteExpandido && <Expandido { ...{ cliente: cadastros[ clienteExpandido ], cadastros, filtros, fecharExpandido, salvarExpandido } } /> */ }
+                { cadastroExpandido && <Expandido { ...{ expandido: cadastros[ cadastroExpandido ], cadastros, filtros, fecharExpandido, salvarExpandido } } /> }
             </S.Container>
         </MainFrame>
 
