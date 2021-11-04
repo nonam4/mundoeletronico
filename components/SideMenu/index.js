@@ -36,7 +36,7 @@ function SideMenu ( props ) {
     function trocarListagem ( listagem ) {
 
         toggleLoad()
-        //router.push( listagem )
+        router.push( listagem )
     }
 
     function resetarCadastro ( listagem ) {

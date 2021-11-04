@@ -1,35 +1,77 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState, useEffect, useRef } from 'react'
+import { useDados } from '../../contexts/DadosContext'
 
 import * as S from './styles'
+
+import * as Database from '../../workers/database'
+
+import MainFrame from '../../components/MainFrame'
 import Header from '../../components/Header'
 import DropDown from '../../components/Atendimentos/DropDown'
 import Listagem from '../../components/Atendimentos/Listagem'
 
-function Atendimentos ( props ) {
+function Atendimentos () {
 
+    // variaveis do contexto, disponível em todo o sistema
+    const { state, dispatch } = useDados()
+    // variaveis sobre a visibilidade do menu lateral
+    const { expandido, sempreVisivel } = state.menu
+    // referência do campo de busca para focar automático no ctrl + f
+    const buscaRef = useRef( null )
+    // busca nos atendimentos
     const [ busca, setBusca ] = useState( '' )
-    //variaveis de buscas do database
-    const [ clientes, setClientes ] = useState( {} )
-    const [ atendimentos, setAtendimentos ] = useState( { 'Tecnicos': {} } )
+    // atendimentos disponíveis no contexto
+    const { atendimentos } = state
+    //  array de atendimentos filtrados pelo campo de busca, item loca, não interfere no contexto
     const [ atendimentosFiltrados, setAtendimentosFiltrados ] = useState( { 'Tecnicos': {} } )
 
     useEffect( () => {
-        getDatabaseData()
+        // adiciona os listeners do ctrl + f
+        window.addEventListener( 'keydown', e => {
+            // se os inputs ainda não estiverem criados não faz nada
+            if ( !buscaRef || !buscaRef.current ) return
+            // adiciona focus ao input de busca
+            if ( e.ctrlKey && e.key === 'f' ) {
+                buscaRef.current.focus()
+                e.preventDefault()
+            }
+        } )
+
+        solicitarDados()
     }, [] )
 
-    //quando for alterado o campo de busca, o sistema mostrará os dados correspondentes
-    //se a busca for valida, irá filtrar localmente os dados
-    //se limpar a busca, irá buscar novamente os dados no servidor
+    // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database ou busca local
     useEffect( () => {
-        if ( busca !== '' ) setAtendimentosFiltrados( filtrarAtendimentosPorBusca() )
-        if ( busca === '' ) setAtendimentosFiltrados( atendimentos )
+
+        // primeiro busca localmente, se não encontrar nenhuma correspondência então passa para a busca no database
+        // busca por nome de cliente, data ou palavra chave
+        if ( busca === '' ) return setAtendimentosFiltrados( atendimentos )
+        setAtendimentosFiltrados( filtrarAtendimentosPorBusca() )
     }, [ busca, atendimentos ] )
 
-    async function getDatabaseData () {
-        let dbAtendimentos = await axios.get( '/api/getatendimentos' )
-        setAtendimentos( dbAtendimentos.data )
-        props.setLoad( false )
+    function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function setAtendimentos ( dados ) {
+        dispatch( { type: 'setAtendimentos', payload: dados } )
+    }
+
+    async function solicitarDados () {
+
+        setLoad( true )
+        Database.getAtendimentos( busca ).then( res => {
+            setAtendimentos( res.data )
+            // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
+            setTimeout( () => {
+                setLoad( false )
+            }, 200 )
+        } ).catch( err => {
+            setLoad( false )
+            Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
+            console.error( err )
+        } )
     }
 
     function filtrarAtendimentosPorBusca () {
@@ -85,21 +127,23 @@ function Atendimentos ( props ) {
     }
 
     return (
-        <S.Container expanded={ props.expanded } desktop={ props.desktop }>
-            <Header { ...props }>
-                <DropDown { ...{ busca, setBusca } } />
-            </Header>
-            <S.View>
-                {//lista primeiro os em aberto
-                    <Listagem tecnico={ 'Em aberto' } expandido={ true } atendimentos={ atendimentosFiltrados[ 'Em aberto' ] } /> }
+        <MainFrame>
+            <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
+                <Header >
+                    <DropDown { ...{ busca, setBusca, buscaRef } } />
+                </Header>
+                <S.View>
+                    {//lista primeiro os em aberto
+                        <Listagem tecnico={ 'Em aberto' } expandido={ true } atendimentos={ atendimentosFiltrados[ 'Em aberto' ] } /> }
 
-                { Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).map( tecnico =>
-                    <Listagem key={ tecnico } tecnico={ tecnico } expandido={ true } draggable={ true } atendimentos={ atendimentosFiltrados[ 'Tecnicos' ][ tecnico ] } /> ) }
+                    { Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).map( tecnico =>
+                        <Listagem key={ tecnico } tecnico={ tecnico } expandido={ true } draggable={ true } atendimentos={ atendimentosFiltrados[ 'Tecnicos' ][ tecnico ] } /> ) }
 
-                {//por fim lista os feitos
-                    <Listagem tecnico={ 'Feitos' } feitos={ true } atendimentos={ atendimentosFiltrados[ 'Feitos' ] } /> }
-            </S.View>
-        </S.Container>
+                    {//por fim lista os feitos
+                        <Listagem tecnico={ 'Feitos' } feitos={ true } atendimentos={ atendimentosFiltrados[ 'Feitos' ] } /> }
+                </S.View>
+            </S.Container>
+        </MainFrame>
     )
 }
 

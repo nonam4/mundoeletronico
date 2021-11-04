@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDados } from '../../contexts/DadosContext'
-import axios from 'axios'
 import packageInfo from '../../package.json'
 
 import * as S from './styles'
@@ -27,7 +26,7 @@ function Impressoras () {
     const [ terminaEm, setTerminaEm ] = useState( 24 )
     // cadastros disponíveis no contexto, 
     const { cadastros } = state
-    // array de cadastros filtrados pelo campo de busca, item loca, não interfere no contexto
+    // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
     // variável de controle do cliente que está expandido
     const [ cadastroExpandido, setCadastroExpandido ] = useState( undefined )

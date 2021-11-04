@@ -13,12 +13,13 @@ function DropDown ( props ) {
     const filtroPadrao = { listando: 'todos', data: getDatas()[ 0 ].value, busca: '' }
     // ultimo filtro aplicado com sucesso
     const [ ultimoFiltroUsado, setUltimoFiltroUsado ] = useState( filtroPadrao )
-    // usado para definir se irá mostrar o botão de aplicar filtros
+    // novo filtro alterado pelo usuario
     const [ novoFiltroUsado, setNovoFiltroUsado ] = useState( filtroPadrao )
     // usado para definir se irá mostrar a bolinha indicadora de filtro
     const [ usandoFiltro, setUsandoFiltro ] = useState( false )
     // usado para definir de volta a data atual no select de datas
     const [ usandoFiltroPadrao, setUsandoFiltroPadrao ] = useState( false )
+    // controle do foco da busca pelo ctrl f
     const [ focus, setFocus ] = useState( false )
 
     const listagens = [ {
@@ -78,8 +79,7 @@ function DropDown ( props ) {
     }
 
     function mostrarBotaoAplicar () {
-        if ( JSON.stringify( novoFiltroUsado ) !== JSON.stringify( ultimoFiltroUsado ) ) return true
-        return false
+        return JSON.stringify( novoFiltroUsado ) !== JSON.stringify( ultimoFiltroUsado )
     }
 
     return (

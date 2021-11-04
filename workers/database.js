@@ -17,6 +17,10 @@ export async function salvarExpandido ( usuario, alterado ) {
     return await axios.post( '/api/salvarcliente', { usuario, cliente: alterado } )
 }
 
+export async function getAtendimentos ( busca ) {
+    return await axios.get( '/api/getatendimentos', { params: { busca } } )
+}
+
 export function getDatas () {
     let datas = []
     let data = new Date()

@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer } from 'react'
 
 const initialData = {
     cadastros: {},
-    atendimentos: {},
+    atendimentos: { 'Tecnicos': {} },
     load: true,
     usuario: undefined,
     tema: undefined,
