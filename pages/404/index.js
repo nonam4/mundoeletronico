@@ -8,7 +8,7 @@ import * as S from './styles'
 
 function NotFound () {
     const { colors } = useContext( ThemeContext )
-    const { state, dispatch } = useDados()
+    const { dispatch } = useDados()
     const router = useRouter()
 
     useEffect( () => {
