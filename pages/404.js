@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
 import { useEffect, useContext } from 'react'
-import { useDados } from '../../contexts/DadosContext'
+import { useDados } from '../contexts/DadosContext'
 import { useRouter } from 'next/router'
 
-import * as S from './styles'
+import * as S from '../styles/404'
 
 function NotFound () {
     const { colors } = useContext( ThemeContext )

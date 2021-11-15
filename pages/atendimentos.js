@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDados } from '../../contexts/DadosContext'
+import { useDados } from '../contexts/DadosContext'
 
-import * as S from './styles'
+import * as S from '../styles/atendimentos'
 
-import * as Database from '../../workers/database'
+import * as Database from '../workers/database'
 
-import MainFrame from '../../components/MainFrame'
-import Header from '../../components/Header'
-import DropDown from '../../components/Atendimentos/DropDown'
-import Listagem from '../../components/Atendimentos/Listagem'
+import MainFrame from '../components/MainFrame'
+import Header from '../components/Header'
+import DropDown from '../components/Atendimentos/DropDown'
+import Listagem from '../components/Atendimentos/Listagem'
 
 function Atendimentos () {
 

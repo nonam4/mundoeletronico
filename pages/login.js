@@ -2,17 +2,17 @@ import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
 import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useDados } from '../../contexts/DadosContext'
+import { useDados } from '../contexts/DadosContext'
 
-import TextField from '../../components/Inputs/TextField'
-import Checkbox from '../../components/Inputs/Checkbox'
-import Button from '../../components/Inputs/Button'
+import TextField from '../components/Inputs/TextField'
+import Checkbox from '../components/Inputs/Checkbox'
+import Button from '../components/Inputs/Button'
 
-import usePersistedState from '../../hooks/usePersistedState'
+import usePersistedState from '../hooks/usePersistedState'
 
-import * as Notification from '../../workers/notification'
-import * as Database from '../../workers/database'
-import * as S from './styles'
+import * as Notification from '../workers/notification'
+import * as Database from '../workers/database'
+import * as S from '../styles/login'
 
 function Login () {
     const { colors } = useContext( ThemeContext )

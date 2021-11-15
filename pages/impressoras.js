@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDados } from '../../contexts/DadosContext'
-import packageInfo from '../../package.json'
+import { useDados } from '../contexts/DadosContext'
+import packageInfo from '../package.json'
 import { useRouter } from 'next/router'
 
-import * as S from './styles'
+import * as S from '../styles/impressoras'
 
-import * as Notification from '../../workers/notification'
-import * as Database from '../../workers/database'
+import * as Notification from '../workers/notification'
+import * as Database from '../workers/database'
 
-import MainFrame from '../../components/MainFrame'
-import Header from '../../components/Header'
-import DropDown from '../../components/Impressoras/DropDown'
-import Resumo from '../../components/Impressoras/Resumo'
+import MainFrame from '../components/MainFrame'
+import Header from '../components/Header'
+import DropDown from '../components/Impressoras/DropDown'
+import Resumo from '../components/Impressoras/Resumo'
 
 function Impressoras () {
     // variaveis do contexto, disponível em todo o sistema
