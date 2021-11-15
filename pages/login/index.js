@@ -14,7 +14,7 @@ import * as Notification from '../../workers/notification'
 import * as Database from '../../workers/database'
 import * as S from './styles'
 
-function Username () {
+function Login () {
     const router = useRouter()
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useDados()
@@ -127,4 +127,4 @@ function TextContainer ( props ) {
     )
 }
 
-export default Username
+export default Login
