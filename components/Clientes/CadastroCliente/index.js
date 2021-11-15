@@ -82,7 +82,6 @@ function Expandido () {
 
         // se esse componente estiver em stack em cima de outro componente
         // fecha esse componente e volta pro anterior
-        console.log( router.query )
         if ( router.query.stack !== 'cadastrocliente' && router.query.stack1 === 'cadastrocliente' )
             return setTimeout( () => {
                 router.push( {
