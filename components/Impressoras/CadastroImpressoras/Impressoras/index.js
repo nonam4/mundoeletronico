@@ -5,12 +5,12 @@ import { useDados } from '../../../../contexts/DadosContext'
 import MenuIcon from '../../../Icons/MenuIcon'
 import TextField from '../../../Inputs/SimpleTextField'
 import Select from '../../../Inputs/Select'
-import { Botao } from '../../Expandido/styles'
+import { Botao } from '../styles'
 
 import * as S from './styles'
 
 function Impressoras ( props ) {
-    const { state, dispatch } = useDados()
+    const { state } = useDados()
     const { colors } = useContext( ThemeContext )
     const capacidades = [ { label: 'Não controlado', value: 'ilimitado' }, { label: '2000 págs', value: '2000' }, { label: '5000 págs', value: '5000' },
     { label: '10000 págs', value: '10000' }, { label: '15000 págs', value: '15000' }, { label: '20000 págs', value: '20000' } ]

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-    width: 100%;
+    width: ${ ( { sempreVisivel } ) => sempreVisivel ? 'calc(100% - 250px)' : '100%' };
     height: calc(100% - 60px);
     position: absolute;
     top: 60px;
@@ -9,8 +9,10 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 0.8rem 0 0 0.8rem;
-    opacity: ${ ( { show } ) => show ? 1 : 0 };
     background-color: ${ ( { theme } ) => theme.colors.background };
+    :hover {
+        z-index: 2;
+    }
 `
 export const Botoes = styled.div`
     width: 100%;

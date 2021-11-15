@@ -13,7 +13,7 @@ export async function getImpressoras ( filtros ) {
     return await axios.get( '/api/getimpressoras', { params: { filtros: filtros || defaults } } )
 }
 
-export async function salvarExpandido ( usuario, alterado ) {
+export async function salvarCadastro ( usuario, alterado ) {
     return await axios.post( '/api/salvarcliente', { usuario, cliente: alterado } )
 }
 

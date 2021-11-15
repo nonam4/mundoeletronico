@@ -33,6 +33,7 @@ export const Container = styled.div`
     border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
     align-items: center;
     padding-top: 60px;
+    z-index: 3;
 `
 export const Footer = styled.div`
     width: 100%;

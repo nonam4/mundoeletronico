@@ -19,10 +19,12 @@ export const Dropdown = styled.div`
     border-radius: 50%;
     cursor: pointer;
     position: relative;
+    transition-delay: 1s;
     ${ ( { forceShow } ) => forceShow && css`
         div:first-of-type {
             opacity: 1;
             z-index: 1;
+            pointer-events: auto;
         }
         span {
             border-bottom: solid 2px ${ ( { theme } ) => theme.colors.hover };
@@ -40,6 +42,7 @@ export const Dropdown = styled.div`
         div:first-of-type {
             opacity: 1;
             z-index: 1;
+            pointer-events: auto;
         }
         span {
             border-bottom: solid 2px ${ ( { theme } ) => theme.colors.hover };
@@ -82,6 +85,7 @@ export const Foto = styled.img`
     border-radius: 50%;
 `
 export const Settings = styled.div`
+    pointer-events: none;
     opacity: 0;
     z-index: -1;
     display: flex;
@@ -108,6 +112,7 @@ export const SettingsItem = styled.div`
     cursor: pointer;
     line-height: 40px;
     padding: 0 1rem 0 1.5rem;
+    pointer-events: inherit;
     :hover {
         border-left: solid 5px ${ ( { theme } ) => theme.colors.hover };
         background: ${ ( { theme } ) => theme.colors.highlight };

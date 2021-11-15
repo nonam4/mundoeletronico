@@ -10,8 +10,7 @@ import * as S from './styles'
 function SideMenu () {
     const { state, dispatch } = useDados()
     const router = useRouter()
-    const [ expandido, setExpandido ] = useState( false )
-    const [ sempreVisivel, setSempreVisivel ] = useState( false )
+    let { expandido, sempreVisivel } = state.menu
 
     const pages = {
         impressoras: {
@@ -30,23 +29,28 @@ function SideMenu () {
 
     // monitora redimensionamentos da tela
     useEffect( () => {
-        function handleResize () { setSempreVisivel( window.innerWidth > 833 ) }
+        function handleResize () {
+            if ( window.innerWidth > 833 ) {
+                setMenu( true, true )
+            }
+            if ( window.innerWidth < 834 ) {
+                setMenu( false, false )
+            }
+        }
 
         // define se o menu está expandido ao iniciar o aplicativo
-        setExpandido( window.innerWidth > 833 )
         handleResize()
         window.addEventListener( 'resize', handleResize )
-
         return () => window.removeEventListener( 'resize', handleResize )
     }, [] )
 
-    useEffect( () => {
-        if ( sempreVisivel ) setExpandido( true )
-        if ( !sempreVisivel && expandido ) setExpandido( false )
-    }, [ sempreVisivel ] )
-
     function toggleLoad () {
         dispatch( { type: 'setLoad', payload: !state.load } )
+    }
+
+    function setMenu ( a, b ) {
+        if ( typeof a !== 'boolean' || typeof b !== 'boolean' ) throw new Error( 'Valor para "Menu" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setMenu', payload: { expandido: a, sempreVisivel: b } } )
     }
 
     function trocarListagem ( listagem ) {
@@ -73,15 +77,18 @@ function SideMenu () {
     }
 
     function active ( item ) {
+        if ( item === 'impressoras' && router.query.stack === 'cadastroimpressoras' ) return true
+        if ( router.query.stack ) return item == router.query.stack
         return item == router.pathname.replace( '/', '' )
     }
 
     return (
         <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
             { !sempreVisivel &&
-                <S.Expansor expandido={ expandido } onClick={ () => setExpandido( !expandido ) } >
+                <S.Expansor expandido={ expandido } onClick={ () => setMenu( !expandido, sempreVisivel ) } >
                     <MenuIcon size={ '18' } margin={ '0' } title={ 'Expandir/Recolher' } name={ expandido ? 'arrow_lft' : 'arrow_rgt' } />
-                </S.Expansor> }
+                </S.Expansor>
+            }
 
             <S.Actions>
                 <S.MenuSection>

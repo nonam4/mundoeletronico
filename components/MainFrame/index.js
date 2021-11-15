@@ -1,13 +1,14 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
-import { useEffect, useContext, useState } from 'react'
+import { useEffect, useContext } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 import usePersistedState from '../../hooks/usePersistedState'
 
 import SideMenu from '../SideMenu'
 
-import CadastroCliente from '../../pages/cadastrocliente'
+import CadastroCliente from '../Clientes/CadastroCliente'
+import CadastroImpressoras from '../Impressoras/CadastroImpressoras'
 
 export default function Index ( { children } ) {
     const { colors } = useContext( ThemeContext )
@@ -16,7 +17,8 @@ export default function Index ( { children } ) {
     const { state, dispatch } = useDados()
 
     const stack = {
-        cadastrocliente: <CadastroCliente />
+        cadastrocliente: <CadastroCliente />,
+        cadastroimpressoras: <CadastroImpressoras />
     }
 
     useEffect( () => {
@@ -62,6 +64,7 @@ export default function Index ( { children } ) {
             { state.usuario && state.autenticado && <>
                 { children }
                 { router.query.stack && stack[ router.query.stack ] }
+                { router.query.stack1 && stack[ router.query.stack1 ] }
                 <SideMenu />
             </> }
         </>

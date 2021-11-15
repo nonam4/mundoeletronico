@@ -12,7 +12,6 @@ import MainFrame from '../../components/MainFrame'
 import Header from '../../components/Header'
 import DropDown from '../../components/Impressoras/DropDown'
 import Resumo from '../../components/Impressoras/Resumo'
-import Expandido from '../../components/Impressoras/Expandido'
 
 function Impressoras () {
     // variaveis do contexto, disponível em todo o sistema
@@ -30,8 +29,6 @@ function Impressoras () {
     const { cadastros } = state
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
-    // variável de controle do cliente que está expandido
-    const [ cadastroExpandido, setCadastroExpandido ] = useState( undefined )
     // variável de controle de visibilidade do componente
     const [ show, setShow ] = useState( true )
 
@@ -61,6 +58,19 @@ function Impressoras () {
         // definir o numero de interfaces na tela de volta para o padrão
         setTerminaEm( 24 )
 
+        // se a data dos filtros mudar e o cadastro de impressoras estiver em stack, atualiza a url
+        if ( router.query.data !== filtros.data && router.query.stack ) {
+            let paginaAtual = router.pathname.replace( '/', '' )
+            router.push( {
+                pathname: paginaAtual,
+                query: {
+                    id: router.query.id,
+                    stack: 'cadastroimpressora',
+                    data: filtros.data,
+                }
+            } )
+        }
+
         // se a busca estiver vazia vai definir os cadastros filtrados com os dados do contexto
         if ( filtros.busca === '' ) return setCadastrosFiltrados( cadastros )
 
@@ -71,11 +81,15 @@ function Impressoras () {
     // controla se o componente será visiível ou não caso tenha uma página em stack
     useEffect( () => {
         setLoad( false )
+        // se o stack for o 'cadastroimpressoras' não esconde os itens de baixo
+        // pois o 'cadastroimpressoras' precisa do header de página de impressoras 
+        if ( router.query.stack === 'cadastroimpressoras' ) return
+
+        // caso contrário esconde normalmente
         if ( !router.query.stack && document.activeElement ) document.activeElement.blur()
 
         !router.query.stack ? setShow( true ) : setShow( false )
-        !router.query.stack ? setShow( true ) : setShow( false )
-    }, [ !router.query.stack ] )
+    }, [ router.query.stack ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -160,26 +174,6 @@ function Impressoras () {
         if ( final && a > b && a != b ) setTerminaEm( b )
     }
 
-    function salvarExpandido ( alterado ) {
-        let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
-
-        Database.salvarExpandido( state.usuario, alterado ).then( () => {
-
-            Notification.removeNotification( aviso )
-            Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
-            // depois que salvou atualiza os dados localmente
-            setCadastros( { ...cadastros, [ alterado.id ]: alterado } )
-        } ).catch( err => {
-            Notification.removeNotification( aviso )
-            console.error( err )
-            Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
-        } )
-    }
-
-    function fecharExpandido () {
-        setCadastroExpandido( undefined )
-    }
-
     function renderViews () {
         let views = []
 
@@ -188,9 +182,14 @@ function Impressoras () {
         for ( let x = 0; x < terminaEm; x++ ) {
             let id = Object.keys( cadastrosFiltrados )[ x ]
             if ( !id ) break
-            views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], setCadastroExpandido, version: packageInfo.version } } /> )
+            views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], filtros, version: packageInfo.version } } /> )
         }
         return views
+    }
+
+    function showView () {
+        if ( router.query.stack !== 'cadastroimpressoras' || !router.query.stack ) return true
+        return false
     }
 
     return (
@@ -199,8 +198,7 @@ function Impressoras () {
                 <Header >
                     <DropDown { ...{ filtros, setFiltros, buscaRef } } />
                 </Header>
-                <S.View onScroll={ e => rolarTela( e ) }> { renderViews() } </S.View>
-                { cadastroExpandido && <Expandido { ...{ expandido: cadastros[ cadastroExpandido ], cadastros, filtros, fecharExpandido, salvarExpandido } } /> }
+                <S.View show={ showView() } onScroll={ e => rolarTela( e ) }> { renderViews() } </S.View>
             </S.Container>
         </MainFrame>
 

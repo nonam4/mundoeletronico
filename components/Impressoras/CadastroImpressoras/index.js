@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext, memo } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useDados } from '../../../contexts/DadosContext'
 import { ThemeContext } from 'styled-components'
+import { useRouter } from 'next/router'
 
 import set from 'lodash/fp/set'
 
@@ -11,17 +12,23 @@ import TextField from '../../Inputs/SimpleTextField'
 import Impressoras from './Impressoras'
 
 import * as S from './styles'
+import * as Database from '../../../workers/database'
+import * as Notification from '../../../workers/notification'
 
-function Expandido ( props ) {
+function Expandido () {
 
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useDados()
-    const { expandido, cadastros, filtros } = props
+    const router = useRouter()
 
-    //valor padrão do select de tipo de franquias
+    // pega os filtros passados pela URL
+    const [ filtros, setFiltros ] = useState( undefined )
+    // variaveis sobre a visibilidade do menu lateral
+    const { menuExpandido, sempreVisivel } = state.menu
+    // armazena os dados do cadastro expandido
+    const [ expandido, setExpandido ] = useState( undefined )
+    // valor padrão do select de tipo de franquias
     const franquias = [ { label: 'Ilimitada', value: 'ilimitado' }, { label: 'Por página', value: 'pagina' }, { label: 'Por máquina', value: 'maquina' } ]
-    // define se o container está visivível ou não, para uma transição suave
-    const [ show, setShow ] = useState( false )
     // decide se irá aparecer o botão para desfazer todas as alterações feitas
     const [ rollback, setRollback ] = useState( false )
     // variável local, sem referência à variável do contexto
@@ -34,22 +41,27 @@ function Expandido ( props ) {
     const [ vpe, setVpe ] = useState( 'R$ 0,00' )
 
     useEffect( () => {
-        setShow( true )
-    }, [] )
+        setLoad( false )
+    }, [ router.query ] )
 
     useEffect( () => {
-        if ( !expandido ) return
-        // toda vez que o valor dos props for alterado irá definir o cadastro local
+        if ( !router.query.id ) return
+        setFiltros( { data: router.query.data } )
+        setExpandido( state.cadastros[ router.query.id ] )
+    }, [ router.query.data, router.query.id ] )
+
+    useEffect( () => {
+        // toda vez que o valor do expandido for alterado irá definir o cadastro local
         // transforma em string e retransforma para json para criar uma cópia sem referência
+        if ( !expandido ) return
         setCadastro( JSON.parse( JSON.stringify( expandido ) ) )
-    }, [ props.expandido ] )
+    }, [ expandido ] )
 
     useEffect( () => {
         if ( !cadastro ) return
         setFranquiaPagina( cadastro.franquia.tipo === 'pagina' ? true : false )
         setValorFranquiaPagina( `${ cadastro.franquia.limite } págs` )
         setVpe( cadastro.franquia.vpe === 0 ? 'R$ 0,00' : `R$ ${ String( cadastro.franquia.vpe ).replace( '.', ',' ) }` )
-
     }, [ cadastro ] )
 
     useEffect( () => {
@@ -58,16 +70,57 @@ function Expandido ( props ) {
         setRollback( false )
     }, [ rollback ] )
 
+    function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function setCadastros ( dados ) {
+        dispatch( { type: 'setCadastros', payload: dados } )
+    }
+
+    function editarCadastro ( editado ) {
+        let paginaAtual = router.pathname.replace( '/', '' )
+
+        setLoad( true )
+        setTimeout( () => {
+            router.push( {
+                pathname: paginaAtual,
+                query: {
+                    stack: router.query.stack,
+                    stack1: 'cadastrocliente',
+                    id: editado.id,
+                    data: router.query.data,
+                }
+            } )
+        }, 200 )
+    }
+
     function salvar () {
-        props.salvarExpandido( cadastro )
+        let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
+
+        Database.salvarCadastro( state.usuario, alterado ).then( () => {
+
+            Notification.removeNotification( aviso )
+            Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
+            // depois que salvou atualiza os dados localmente
+            setCadastros( { ...state.cadastros, [ alterado.id ]: alterado } )
+        } ).catch( err => {
+            Notification.removeNotification( aviso )
+            console.error( err )
+            Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
+        } )
+
         fechar()
     }
 
     function fechar () {
-        setShow( false )
+        let paginaAtual = router.pathname.replace( '/', '' )
+        setLoad( true )
+
         setTimeout( () => {
-            props.fecharExpandido()
-        }, 300 )
+            router.push( paginaAtual )
+        }, [ 200 ] )
     }
 
     function gerarRelatorio () {
@@ -285,12 +338,12 @@ function Expandido ( props ) {
     }
 
     return (
-        <S.Container show={ show }>
+        <S.Container expandido={ menuExpandido } sempreVisivel={ sempreVisivel }>
             { cadastro && <>
                 <S.Botoes>
                     { compareParentData() && <S.Botao onClick={ () => setRollback( true ) } hover={ colors.azul } title='Desfazer'> <MenuIcon name='desfazer' margin='0.8' /> </S.Botao> }
                     <S.Botao onClick={ () => gerarRelatorio() } hover={ colors.azul } title='Gerar Relatório'> <MenuIcon name='relatorio' margin='0.8' /> </S.Botao>
-                    <S.Botao onClick={ () => { console.log( 'editando' ) } } hover={ colors.azul } title='Editar Cliente'> <MenuIcon name='usuario_editar' margin='0.8' /> </S.Botao>
+                    <S.Botao onClick={ () => editarCadastro( cadastro ) } hover={ colors.azul } title='Editar Cliente'> <MenuIcon name='usuario_editar' margin='0.8' /> </S.Botao>
                     { compareParentData() && <S.Botao onClick={ () => salvar() } hover={ colors.azul } title='Salvar/Fechar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
                     <S.Botao onClick={ () => fechar() } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
                 </S.Botoes>
@@ -349,4 +402,4 @@ function Expandido ( props ) {
     )
 }
 
-export default memo( Expandido )
+export default Expandido

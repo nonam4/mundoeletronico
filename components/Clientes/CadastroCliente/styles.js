@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-    width: 100%;
+    width: ${ ( { sempreVisivel } ) => sempreVisivel ? 'calc(100% - 250px)' : '100%' }; 
     height: 100%;
-    margin-left: ${ ( { expanded, desktop } ) => desktop ? '0px' : expanded ? '-250px' : '0px' };
-    position: relative;
+    position: absolute;
+    background-color: ${ ( { theme } ) => theme.colors.background };
+    z-index: 3;
 `
 export const View = styled.div`
     width: 100%;

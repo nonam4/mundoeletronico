@@ -5,10 +5,10 @@ export const Container = styled.div`
     height: 100%;
     margin-left: ${ ( { expandido, sempreVisivel } ) => sempreVisivel ? '0px' : expandido ? '-250px' : '0px' };
     position: relative;
-    opacity: ${ ( { show } ) => show ? '1' : '0' };
-    z-index: ${ ( { show } ) => show ? '1' : '-1' };
 `
 export const View = styled.div`
+    opacity: ${ ( { show } ) => show ? '1' : '0' };
+    pointer-events: ${ ( { show } ) => show ? 'auto' : 'none' };
     width: 100%;
     height: fit-content;
     max-height: calc( 100% - 60px );

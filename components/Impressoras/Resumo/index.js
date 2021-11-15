@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useDados } from '../../../contexts/DadosContext'
 import { ThemeContext } from 'styled-components'
 
 import * as S from './styles'
@@ -8,12 +9,13 @@ import Icon from '../../../components/Icons/MenuIcon'
 
 function ClienteResumo ( props ) {
     const router = useRouter()
+    const { dispatch } = useDados()
     const { colors } = useContext( ThemeContext )
     const [ hoverColor, setHoverColor ] = useState( colors.azul )
     const [ iconName, setIconName ] = useState( 'status_ok' )
     const [ iconTitle, setIconTitle ] = useState( 'Tudo Ok!' )
 
-    const { cadastro } = props
+    const { cadastro, filtros } = props
 
     useEffect( () => {
         if ( cadastro.sistema.versao === 'N/I' ) {
@@ -43,8 +45,24 @@ function ClienteResumo ( props ) {
         }
     }, [ props.cadastro ] )
 
+    function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setLoad', payload: valor } )
+    }
+
     function expandirCadastro ( id ) {
-        props.setCadastroExpandido( id )
+        let paginaAtual = router.pathname.replace( '/', '' )
+        setLoad( true )
+
+        setTimeout( () => {
+            router.push( {
+                pathname: paginaAtual,
+                query: {
+                    id, stack: 'cadastroimpressoras',
+                    data: filtros.data,
+                }
+            } )
+        }, 200 )
     }
 
     return (

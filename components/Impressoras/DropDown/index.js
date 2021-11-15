@@ -104,8 +104,8 @@ function DropDown ( props ) {
                     </S.FilterItem>
                     <Select options={ listagens } onChange={ handleListagemChange } />
                 </S.FilterOption>
-                <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarFiltrosPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
                 <H.SettingsItem show={ mostrarBotaoAplicar() } onClick={ () => aplicarNovoFiltro() }> <Icon name={ 'aplicar' } /> Aplicar Filtros </H.SettingsItem>
+                <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarFiltrosPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
             </H.Settings>
         </H.Dropdown>
     )
