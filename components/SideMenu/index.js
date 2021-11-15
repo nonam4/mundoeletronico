@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { router } from 'next'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import packageInfo from '../../package.json'
 import { useDados } from '../../contexts/DadosContext'
@@ -7,10 +7,26 @@ import { useDados } from '../../contexts/DadosContext'
 import MenuIcon from '../Icons/MenuIcon'
 import * as S from './styles'
 
-function SideMenu ( props ) {
+function SideMenu () {
     const { state, dispatch } = useDados()
+    const router = useRouter()
     const [ expandido, setExpandido ] = useState( false )
     const [ sempreVisivel, setSempreVisivel ] = useState( false )
+
+    const pages = {
+        impressoras: {
+            stack: false,
+            url: 'impressoras'
+        },
+        atendimentos: {
+            stack: false,
+            url: 'atendimentos'
+        },
+        cadastrocliente: {
+            stack: true,
+            url: 'cadastrocliente'
+        }
+    }
 
     // monitora redimensionamentos da tela
     useEffect( () => {
@@ -35,15 +51,25 @@ function SideMenu ( props ) {
 
     function trocarListagem ( listagem ) {
 
+        let paginaAtual = router.pathname.replace( '/', '' )
         toggleLoad()
-        setTimeout( () => {
-            router.push( listagem )
-        }, [ 200 ] )
-    }
+        // se a nova página desejada for empilhavel, mantém a mesma url e define uma query com a página em stack
+        // se a página nova não for empilhavel muda a url para ela
+        if ( listagem.stack ) {
 
-    function resetarCadastro ( listagem ) {
-        //props.setEditarCadastro(false)
-        trocarListagem( listagem )
+            setTimeout( () => {
+                router.push( {
+                    pathname: paginaAtual,
+                    query: {
+                        stack: listagem.url
+                    }
+                } )
+            }, [ 200 ] )
+        } else {
+            setTimeout( () => {
+                router.push( listagem.url )
+            }, [ 200 ] )
+        }
     }
 
     function active ( item ) {
@@ -66,12 +92,12 @@ function SideMenu ( props ) {
                 <S.MenuSection>
                     <S.MenuTitle>CLIENTES/FORNECEDORES</S.MenuTitle>
                     <S.MenuItem> <MenuIcon name={ 'usuario_listar' } /> Listar </S.MenuItem>
-                    <S.MenuItem active={ active( 'clientes' ) } onClick={ !active( 'clientes' ) ? () => resetarCadastro( 'clientes' ) : () => { } }> <MenuIcon name={ 'usuario_adicionar' } /> { props.editarCadastro && active( 'clientes' ) ? 'Editar Cadastro' : 'Cadastrar' } </S.MenuItem>
+                    <S.MenuItem active={ active( 'cadastrocliente' ) } onClick={ !active( 'cadastrocliente' ) ? () => trocarListagem( pages.cadastrocliente ) : () => { } }> <MenuIcon name={ 'usuario_adicionar' } /> Cadastro </S.MenuItem>
                 </S.MenuSection>
                 <S.MenuSection>
                     <S.MenuTitle>LOCAÇÃO</S.MenuTitle>
-                    <S.MenuItem active={ active( 'impressoras' ) } onClick={ !active( 'impressoras' ) ? () => trocarListagem( 'impressoras' ) : () => { } }> <MenuIcon name={ 'status_nenhuma' } /> Listar Impressoras </S.MenuItem>
-                    <S.MenuItem active={ active( 'atendimentos' ) } onClick={ !active( 'atendimentos' ) ? () => trocarListagem( 'atendimentos' ) : () => { } }> <MenuIcon name={ 'atendimento_listar' } /> Listar Atendimentos </S.MenuItem>
+                    <S.MenuItem active={ active( 'impressoras' ) } onClick={ !active( 'impressoras' ) ? () => trocarListagem( pages.impressoras ) : () => { } }> <MenuIcon name={ 'status_nenhuma' } /> Listar Impressoras </S.MenuItem>
+                    <S.MenuItem active={ active( 'atendimentos' ) } onClick={ !active( 'atendimentos' ) ? () => trocarListagem( pages.atendimentos ) : () => { } }> <MenuIcon name={ 'atendimento_listar' } /> Listar Atendimentos </S.MenuItem>
                     <S.MenuItem> <MenuIcon name={ 'atendimento_adicionar' } /> Novo Atendimento </S.MenuItem>
                 </S.MenuSection>
             </S.Actions>

@@ -45,8 +45,6 @@ function View ( { children } ) {
         if ( state.tema.title !== '' && state.tema.title != theme.title ) setTheme( state.tema )
     }, [ state.tema ] )
 
-
-
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />

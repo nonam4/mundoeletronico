@@ -1,16 +1,23 @@
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { ThemeContext } from 'styled-components'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 import usePersistedState from '../../hooks/usePersistedState'
 
 import SideMenu from '../SideMenu'
 
+import CadastroCliente from '../../pages/cadastrocliente'
+
 export default function Index ( { children } ) {
     const { colors } = useContext( ThemeContext )
+    const router = useRouter()
     const [ usuario, setUsuario ] = usePersistedState( 'usuario', undefined )
     const { state, dispatch } = useDados()
+
+    const stack = {
+        cadastrocliente: <CadastroCliente />
+    }
 
     useEffect( () => {
         // inicialmente o usuário será undefined então espera o proximo ciclo
@@ -20,7 +27,7 @@ export default function Index ( { children } ) {
         if ( !usuario ) return router.replace( '/login' )
 
         // se não estiver autenticado mas tem usuário salvo tente login automático
-        if ( usuario && !state.autenticado ) return router.replace( '/login?fallback=impressoras' )
+        if ( usuario && !state.autenticado ) return router.replace( `/login?fallback=${ router.pathname.replace( '/', '' ) }` )
 
         // se estiver autenticado e salvo, prepare o app
         if ( usuario && state.autenticado ) return prepararApp()
@@ -42,7 +49,6 @@ export default function Index ( { children } ) {
         // primeiro tenta atualizar o usuário nas variáveis de ambiente
         // sempre que precisar buscaremos o login aqui ao invés do localstorage
         dispatch( { type: 'setUsuario', payload: usuario } )
-
         toggleLoad()
     }
 
@@ -55,6 +61,7 @@ export default function Index ( { children } ) {
             </Head>
             { state.usuario && state.autenticado && <>
                 { children }
+                { router.query.stack && stack[ router.query.stack ] }
                 <SideMenu />
             </> }
         </>

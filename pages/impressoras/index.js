@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 import packageInfo from '../../package.json'
+import { useRouter } from 'next/router'
 
 import * as S from './styles'
 
@@ -16,6 +17,7 @@ import Expandido from '../../components/Impressoras/Expandido'
 function Impressoras () {
     // variaveis do contexto, disponível em todo o sistema
     const { state, dispatch } = useDados()
+    const router = useRouter()
     // variaveis sobre a visibilidade do menu lateral
     const { expandido, sempreVisivel } = state.menu
     // referência do campo de busca para focar automático no ctrl + f
@@ -30,6 +32,8 @@ function Impressoras () {
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
     // variável de controle do cliente que está expandido
     const [ cadastroExpandido, setCadastroExpandido ] = useState( undefined )
+    // variável de controle de visibilidade do componente
+    const [ show, setShow ] = useState( true )
 
     useEffect( () => {
         // adiciona os listeners do ctrl + f
@@ -63,6 +67,15 @@ function Impressoras () {
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
     }, [ filtros.busca, cadastros ] )
+
+    // controla se o componente será visiível ou não caso tenha uma página em stack
+    useEffect( () => {
+        setLoad( false )
+        if ( !router.query.stack && document.activeElement ) document.activeElement.blur()
+
+        !router.query.stack ? setShow( true ) : setShow( false )
+        !router.query.stack ? setShow( true ) : setShow( false )
+    }, [ !router.query.stack ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -182,7 +195,7 @@ function Impressoras () {
 
     return (
         <MainFrame>
-            <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
+            <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel } show={ show }>
                 <Header >
                     <DropDown { ...{ filtros, setFiltros, buscaRef } } />
                 </Header>

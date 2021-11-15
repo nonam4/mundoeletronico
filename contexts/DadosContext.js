@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer } from 'react'
 
+
 const initialData = {
     cadastros: {},
     atendimentos: { 'Tecnicos': {} },

@@ -15,8 +15,8 @@ import * as Database from '../../workers/database'
 import * as S from './styles'
 
 function Login () {
-    const router = useRouter()
     const { colors } = useContext( ThemeContext )
+    const router = useRouter()
     const { state, dispatch } = useDados()
     const [ usuario, setUsuario ] = usePersistedState( 'usuario', undefined )
 

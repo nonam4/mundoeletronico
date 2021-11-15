@@ -1,21 +1,30 @@
-import { useState, useEffect, useContext, memo } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { useRouter } from 'next/router'
+import { useDados } from '../../contexts/DadosContext'
 import axios from 'axios'
 import set from 'lodash/fp/set'
 import { ThemeContext } from 'styled-components'
 
-import Header from '../Header'
-import MenuIcon from '../Icons/MenuIcon'
-import Checkbox from '../Inputs/Checkbox'
-import TextField from '../Inputs/TextField'
-import SimpleTextField from '../Inputs/SimpleTextField'
+import Header from '../../components/Header'
+import MenuIcon from '../../components/Icons/MenuIcon'
+import Checkbox from '../../components/Inputs/Checkbox'
+import TextField from '../../components/Inputs/TextField'
+import SimpleTextField from '../../components/Inputs/SimpleTextField'
 
 import * as S from './styles'
 
 function Expandido ( props ) {
+    // variaveis do contexto, disponível em todo o sistema
+    const { state, dispatch } = useDados()
+    const router = useRouter()
+
     const data = new Date()
+
     const [ ultimoHorarioUsado, setUltimoHorarioUsado ] = useState( { 0: '08:00', 1: '12:00', 2: '13:30', 3: '18:00' } )
+
     const dias = [ { nome: 'Segunda', index: 'segunda' }, { nome: 'Terça', index: 'terca' }, { nome: 'Quarta', index: 'quarta' },
     { nome: 'Quinta', index: 'quinta' }, { nome: 'Sexta', index: 'sexta' }, { nome: 'Sábado', index: 'sabado' } ]
+
     const limpo = {
         id: data.getTime(), nomefantasia: '', razaosocial: '', cpfcnpj: '', endereco: {
             rua: '', numero: '', complemento: '', bairro: '', cidade: '', estado: '', cep: ''
@@ -23,17 +32,16 @@ function Expandido ( props ) {
         horarios: { segunda: { aberto: false }, terca: { aberto: false }, quarta: { aberto: false }, quinta: { aberto: false }, sexta: { aberto: false }, sabado: { aberto: false } },
         sistema: { local: window.btoa( 'N/I' ), versao: 'N/I' }
     }
-    //variaveis de controle de interface
+
     const { colors } = useContext( ThemeContext )
+
     const [ rollback, setRollback ] = useState( false )
     const [ cadastros, setCadastros ] = useState( false ) //todos os clientes (usado apenas pelo rollback)
     //valores alteráveis pelo usuário
     const [ cadastro, setCadastro ] = useState( limpo ) //somente o cliente editado
 
     useEffect( () => {
-        props.setLoad( true )
-        setCadastros( props.cadastros )
-        props.setLoad( false )
+        setLoad( false )
     }, [] )
 
     useEffect( () => {
@@ -46,6 +54,20 @@ function Expandido ( props ) {
         setUltimoHorarioUsado( { 0: '08:00', 1: '12:00', 2: '13:30', 3: '18:00' } )
         setRollback( false )
     }, [ rollback, cadastro ] )
+
+    function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function fechar () {
+        let paginaAtual = router.pathname.replace( '/', '' )
+        setLoad( true )
+
+        setTimeout( () => {
+            router.push( paginaAtual )
+        }, [ 200 ] )
+    }
 
     async function salvar () {
         let aviso = props.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
@@ -251,7 +273,7 @@ function Expandido ( props ) {
                 <S.Botoes>
                     { compareParentData() && <S.Botao onClick={ () => setRollback( true ) } hover={ colors.azul } title='Desfazer'> <MenuIcon name='desfazer' margin='0.8' /> </S.Botao> }
                     { compareParentData() && <S.Botao onClick={ () => salvar() } hover={ colors.azul } title='Salvar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
-                    { !cadastro && <S.Botao onClick={ () => { } } hover={ colors.azul } title='Fechar'> <MenuIcon name='status_nenhuma' margin='0.8' /> </S.Botao> }
+                    <S.Botao onClick={ () => { fechar() } } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0.8' /> </S.Botao>
                 </S.Botoes>
                 <S.TituloContainer>
                     <S.Titulo> Dados cadastrais </S.Titulo>
@@ -323,4 +345,4 @@ function Expandido ( props ) {
     )
 }
 
-export default memo( Expandido )
+export default Expandido
