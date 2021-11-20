@@ -103,7 +103,7 @@ function Login () {
             <S.Logo src='/icon.png' />
             <>
                 <TextContainer>
-                    <TextField onChange={ e => setUsername( e.target.value ) } value={ username } placeholder={ 'Usuário' } icon={ 'usuario' } />
+                    <TextField onChange={ e => setUsername( e.target.value.toLowerCase() ) } value={ username } placeholder={ 'Usuário' } icon={ 'usuario' } />
                 </TextContainer>
                 <TextContainer>
                     <TextField onChange={ e => setPassword( e.target.value ) } value={ password } placeholder={ 'Senha' } icon={ 'coletor_chave' } type={ 'password' } />

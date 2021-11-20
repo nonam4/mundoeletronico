@@ -325,27 +325,27 @@ function Expandido () {
 
                 <S.LinhaContainer>
                     <S.LinhaSubContainer>
-                        <S.SubLinha>
+                        <S.SobLinha>
                             <S.Linha> <TextField placeholder={ 'Nome Fantasia' } onChange={ ( e ) => handleInput( e, 'nomefantasia' ) } value={ editado.nomefantasia } icon={ false } maxLength={ 50 } /> </S.Linha>
                             <S.Spacer />
                             <S.Linha minWidth={ '140px' } maxWidth={ '140px' }>
                                 <S.SubTitulo> Tipo </S.SubTitulo>
                                 <Select valor={ editado.tipo } options={ tiposCadastro } onChange={ handleTipoClienteChange } />
                             </S.Linha>
-                        </S.SubLinha>
+                        </S.SobLinha>
                         <S.Linha> <TextField placeholder={ 'Razão Social' } onChange={ ( e ) => handleInput( e, 'razaosocial' ) } value={ editado.razaosocial } icon={ false } maxLength={ 50 } /> </S.Linha>
 
-                        <S.SubLinha>
+                        <S.SobLinha>
                             <S.Linha minWidth={ '140px' } maxWidth={ '140px' }> <TextField placeholder={ 'CPF/CNPJ' } onChange={ ( e ) => formatarCpfcnpj( e, 'cpfcnpj' ) } value={ editado.cpfcnpj } icon={ false } /> </S.Linha>
                             <S.Spacer />
                             <S.Linha> <TextField placeholder={ 'Email' } onChange={ ( e ) => handleInput( e, 'contato.email' ) } value={ editado.contato.email } icon={ false } maxLength={ 50 } /> </S.Linha>
-                        </S.SubLinha>
+                        </S.SobLinha>
 
-                        <S.Linha>
+                        <S.SubLinha>
                             <S.Linha> <TextField placeholder={ 'Telefone' } onChange={ ( e ) => formatarTelefone( e, 'contato.telefone' ) } value={ editado.contato.telefone } icon={ false } /> </S.Linha>
                             <S.Spacer />
                             <S.Linha> <TextField placeholder={ 'Celular' } onChange={ ( e ) => formatarCelular( e, 'contato.celular' ) } value={ editado.contato.celular } icon={ false } /> </S.Linha>
-                        </S.Linha>
+                        </S.SubLinha>
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
 
@@ -355,27 +355,27 @@ function Expandido () {
 
                 <S.LinhaContainer>
                     <S.LinhaSubContainer>
-                        <S.Linha>
+                        <S.SubLinha>
                             <S.Linha> <TextField placeholder={ 'Rua' } onChange={ ( e ) => handleInput( e, 'endereco.rua' ) } value={ editado.endereco.rua } icon={ false } maxLength={ 50 } /> </S.Linha>
                             <S.Spacer />
                             <S.Linha important={ true } minWidth={ '65px' } maxWidth={ '65px' }> <TextField placeholder={ 'Número' } onChange={ ( e ) => formatarNumero( e, 'endereco.numero' ) } value={ editado.endereco.numero } icon={ false } maxLength={ 5 } /> </S.Linha>
-                        </S.Linha>
-
-                        <S.SubLinha>
-                            <S.Linha> <TextField placeholder={ 'Complemento' } onChange={ ( e ) => handleInput( e, 'endereco.complemento' ) } value={ editado.endereco.complemento } icon={ false } maxLength={ 100 } /> </S.Linha>
                         </S.SubLinha>
 
-                        <S.SubLinha>
+                        <S.SobLinha>
+                            <S.Linha> <TextField placeholder={ 'Complemento' } onChange={ ( e ) => handleInput( e, 'endereco.complemento' ) } value={ editado.endereco.complemento } icon={ false } maxLength={ 100 } /> </S.Linha>
+                        </S.SobLinha>
+
+                        <S.SobLinha>
                             <S.Linha> <TextField placeholder={ 'Bairro' } onChange={ ( e ) => handleInput( e, 'endereco.bairro' ) } value={ editado.endereco.bairro } icon={ false } maxLength={ 50 } /> </S.Linha>
                             <S.Spacer />
-                            <S.Linha margin={ 'none' } maxWidth={ 'fit-content' }>
+                            <S.SubLinha margin={ '0' } maxWidth={ 'fit-content' }>
                                 <S.Linha> <TextField placeholder={ 'Cidade' } onChange={ ( e ) => handleInput( e, 'endereco.cidade' ) } value={ editado.endereco.cidade } icon={ false } maxLength={ 50 } /> </S.Linha>
                                 <S.Spacer />
                                 <S.Linha important={ true } minWidth={ '38px' } maxWidth={ '38px' }> <TextField placeholder={ 'UF' } onChange={ ( e ) => formatarEstado( e, 'endereco.estado' ) } value={ editado.endereco.estado.toUpperCase() } icon={ false } maxLength={ 2 } /> </S.Linha>
                                 <S.Spacer />
                                 <S.Linha important={ true } minWidth={ '82px' } maxWidth={ '82px' }> <TextField placeholder={ 'CEP' } onChange={ ( e ) => formatarCep( e, 'endereco.cep' ) } value={ editado.endereco.cep } icon={ false } /> </S.Linha>
-                            </S.Linha>
-                        </S.SubLinha>
+                            </S.SubLinha>
+                        </S.SobLinha>
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
 

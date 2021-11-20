@@ -96,7 +96,6 @@ export const Linha = styled.div`
     display: flex;
     min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
-    margin-bottom: ${ ( { margin } ) => margin ? margin : '0.4rem' };
     position: relative;
 
     @media only screen and (max-width: 600px) {
@@ -133,6 +132,40 @@ export const Linha = styled.div`
     }
 `
 export const SubLinha = styled.div`
+width: 100%;
+    height: 50px;
+    display: flex;
+    min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
+    max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
+    position: relative;
+
+    @media only screen and (max-width: 600px) {
+        min-width: ${ ( { important, minWidth } ) => important ? `${ minWidth }` : 'unset' };
+        max-width: ${ ( { important, maxWidth } ) => important ? `${ maxWidth }` : 'unset' };
+        width: 100%;
+        
+        div {
+                width: 100%;
+                align-items: end;
+                display: flex;
+            }
+    }   
+
+    select {
+        text-align-last: center;
+        width: fit-content;
+        font-weight: bold;
+        padding: 0 0.5rem 0.3rem;
+        border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };
+        position: absolute;
+        bottom: 0;
+
+        @media only screen and (max-width: 600px) {
+            width: 100%;
+        }
+    }
+`
+export const SobLinha = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -175,22 +208,28 @@ export const Listagem = styled.div`
 export const HorarioContainer = styled.div`
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     padding-right: 0.8rem;
 `
 export const HorarioSubcontainer = styled.div`
-    width: 100%;
+    width: 16.66%; 
     
     div {
         width: 100%;
         margin: 0;
         padding: 0;
     }
+
+    @media only screen and (max-width: 700px) {
+        width: 33.33%;
+        margin-bottom: 0.8rem;
+    }
 `
 export const Horario = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
+    padding: 0.4rem 0.8rem 0 0 !important;
 
     svg {
         width: 16px;
