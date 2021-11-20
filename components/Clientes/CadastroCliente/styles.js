@@ -69,8 +69,8 @@ export const SubTitulo = styled.label`
     color: #0070f3;
     font-size: 12px;
     position: absolute;
-    top: -22px;
-    left: 0.5rem;
+    top: 4px;
+    left: 0.5rem; 
 `
 export const LinhaContainer = styled.div`
     width: 100%;
@@ -92,6 +92,7 @@ export const LinhaSubContainer = styled.div`
 `
 export const Linha = styled.div`
     width: 100%;
+    height: 50px;
     display: flex;
     min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
@@ -102,7 +103,13 @@ export const Linha = styled.div`
         min-width: ${ ( { important, minWidth } ) => important ? `${ minWidth }` : 'unset' };
         max-width: ${ ( { important, maxWidth } ) => important ? `${ maxWidth }` : 'unset' };
         width: 100%;
-    }
+        
+        div {
+                width: 100%;
+                align-items: end;
+                display: flex;
+            }
+    }   
 
     select {
         text-align-last: center;
@@ -110,6 +117,12 @@ export const Linha = styled.div`
         font-weight: bold;
         padding: 0 0.5rem 0.3rem;
         border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };
+        position: absolute;
+        bottom: 0;
+
+        @media only screen and (max-width: 600px) {
+            width: 100%;
+        }
     }
 
     :hover {
@@ -132,6 +145,7 @@ export const SubLinha = styled.div`
 export const Spacer = styled.div`
     min-width: 0.8rem;
     max-width: 0.8rem;
+    height: 1px;
 `
 export const DadosColetor = styled.div`
     width: 100%;
