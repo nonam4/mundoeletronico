@@ -29,8 +29,6 @@ function Impressoras () {
     const { cadastros } = state
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
-    // variável de controle de visibilidade do componente
-    const [ show, setShow ] = useState( true )
 
     useEffect( () => {
         // adiciona os listeners do ctrl + f
@@ -78,6 +76,7 @@ function Impressoras () {
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
     }, [ filtros.busca, cadastros ] )
 
+    /*
     // controla se o componente será visiível ou não caso tenha uma página em stack
     useEffect( () => {
         setLoad( false )
@@ -90,6 +89,7 @@ function Impressoras () {
 
         !router.query.stack ? setShow( true ) : setShow( false )
     }, [ router.query.stack ] )
+    */
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -194,7 +194,7 @@ function Impressoras () {
 
     return (
         <MainFrame>
-            <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel } show={ show }>
+            <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
                 <Header >
                     <DropDown { ...{ filtros, setFiltros, buscaRef } } />
                 </Header>

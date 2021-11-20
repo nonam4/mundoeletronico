@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-    width: ${ ( { show } ) => show ? '100%' : '0px' };
+    width: 100%;
     height: 100%;
     margin-left: ${ ( { expandido, sempreVisivel } ) => sempreVisivel ? '0px' : expandido ? '-250px' : '0px' };
     position: relative;
