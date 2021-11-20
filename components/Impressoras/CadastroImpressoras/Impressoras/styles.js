@@ -93,7 +93,6 @@ export const Dados = styled.div`
         font-weight: bold;
         padding: 0 0.5rem 0.3rem;
     }
-    
 `
 export const DadosTrocas = styled.div`
     width: 100%;

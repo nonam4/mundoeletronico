@@ -18,8 +18,6 @@ export default async ( req, res ) => {
         }
     } ).then( async res => {
 
-        console.log( res.data )
-
         let velho = res.data.cliente
         if ( !velho.ativo ) database.doc( `/cadastros/${ cliente.id }` ).delete() //se o cliente não estiver mais ativo, delete
         let cliente = {}

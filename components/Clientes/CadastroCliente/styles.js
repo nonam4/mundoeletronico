@@ -65,6 +65,13 @@ export const Titulo = styled.div`
     text-transform: uppercase;
     line-height: 48px;
 `
+export const SubTitulo = styled.label`
+    color: #0070f3;
+    font-size: 12px;
+    position: absolute;
+    top: -22px;
+    left: 0.5rem;
+`
 export const LinhaContainer = styled.div`
     width: 100%;
     display: flex;
@@ -89,11 +96,27 @@ export const Linha = styled.div`
     min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
     margin-bottom: ${ ( { margin } ) => margin ? margin : '0.4rem' };
+    position: relative;
 
     @media only screen and (max-width: 600px) {
         min-width: ${ ( { important, minWidth } ) => important ? `${ minWidth }` : 'unset' };
         max-width: ${ ( { important, maxWidth } ) => important ? `${ maxWidth }` : 'unset' };
         width: 100%;
+    }
+
+    select {
+        text-align-last: center;
+        width: fit-content;
+        font-weight: bold;
+        padding: 0 0.5rem 0.3rem;
+        border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    }
+
+    :hover {
+        span {
+            left: 0;
+            width: 100%;
+        }
     }
 `
 export const SubLinha = styled.div`

@@ -9,6 +9,7 @@ import MenuIcon from '../../Icons/MenuIcon'
 import Checkbox from '../../Inputs/Checkbox'
 import TextField from '../../Inputs/TextField'
 import SimpleTextField from '../../Inputs/SimpleTextField'
+import Select from '../../Inputs/Select'
 
 import * as Database from '../../../workers/database'
 import * as Notification from '../../../workers/notification'
@@ -29,13 +30,15 @@ function Expandido () {
     // dias da semana
     const dias = [ { nome: 'Segunda', index: 'segunda' }, { nome: 'Terça', index: 'terca' }, { nome: 'Quarta', index: 'quarta' },
     { nome: 'Quinta', index: 'quinta' }, { nome: 'Sexta', index: 'sexta' }, { nome: 'Sábado', index: 'sabado' } ]
+    // opções de tipo de cadastro
+    const tiposCadastro = [ { label: 'Locação', value: 'locacao' }, { label: 'TI / Particular', value: 'particular' }, { label: 'Fornecedor', value: 'fornecedor' } ]
     // cliente com todos os dados limpos, local: 'Ti9J' é local: 'N/I' já codificado em base64
     const limpo = {
         id: data.getTime(), nomefantasia: '', razaosocial: '', cpfcnpj: '', endereco: {
             rua: '', numero: '', complemento: '', bairro: '', cidade: '', estado: '', cep: ''
         }, contato: { email: '', telefone: '', celular: '' },
         horarios: { segunda: { aberto: false }, terca: { aberto: false }, quarta: { aberto: false }, quinta: { aberto: false }, sexta: { aberto: false }, sabado: { aberto: false } },
-        sistema: { local: 'Ti9J', versao: 'N/I' }
+        sistema: { local: 'Ti9J', versao: 'N/I' }, tipo: 'locacao'
     }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
@@ -130,6 +133,10 @@ function Expandido () {
             string.splice( pos, 0, chars[ i ] )
         }
         return string.join( '' ) //devolve de volta em string novamente
+    }
+
+    function handleTipoClienteChange ( e ) {
+        setEditado( set( 'tipo', e.target.value, editado ) )
     }
 
     function formatarCpfcnpj ( e, campo ) {
@@ -318,7 +325,14 @@ function Expandido () {
 
                 <S.LinhaContainer>
                     <S.LinhaSubContainer>
-                        <S.Linha> <TextField placeholder={ 'Nome Fantasia' } onChange={ ( e ) => handleInput( e, 'nomefantasia' ) } value={ editado.nomefantasia } icon={ false } maxLength={ 50 } /> </S.Linha>
+                        <S.SubLinha>
+                            <S.Linha> <TextField placeholder={ 'Nome Fantasia' } onChange={ ( e ) => handleInput( e, 'nomefantasia' ) } value={ editado.nomefantasia } icon={ false } maxLength={ 50 } /> </S.Linha>
+                            <S.Spacer />
+                            <S.Linha minWidth={ '140px' } maxWidth={ '140px' }>
+                                <S.SubTitulo> Tipo </S.SubTitulo>
+                                <Select valor={ editado.tipo } options={ tiposCadastro } onChange={ handleTipoClienteChange } />
+                            </S.Linha>
+                        </S.SubLinha>
                         <S.Linha> <TextField placeholder={ 'Razão Social' } onChange={ ( e ) => handleInput( e, 'razaosocial' ) } value={ editado.razaosocial } icon={ false } maxLength={ 50 } /> </S.Linha>
 
                         <S.SubLinha>
