@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDados } from '../contexts/DadosContext'
+import { useRouter } from 'next/router'
 
 import * as S from '../styles/atendimentos'
 
@@ -11,7 +12,7 @@ import DropDown from '../components/Atendimentos/DropDown'
 import Listagem from '../components/Atendimentos/Listagem'
 
 function Atendimentos () {
-
+    const router = useRouter()
     // variaveis do contexto, disponível em todo o sistema
     const { state, dispatch } = useDados()
     // variaveis sobre a visibilidade do menu lateral
@@ -39,6 +40,11 @@ function Atendimentos () {
 
         solicitarDados()
     }, [] )
+
+    // garante que o load será fechado quando o stack mudar
+    useEffect( () => {
+        setLoad( false )
+    }, [ router.query.stack ] )
 
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database ou busca local
     useEffect( () => {

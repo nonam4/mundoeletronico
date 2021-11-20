@@ -76,20 +76,10 @@ function Impressoras () {
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
     }, [ filtros.busca, cadastros ] )
 
-    /*
-    // controla se o componente será visiível ou não caso tenha uma página em stack
+    // garante que o load será fechado quando o stack mudar
     useEffect( () => {
         setLoad( false )
-        // se o stack for o 'cadastroimpressoras' não esconde os itens de baixo
-        // pois o 'cadastroimpressoras' precisa do header de página de impressoras 
-        if ( router.query.stack === 'cadastroimpressoras' ) return
-
-        // caso contrário esconde normalmente
-        if ( !router.query.stack && document.activeElement ) document.activeElement.blur()
-
-        !router.query.stack ? setShow( true ) : setShow( false )
     }, [ router.query.stack ] )
-    */
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
