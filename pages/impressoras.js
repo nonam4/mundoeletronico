@@ -30,8 +30,8 @@ function Impressoras () {
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
 
+    // adiciona os listeners do ctrl + f
     useEffect( () => {
-        // adiciona os listeners do ctrl + f
         window.addEventListener( 'keydown', e => {
             // se os inputs ainda não estiverem criados não faz nada
             if ( !buscaRef || !buscaRef.current ) return

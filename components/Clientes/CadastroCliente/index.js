@@ -103,6 +103,18 @@ function Expandido () {
     }
 
     async function salvarCadastro ( alterado ) {
+
+        if ( editado.nomefantasia === '' || editado.nomefantasia.length < 5 ) return Notification.notificate( 'Erro', 'Nome fantasia em branco ou inválido!', 'danger' )
+        if ( editado.razaosocial === '' || editado.razaosocial.length < 5 ) return Notification.notificate( 'Erro', 'Razão social em branco ou inválida!', 'danger' )
+        if ( editado.cpfcnpj === '' || editado.cpfcnpj.length < 14 ) return Notification.notificate( 'Erro', 'CPF/CNPJ branco ou inválido!', 'danger' )
+        if ( editado.contato.telefone === '' && editado.contato.celular === '' ) return Notification.notificate( 'Erro', 'Informe algum telefone ou celular!', 'danger' )
+        if ( editado.contato.telefone !== '' && editado.contato.telefone.length < 14 ) return Notification.notificate( 'Erro', 'Telefone em branco ou inválido!', 'danger' )
+        if ( editado.contato.celular !== '' && editado.contato.celular.length < 15 ) return Notification.notificate( 'Erro', 'Celular em branco ou inválido!', 'danger' )
+        if ( editado.endereco.rua === '' || editado.endereco.rua.length < 5 ) return Notification.notificate( 'Erro', 'Endereço/Rua em branco ou inválido!', 'danger' )
+        if ( editado.endereco.numero === '' ) return Notification.notificate( 'Erro', 'Endereço/Número em branco ou inválido!', 'danger' )
+        if ( editado.endereco.cidade === '' || editado.endereco.cidade.length < 4 ) return Notification.notificate( 'Erro', 'Endereço/Cidade em branco ou inválido!', 'danger' )
+        if ( editado.endereco.estado === '' || editado.endereco.estado.length < 2 ) return Notification.notificate( 'Erro', 'Endereço/Estado em branco ou inválido!', 'danger' )
+
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
         Database.salvarCadastro( state.usuario, alterado ).then( () => {
@@ -110,6 +122,7 @@ function Expandido () {
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
             setCadastro( alterado )
+            fechar()
 
         } ).catch( err => {
             Notification.removeNotification( aviso )
