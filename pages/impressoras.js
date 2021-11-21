@@ -63,7 +63,7 @@ function Impressoras () {
                 pathname: paginaAtual,
                 query: {
                     id: router.query.id,
-                    stack: 'cadastroimpressora',
+                    stack: 'cadastroimpressoras',
                     data: filtros.data,
                 }
             } )
