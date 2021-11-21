@@ -341,7 +341,7 @@ function Expandido () {
                         <S.SobLinha>
                             <S.Linha> <TextField placeholder={ 'Nome Fantasia' } onChange={ ( e ) => handleInput( e, 'nomefantasia' ) } value={ editado.nomefantasia } icon={ false } maxLength={ 50 } /> </S.Linha>
                             <S.Spacer />
-                            <S.Linha minWidth={ '140px' } maxWidth={ '140px' }>
+                            <S.Linha minWidth={ '140px' } maxWidth={ '140px' } forceHover={ true }>
                                 <S.SubTitulo> Tipo </S.SubTitulo>
                                 <Select valor={ editado.tipo } options={ tiposCadastro } onChange={ handleTipoClienteChange } />
                             </S.Linha>

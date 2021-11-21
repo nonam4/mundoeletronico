@@ -13,6 +13,9 @@ export const Input = styled.input.attrs( { type: 'checkbox' } )`
     :checked + label::after {
         transform: rotate(-45deg) scale(1);
     }
+    :checked + label::before {
+        border: 2px solid ${ ( { theme } ) => theme.colors.hover };
+    }
     :focus + label::before {
         outline: 0;
     }
@@ -25,7 +28,7 @@ export const Label = styled.label`
     padding-left: 40px;
     position: relative;
     cursor: pointer;
-    ::before{
+    ::before {
         box-sizing: border-box;
         content: '';
         position: absolute;
@@ -34,7 +37,7 @@ export const Label = styled.label`
         width: 22px;
         height: 22px;
         border-radius: 3px;
-        border: 2px solid ${ ( { theme } ) => theme.colors.hover };
+        border: 2px solid ${ ( { theme } ) => theme.colors.borders };
         transition: all ease 0.15s;
     }
     ::after {
@@ -50,5 +53,10 @@ export const Label = styled.label`
         position: absolute;
         top: 5px;
         left: 5px;
+    }
+    :hover {
+        ::before {
+            border: 2px solid ${ ( { theme } ) => theme.colors.hover };
+        }
     }
 `

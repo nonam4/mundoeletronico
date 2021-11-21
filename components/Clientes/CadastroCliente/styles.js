@@ -97,6 +97,7 @@ export const Linha = styled.div`
     min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
     position: relative;
+    margin-top: 0.5rem;
 
     @media only screen and (max-width: 600px) {
         min-width: ${ ( { important, minWidth } ) => important ? `${ minWidth }` : 'unset' };
@@ -104,11 +105,14 @@ export const Linha = styled.div`
         width: 100%;
         
         div {
-                width: 100%;
                 align-items: end;
                 display: flex;
             }
     }   
+
+    div {
+        width: 100%;
+    }
 
     select {
         text-align-last: center;
@@ -124,6 +128,11 @@ export const Linha = styled.div`
         }
     }
 
+    span {
+        left: ${ ( { forceHover } ) => forceHover && '0' };
+        width: ${ ( { forceHover } ) => forceHover && '100%' };
+    }
+
     :hover {
         span {
             left: 0;
@@ -132,8 +141,7 @@ export const Linha = styled.div`
     }
 `
 export const SubLinha = styled.div`
-width: 100%;
-    height: 50px;
+    width: 100%;
     display: flex;
     min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
@@ -210,6 +218,7 @@ export const HorarioContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     padding-right: 0.8rem;
+    margin-top: 0.5rem;
 `
 export const HorarioSubcontainer = styled.div`
     width: 16.66%; 
