@@ -88,7 +88,7 @@ function DropDown ( props ) {
                 { usandoFiltro && <S.FilterIndicator /> }
                 <Icon name={ 'filtros' } margin={ '0' } title={ 'Filtros' } />
             </H.DropdownItem>
-            <H.Settings right={ '-90' }>
+            <H.SettingsContainer right={ '-90' }><H.Settings>
                 <S.FilterOption>
                     <TextField useRef={ props.buscaRef } onFocus={ toggleFocus } onBlur={ toggleFocus } onChange={ handleBuscaChange } value={ novoFiltroUsado.busca } placeholder={ 'Buscar...' } icon={ 'buscar' } />
                 </S.FilterOption>
@@ -106,7 +106,7 @@ function DropDown ( props ) {
                 </S.FilterOption>
                 <H.SettingsItem show={ mostrarBotaoAplicar() } onClick={ () => aplicarNovoFiltro() }> <Icon name={ 'aplicar' } /> Aplicar Filtros </H.SettingsItem>
                 <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarFiltrosPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
-            </H.Settings>
+            </H.Settings></H.SettingsContainer>
         </H.Dropdown>
     )
 }

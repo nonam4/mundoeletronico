@@ -17,7 +17,6 @@ export const Dropdown = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    cursor: pointer;
     position: relative;
     transition-delay: 1s;
     ${ ( { forceShow } ) => forceShow && css`
@@ -84,21 +83,29 @@ export const Foto = styled.img`
     margin-right: 0.8rem;
     border-radius: 50%;
 `
-export const Settings = styled.div`
+export const SettingsContainer = styled.div`
     pointer-events: none;
     opacity: 0;
     z-index: -1;
+    background: transparent;
+    padding: 0.8rem 0px 0px;
+    width: 230px;
+    position: absolute;
+    top: 55px;
+    right: ${ ( { right } ) => `${ right }px` };
+    cursor: default;
+`
+export const Settings = styled.div`
+    pointer-events: none;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0.8rem 0px;
     background: ${ ( { theme } ) => theme.colors.menus };
     border: solid 1px ${ ( { theme } ) => theme.colors.floating };
-    padding: 0.8rem 0px;
-    width: 230px;
     border-radius: 5px;
-    position: absolute;
-    top: 65px;
-    right: ${ ( { right } ) => `${ right }px` };
+    padding: 0.8rem 0px;
+    width: 100%;
     box-shadow: 0px 0px 10px -2px rgba(0,0,0,0.8);
 `
 export const SettingsItem = styled.div`

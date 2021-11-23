@@ -33,7 +33,7 @@ export const Content = styled.div`
     position: absolute;
     top: 0;
     padding: 13px 0.5rem;
-    pointer-events: none;
+    pointer-events: none !important;
 `
 export const Label = styled.label`
     position: absolute;

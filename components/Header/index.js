@@ -30,11 +30,11 @@ function Header ( { children } ) {
                     <S.Foto src={ usuario.foto } />
                     { usuario.nome }
                 </S.DropdownItem>
-                <S.Settings right={ '-3' }>
+                <S.SettingsContainer right={ '-3' }> <S.Settings>
                     <S.SettingsItem> <Icon name={ 'usuario_editar' } /> Perfil </S.SettingsItem>
                     <S.SettingsItem onClick={ toggleTema }> <Icon name={ 'tema' } /> Tema { tema.title === 'claro' ? 'escuro' : 'claro' } </S.SettingsItem>
                     <S.SettingsItem onClick={ () => logout() }> <Icon name={ 'logout' } /> Logout </S.SettingsItem>
-                </S.Settings>
+                </S.Settings></S.SettingsContainer>
             </S.Dropdown>
             { children }
         </S.Container>
