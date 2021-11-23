@@ -1,0 +1,37 @@
+﻿dashboard com:
+-quantidade de 'contratos ativos' (total de clientes)
+-'inventário' de impressoras (quantidade de impressoras no total)
+-'impressões totais' no mês
+-'excedentes totais' no mês
+-'suprimentos/produtos' disponiveis
+-talvez um grafico em barras ou pizza
+	quantidade clientes com alertas**
+	quantidade de clientes com erros*
+	quantidade de clientes com excedentes
+	quantidade de clientes ok
+-atividades recentes
+	ex: Usuario tal fez tal ação
+	ex: Fulano finalizou o atendimento para .... com/sem abastecimento de maquinas
+	ex: Ciclano alterou franquia de Impressora tal em tal cliente
+
+tela de cadastrar cliente/fornecedor ter diferentes icones para diferentes tipos de cadastro (olhar na pagina de ideia de dashboard)
+-cadastro de locação - icone de empresa
+-cadastro de ti - icone de pessoa
+-cadastro de fornecedor - icone de trabalhador
+
+substituição de impressoras
+-se a impressora A for trocada pela B -> impressora B recebe A no array 'substituindo'. Array 'substituindo' de impressora A será limpo
+-se a impressora B for trocada pela C -> impressora C recebe A e B no array 'substituindo'. Array 'substituindo' de impressora B será limpo
+-se a impressora C for trocada pela A -> impressora A recebe B e C no array 'substituindo'. Array 'substituindo' de impressora C será limpo
+
+downloads de resets
+-criar opção de gerar uma chave aleatória para liberar o download
+EX: quando clicar pra baixar algum item (que precise de chave) o 
+sistema pedirá a chave de autenticação que terá uma validade de 1 dia útil
+Quando o cliente colocar a chave de download, o backend fará a verificação de
+validade da chave, se for válida, o backend retornará com o link de download
+
+finalização de atendimentos
+-perguntar pro usuario se os equipamentos foram abastecidos
+-caso sim irá listar todas as impressoras (exceto as que o rendimento não é controlado) do cliente e perguntar quais foram abastecidas
+-caso tenha entrega de suprimentos no cliente perguntar a quantidade de cada suprimento que foi entregue
