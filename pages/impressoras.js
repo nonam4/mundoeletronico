@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useDados } from '../contexts/DadosContext'
 import packageInfo from '../package.json'
 import { useRouter } from 'next/router'
@@ -29,19 +29,28 @@ function Impressoras () {
     const { cadastros } = state
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
+    // controle do ctrl F, se pressionados com stack não faz nada
+    function keyPressedListener ( e ) {
+        if ( e.ctrlKey && e.key === 'f' ) {
 
-    // adiciona os listeners do ctrl + f
-    useEffect( () => {
-        window.addEventListener( 'keydown', e => {
             // se os inputs ainda não estiverem criados não faz nada
             if ( !buscaRef || !buscaRef.current ) return
-            // adiciona focus ao input de busca
-            if ( e.ctrlKey && e.key === 'f' ) {
-                buscaRef.current.focus()
-                e.preventDefault()
-            }
-        } )
-    }, [] )
+
+            buscaRef.current.focus()
+            e.preventDefault()
+        }
+    }
+    const memoizedListener = useMemo( () => keyPressedListener, [] )
+
+    // adiciona ou remove os listeners do ctrl + f
+    useEffect( () => {
+
+        if ( !router.query.stack ) {
+            window.addEventListener( 'keydown', memoizedListener )
+        } else {
+            window.removeEventListener( 'keydown', memoizedListener )
+        }
+    }, [ router.query.stack ] )
 
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database
     useEffect( () => {
