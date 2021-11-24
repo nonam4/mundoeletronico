@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 import * as H from '../../../components/Header/styles'
 import * as S from './styles'
@@ -10,6 +11,7 @@ import Select from '../../../components/Inputs/Select'
 import TextField from '../../../components/Inputs/TextField'
 
 function DropDown ( props ) {
+    const router = useRouter()
     const filtroPadrao = { listando: 'todos', data: getDatas()[ 0 ].value, busca: '' }
     // ultimo filtro aplicado com sucesso
     const [ ultimoFiltroUsado, setUltimoFiltroUsado ] = useState( filtroPadrao )
@@ -89,21 +91,21 @@ function DropDown ( props ) {
                 <Icon name={ 'filtros' } margin={ '0' } title={ 'Filtros' } />
             </H.DropdownItem>
             <H.SettingsContainer right={ '-90' }><H.Settings>
-                <S.FilterOption>
+                { !router.query.stack && <S.FilterOption>
                     <TextField useRef={ props.buscaRef } onFocus={ toggleFocus } onBlur={ toggleFocus } onChange={ handleBuscaChange } value={ novoFiltroUsado.busca } placeholder={ 'Buscar...' } icon={ 'buscar' } />
-                </S.FilterOption>
+                </S.FilterOption> }
                 <S.FilterOption>
                     <S.FilterItem>
                         <Icon name={ 'calendario' } /> Datas
                     </S.FilterItem>
                     <Select options={ getDatas() } valor={ usandoFiltroPadrao ? filtroPadrao.data : undefined } onChange={ handleDataChange } />
                 </S.FilterOption>
-                <S.FilterOption>
+                { !router.query.stack && <S.FilterOption>
                     <S.FilterItem>
                         <Icon name={ 'listando' } /> Listando
                     </S.FilterItem>
                     <Select options={ listagens } onChange={ handleListagemChange } />
-                </S.FilterOption>
+                </S.FilterOption> }
                 <H.SettingsItem show={ mostrarBotaoAplicar() } onClick={ () => aplicarNovoFiltro() }> <Icon name={ 'aplicar' } /> Aplicar Filtros </H.SettingsItem>
                 <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarFiltrosPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
             </H.Settings></H.SettingsContainer>
