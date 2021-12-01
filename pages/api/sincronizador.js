@@ -9,10 +9,7 @@ import axios from 'axios'
 
 export default async ( req, res ) => {
 
-    console.log( req.query )
     let { serial, chave, leitura, modelo, id } = req.query
-
-    console.log( serial, chave, leitura, modelo, id )
 
     database.doc( `/historico/${ serial }` ).set( {
         [ chave ]: leitura, modelo, usuarioAtual: id
@@ -25,9 +22,9 @@ export default async ( req, res ) => {
             usuario: process.env.USER,
             senha: process.env.PASS
         }
-    } ).then( async res => {
+    } ).then( async nres => {
 
-        let velho = res.data.cliente
+        let velho = nres.data.cliente
         if ( !velho.ativo ) return database.doc( `/cadastros/${ cliente.id }` ).delete() //se o cliente não estiver mais ativo, delete
         let cliente = {}
         let franquia = {}
@@ -144,8 +141,8 @@ export default async ( req, res ) => {
             }
         }
         cliente.impressoras = impressoras
+        console.log( cliente )
         database.doc( `/cadastros/${ cliente.id }` ).set( cliente, { merge: true } )
-        //database.doc(`/cadastros/${cliente.id}`).set(cliente)
     } ).catch( err => {
         console.log( 'erro ao receber ', err )
         res.status( 400 ).send( `Não sincronizou. Usando usuario ${ process.env.USER } - erro ${ err }` )
