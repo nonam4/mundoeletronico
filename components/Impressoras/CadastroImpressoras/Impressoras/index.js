@@ -121,7 +121,8 @@ function Impressoras ( props ) {
 
             views.push( <S.DropdownItem key={ serial } onClick={ () => trocarImpressora( serial ) }> { impressoras[ serial ].modelo } - { serial } </S.DropdownItem> )
         }
-        return views
+        if ( views.length > 0 ) return views
+        return false
     }
 
     return (
@@ -129,7 +130,7 @@ function Impressoras ( props ) {
             <S.Titulo>
                 { props.impressora.modelo }
                 <S.TituloSubcontainer>
-                    { props.cadastro.impressorasAtivas > 1 && <S.Dropdown>
+                    { props.cadastro.impressorasAtivas > 1 && renderSeriaisTrocas() && <S.Dropdown>
                         <Botao title={ 'Substituir' } hover={ colors.azul }><MenuIcon name={ 'impressora_trocar' } margin='0' /></Botao>
                         <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
                     </S.Dropdown> }
