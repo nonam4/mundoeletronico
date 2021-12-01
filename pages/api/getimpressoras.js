@@ -2,7 +2,7 @@ import database from './_database.js'
 
 export default async ( req, res ) => {
 
-    const { data, listando, busca } = JSON.parse( req.query.filtros )
+    const { data, listando } = JSON.parse( req.query.filtros )
 
     function getDatas () {
         let datas = []
@@ -58,7 +58,44 @@ export default async ( req, res ) => {
     }
 
     let clientes = {}
+    let historico = {}
     let dados = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).where( 'tipo', '==', 'locacao' ).orderBy( 'nomefantasia' ).get()
+    let listaHistorico = await database.collection( '/historico' ).get()
+
+    listaHistorico.forEach( itemHistorico => {
+        let serial = itemHistorico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
+        let dadosHistorico = itemHistorico.data()
+
+        historico[ serial ] = {}
+
+        function pegarMesAtualAnteriror ( dataHistorico ) {
+
+            let dataMatriz = data.split( '-' ) // separa a data matriz em numeros separados
+
+            let mesAnteriror = Number( dataMatriz[ 1 ] ) - 1 // o mes anterior inicialmente será o mes matriz atual menos 1
+            if ( mesAnteriror < 10 ) mesAnteriror = `0${ mesAnteriror }` // se o valor do mes anterior for menor que 10 adiciona o zerio no começo
+            if ( Number( dataMatriz[ 1 ] ) <= 1 ) mesAnteriror = 12 // se o valor do mes atual for 1 define o mes anterior como 12
+
+            // se a data atual for igual à data do historico ou se a data do historico for igual à data do mes anterior permite
+            if ( `${ dataHistorico[ 0 ] }-${ dataHistorico[ 1 ] }` === data || `${ dataHistorico[ 0 ] }-${ dataHistorico[ 1 ] }` === `${ dataMatriz[ 0 ] }-${ mesAnteriror }` ) return true
+            return false
+        }
+
+        for ( let linhaHistorico in dadosHistorico ) {
+
+            let idHistorico = linhaHistorico.split( ' - ' )
+            let dataHistorico = idHistorico[ 0 ].split( '.' )
+            let horarioHistorico = new Date( Number( idHistorico[ 1 ] ) )
+
+            let horaHistorico = horarioHistorico.getHours()
+            if ( horaHistorico < 10 ) horaHistorico = `0${ horaHistorico }`
+            let minutosHistorico = horarioHistorico.getMinutes()
+            if ( minutosHistorico < 10 ) minutosHistorico = `0${ minutosHistorico }`
+
+            if ( pegarMesAtualAnteriror( dataHistorico ) ) historico[ serial ][ linhaHistorico ] = `${ dataHistorico[ 2 ] }/${ dataHistorico[ 1 ] }/${ dataHistorico[ 0 ] } - ${ horaHistorico }:${ minutosHistorico }: ${ dadosHistorico[ linhaHistorico ] } págs`
+        }
+    } )
+
     dados.forEach( dado => {
 
         let cliente = dado.data()
@@ -140,5 +177,5 @@ export default async ( req, res ) => {
     } )
     //define que os dados ficarão em cache por no minimo 60 segundos, depois revalida tudo novamente
     if ( process.env.NODE_ENV === 'development' ) res.setHeader( 'Cache-Control', 's-maxage=60000, stale-while-revalidade' )
-    res.status( 200 ).send( clientes )
+    res.status( 200 ).send( { clientes, historico } )
 }
