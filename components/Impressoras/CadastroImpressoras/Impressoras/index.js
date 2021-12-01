@@ -8,6 +8,7 @@ import Select from '../../../Inputs/Select'
 import { Botao } from '../styles'
 
 import * as S from './styles'
+import * as Relatorio from '../../../../workers/relatorio'
 
 function Impressoras ( props ) {
     const { state } = useDados()
@@ -125,16 +126,23 @@ function Impressoras ( props ) {
         return false
     }
 
+    function gerarHistorico () {
+        Relatorio.gerarHistorico( cadastro, filtros, colors )
+    }
+
     return (
         <S.Container height={ props.cadastro.franquia.tipo }>
             <S.Titulo>
-                { props.impressora.modelo }
+                { impressora.modelo }
                 <S.TituloSubcontainer>
                     { props.cadastro.impressorasAtivas > 1 && renderSeriaisTrocas() && <S.Dropdown>
                         <Botao title={ 'Substituir' } hover={ colors.azul }><MenuIcon name={ 'impressora_trocar' } margin='0' /></Botao>
                         <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
                     </S.Dropdown> }
-                    <Botao title={ 'Excluir' } onClick={ () => deletarImpressora() } hover={ colors.vermelho }>
+                    <Botao title={ 'Gerar histórico' } onClick={ () => gerarHistorico() } hover={ colors.azul }>
+                        <MenuIcon name={ 'historico' } margin='0' />
+                    </Botao>
+                    <Botao title={ impressora.contabilizar ? 'Excluir' : 'Restaurar' } onClick={ () => deletarImpressora() } hover={ impressora.contabilizar ? colors.vermelho : colors.azul }>
                         <MenuIcon name={ impressora.contabilizar ? 'impressora_deletar' : 'status_ok' } margin='0' />
                     </Botao>
                 </S.TituloSubcontainer>
