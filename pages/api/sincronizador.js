@@ -9,6 +9,8 @@ import axios from 'axios'
 
 export default async ( req, res ) => {
 
+    console.log( req )
+
     let { serial, chave, leitura, modelo, id } = req.query
 
     database.doc( `/historico/${ serial }` ).set( {
