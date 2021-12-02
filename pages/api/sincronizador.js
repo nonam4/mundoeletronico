@@ -10,7 +10,7 @@ export default async ( req, res ) => {
 
     console.log( 'começando a sincronizar -> ', req.body )
 
-    let { serial, chave, leitura, modelo, } = req.body
+    let { serial, chave, leitura, modelo, id } = req.body
     let velho = req.body.cliente
 
     database.doc( `/historico/${ serial }` ).set( { [ chave ]: { leitura, modelo, usuarioAtual: `${ id } - ${ cliente.nomefantasia }` } }, { merge: true } )
