@@ -8,15 +8,20 @@ import database from './_database.js'
 
 export default async ( req, res ) => {
 
-    console.log( req.body )
+    console.log( 'começando a sincronizar -> ', req.body )
 
-    let { serial, chave, leitura, modelo, id } = req.body
-    let velho = req.body.cliente
+    let serial = req.body.serial
+    let chave = req.body.chave
+    let leitura = req.body.leitura
+    let modelo = req.body.modelo
+    let id = req.body.id
+    //let velho = req.body.cliente
 
     database.doc( `/historico/${ serial }` ).set( {
         [ chave ]: leitura, modelo, usuarioAtual: `${ id } - ${ cliente.nomefantasia }`
     }, { merge: true } )
 
+    /*
     if ( !velho.ativo ) return database.doc( `/cadastros/${ cliente.id }` ).delete() //se o cliente não estiver mais ativo, delete
     let cliente = {}
     let franquia = {}
@@ -120,6 +125,7 @@ export default async ( req, res ) => {
     cliente.impressoras = impressoras
     database.doc( `/cadastros/${ cliente.id }` ).set( cliente, { merge: true } )
 
-    res.status( 200 ).send( `Sincronizado usando usuario ${ process.env.USER }` )
+    */
+    res.status( 200 ).send( 'Sincronizado' )
 }
 
