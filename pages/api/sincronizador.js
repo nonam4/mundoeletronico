@@ -10,10 +10,10 @@ export default async ( req, res ) => {
 
     console.log( 'começando a sincronizar -> ', req.body )
 
-    let { serial, chave, leitura, modelo } = req.body
+    let { serial, chave, leitura, modelo, } = req.body
     let velho = req.body.cliente
 
-    database.doc( `/historico/${ serial }` ).set( { [ chave ]: { leitura, modelo, usuarioAtual: id } }, { merge: true } )
+    database.doc( `/historico/${ serial }` ).set( { [ chave ]: { leitura, modelo, usuarioAtual: `${ id } - ${ cliente.nomefantasia }` } }, { merge: true } )
 
     if ( !velho.ativo ) return database.doc( `/cadastros/${ cliente.id }` ).delete() //se o cliente não estiver mais ativo, delete
     let cliente = {}
