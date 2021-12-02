@@ -81,7 +81,7 @@ export default async ( req, res ) => {
             return false
         }
 
-        for ( let linhaHistorico in dadosHistorico ) {
+        for ( let linhaHistorico in dadosHistorico.contadores ) {
 
             let idHistorico = linhaHistorico.split( ' - ' )
             let dataHistorico = idHistorico[ 0 ].split( '.' )
