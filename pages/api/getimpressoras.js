@@ -92,7 +92,7 @@ export default async ( req, res ) => {
             let minutosHistorico = horarioHistorico.getMinutes()
             if ( minutosHistorico < 10 ) minutosHistorico = `0${ minutosHistorico }`
 
-            if ( pegarMesAtualAnteriror( dataHistorico ) ) historico[ serial ][ linhaHistorico ] = `${ dataHistorico[ 2 ] }/${ dataHistorico[ 1 ] }/${ dataHistorico[ 0 ] } - ${ horaHistorico }:${ minutosHistorico }: ${ dadosHistorico[ linhaHistorico ] } págs`
+            if ( pegarMesAtualAnteriror( dataHistorico ) ) historico[ serial ][ linhaHistorico ] = `${ dataHistorico[ 2 ] }/${ dataHistorico[ 1 ] }/${ dataHistorico[ 0 ] } - ${ horaHistorico }:${ minutosHistorico }: ${ dadosHistorico.contadores[ linhaHistorico ] } págs`
         }
     } )
 

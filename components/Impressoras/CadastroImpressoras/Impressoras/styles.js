@@ -202,3 +202,8 @@ export const DropdownItem = styled.div`
         color: ${ ( { theme } ) => theme.colors.hover };
     }
 `
+export const DropdownHistoricoItem = styled.div`
+    width: 100%;
+    padding: 0 1rem;
+    line-height: 2;
+`

@@ -130,10 +130,11 @@ function Impressoras ( props ) {
         let historico = state.historico[ impressora.serial ]
 
         for ( let itemHistorico in historico ) {
-            views.push( <S.DropdownItem key={ itemHistorico } > { historico[ itemHistorico ] } </S.DropdownItem> )
+            views.push( <S.DropdownHistoricoItem key={ itemHistorico } > { historico[ itemHistorico ] } </S.DropdownHistoricoItem> )
         }
 
-        return views
+        if ( views.length > 0 ) return views
+        return false
     }
 
     return (
@@ -146,10 +147,10 @@ function Impressoras ( props ) {
                         <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
                     </S.Dropdown> }
 
-                    <S.Dropdown>
+                    { renderHistoricoContadores() && <S.Dropdown>
                         <Botao title={ 'Histórico' } hover={ colors.azul }><MenuIcon name={ 'historico' } margin='0' /></Botao>
                         <S.DropdownList> { renderHistoricoContadores() } </S.DropdownList>
-                    </S.Dropdown>
+                    </S.Dropdown> }
 
                     <Botao title={ impressora.contabilizar ? 'Excluir' : 'Restaurar' } onClick={ () => deletarImpressora() } hover={ impressora.contabilizar ? colors.vermelho : colors.azul }>
                         <MenuIcon name={ impressora.contabilizar ? 'impressora_deletar' : 'status_ok' } margin='0' />
