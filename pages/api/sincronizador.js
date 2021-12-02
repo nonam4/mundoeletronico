@@ -8,11 +8,10 @@ import database from './_database.js'
 
 export default async ( req, res ) => {
 
-    console.log( req.query )
+    console.log( req.body )
 
-    let query = JSON.parse( req.query )
-    let { serial, chave, leitura, modelo, id } = query
-    let velho = query.cliente
+    let { serial, chave, leitura, modelo, id } = req.body
+    let velho = req.body.cliente
 
     database.doc( `/historico/${ serial }` ).set( {
         [ chave ]: leitura, modelo, usuarioAtual: `${ id } - ${ cliente.nomefantasia }`
