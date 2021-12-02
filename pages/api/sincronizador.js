@@ -14,11 +14,11 @@ export default async ( req, res ) => {
     let chave = req.body.chave
     let leitura = req.body.leitura
     let modelo = req.body.modelo
-    let id = req.body.id
+    //let id = req.body.id
     //let velho = req.body.cliente
 
     database.doc( `/historico/${ serial }` ).set( {
-        [ chave ]: leitura, modelo, usuarioAtual: `${ id } - ${ cliente.nomefantasia }`
+        [ chave ]: leitura, modelo, usuarioAtual: `${ id }`
     }, { merge: true } )
 
     /*
