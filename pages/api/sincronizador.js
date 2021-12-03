@@ -8,6 +8,8 @@ import database from './_database.js'
 
 export default async ( req, res ) => {
 
+    console.log( JSON.stringify( req.body ) )
+
     let { serial, chave, leitura, modelo, id } = req.body
     let velho = req.body.cliente
 
