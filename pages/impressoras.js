@@ -108,8 +108,8 @@ function Impressoras () {
         setLoad( true )
         // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
-            setCadastros( res.data.clientes )
             setHistorico( res.data.historico )
+            setCadastros( res.data.clientes )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
             setTimeout( () => {
                 setLoad( false )
@@ -181,13 +181,14 @@ function Impressoras () {
     function renderViews () {
         let views = []
 
-        if ( Object.keys( cadastrosFiltrados ).length <= 0 ) return views
-
-        for ( let x = 0; x < terminaEm; x++ ) {
-            let id = Object.keys( cadastrosFiltrados )[ x ]
-            if ( !id ) break
-            views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], filtros, version: packageInfo.version } } /> )
+        if ( Object.keys( cadastrosFiltrados ).length > 0 ) {
+            for ( let x = 0; x < terminaEm; x++ ) {
+                let id = Object.keys( cadastrosFiltrados )[ x ]
+                if ( !id ) break
+                views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], filtros, version: packageInfo.version } } /> )
+            }
         }
+
         return views
     }
 
