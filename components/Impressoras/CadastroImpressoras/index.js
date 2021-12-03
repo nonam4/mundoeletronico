@@ -48,7 +48,7 @@ function Expandido () {
         if ( !router.query.id ) return
         setFiltros( { data: router.query.data } )
         setExpandido( state.cadastros[ router.query.id ] )
-    }, [ router.query.data, router.query.id ] )
+    }, [ router.query.data, router.query.id, state.cadastros ] )
 
     useEffect( () => {
         // toda vez que o valor do expandido for alterado irá definir o cadastro local
@@ -99,19 +99,17 @@ function Expandido () {
     function salvar () {
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
-        Database.salvarCadastro( state.usuario, alterado ).then( () => {
+        Database.salvarCadastro( state.usuario, cadastro ).then( () => {
 
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
-            setCadastros( { ...state.cadastros, [ alterado.id ]: alterado } )
+            setCadastros( { ...state.cadastros, [ cadastro.id ]: cadastro } )
         } ).catch( err => {
             Notification.removeNotification( aviso )
             console.error( err )
             Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
         } )
-
-        fechar()
     }
 
     function fechar () {
