@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 import Icon from '../../../components/Icons/MenuIcon'
 import TextField from '../../../components/Inputs/TextField'
@@ -7,6 +8,7 @@ import * as H from '../../../components/Header/styles'
 import * as S from './styles'
 
 function DropDown ( props ) {
+    const router = useRouter()
     const buscaPadrao = ''
     // ultimo filtro aplicado com sucesso
     const [ ultimaBusca, setUltimaBusca ] = useState( buscaPadrao )
@@ -56,13 +58,13 @@ function DropDown ( props ) {
                 { usandoFiltro && <S.FilterIndicator /> }
                 <Icon name={ 'filtros' } margin={ '0' } title={ 'Filtros' } />
             </H.DropdownItem>
-            <H.Settings right={ '-90' }>
-                <S.FilterOption>
+            <H.SettingsContainer right={ '-90' }><H.Settings>
+                { !router.query.stack && <S.FilterOption>
                     <TextField useRef={ props.buscaRef } onFocus={ toggleFocus } onBlur={ toggleFocus } onChange={ handleBuscaChange } value={ novaBusca } placeholder={ 'Buscar...' } icon={ 'buscar' } />
-                </S.FilterOption>
-                <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarBuscaPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
+                </S.FilterOption> }
                 <H.SettingsItem show={ mostrarBotaoAplicar() } onClick={ () => aplicarNovoFiltro() }> <Icon name={ 'aplicar' } /> Aplicar Filtros </H.SettingsItem>
-            </H.Settings>
+                <H.SettingsItem show={ usandoFiltro } onClick={ () => voltarBuscaPadrao() }> <Icon name={ 'desfazer' } /> Limpar Filtros </H.SettingsItem>
+            </H.Settings></H.SettingsContainer>
         </H.Dropdown>
     )
 }
