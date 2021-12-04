@@ -9,6 +9,7 @@ import SideMenu from '../SideMenu'
 
 import CadastroCliente from '../Clientes/CadastroCliente'
 import CadastroImpressoras from '../Impressoras/CadastroImpressoras'
+import CadastroAtendimento from '../Atendimentos/CadastroAtendimento'
 
 export default function Index ( { children } ) {
     const { colors } = useContext( ThemeContext )
@@ -18,7 +19,8 @@ export default function Index ( { children } ) {
 
     const stack = {
         cadastrocliente: <CadastroCliente />,
-        cadastroimpressoras: <CadastroImpressoras />
+        cadastroimpressoras: <CadastroImpressoras />,
+        cadastroatendimento: <CadastroAtendimento />
     }
 
     useEffect( () => {
