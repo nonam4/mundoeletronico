@@ -79,6 +79,10 @@ function Expandido () {
         dispatch( { type: 'setLoad', payload: valor } )
     }
 
+    function setInCadastros ( cadastro ) {
+        dispatch( { type: 'setCadastros', payload: { ...state.cadastros, [ cadastro.id ]: cadastro } } )
+    }
+
     function fechar () {
         let paginaAtual = router.pathname.replace( '/', '' )
         setLoad( true )
@@ -102,7 +106,7 @@ function Expandido () {
         }, [ 200 ] )
     }
 
-    async function salvarCadastro ( alterado ) {
+    async function salvarCadastro () {
 
         if ( editado.nomefantasia === '' || editado.nomefantasia.length < 5 ) return Notification.notificate( 'Erro', 'Nome fantasia em branco ou inválido!', 'danger' )
         if ( editado.razaosocial === '' || editado.razaosocial.length < 5 ) return Notification.notificate( 'Erro', 'Razão social em branco ou inválida!', 'danger' )
@@ -117,12 +121,25 @@ function Expandido () {
 
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
-        Database.salvarCadastro( state.usuario, alterado ).then( () => {
+        Database.salvarCadastro( state.usuario, editado ).then( () => {
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
-            setCadastro( alterado )
-            fechar()
+            setCadastro( editado )
+            setInCadastros( editado )
+
+            // se tiver algum id na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
+            // ou seja, não precisa reenviar os dados da url pois eles já estão lá
+            if ( router.query.id ) return
+            // como é um cadastro novo não precisa de data e o stack é a própria página de cadastro
+            let paginaAtual = router.pathname.replace( '/', '' )
+            router.push( {
+                pathname: paginaAtual,
+                query: {
+                    stack: 'cadastrocliente',
+                    id: editado.id
+                }
+            } )
 
         } ).catch( err => {
             Notification.removeNotification( aviso )
@@ -324,7 +341,7 @@ function Expandido () {
             <S.View>
                 <S.Botoes>
                     { compareParentData() && <S.Botao onClick={ () => setRollback( true ) } hover={ colors.azul } title='Desfazer'> <MenuIcon name='desfazer' margin='0.8' /> </S.Botao> }
-                    { compareParentData() && <S.Botao onClick={ () => salvarCadastro( editado ) } hover={ colors.azul } title='Salvar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
+                    { compareParentData() && <S.Botao onClick={ () => salvarCadastro() } hover={ colors.azul } title='Salvar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
                     <S.Botao onClick={ () => { fechar() } } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0.8' /> </S.Botao>
                 </S.Botoes>
                 <S.TituloContainer>

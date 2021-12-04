@@ -66,7 +66,7 @@ function Impressoras () {
         setTerminaEm( 24 )
 
         // se a data dos filtros mudar e o cadastro de impressoras estiver em stack, atualiza a url
-        if ( router.query.data !== filtros.data && router.query.stack ) {
+        if ( router.query.data !== filtros.data && router.query.stack === 'cadastroimpressoras' ) {
             let paginaAtual = router.pathname.replace( '/', '' )
             router.push( {
                 pathname: paginaAtual,
