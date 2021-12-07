@@ -19,10 +19,6 @@ tela de cadastrar cliente/fornecedor ter diferentes icones para diferentes tipos
 -cadastro de ti - icone de pessoa
 -cadastro de fornecedor - icone de trabalhador
 
-historico de coletas de contadores
--colocar opção de listar o historico de coletas do contador
-mostrando dia, hora e o valor de contador lido
-
 substituição de impressoras
 -se a impressora A for trocada pela B -> impressora B recebe A no array 'substituindo'. Array 'substituindo' de impressora A será limpo
 -se a impressora B for trocada pela C -> impressora C recebe A e B no array 'substituindo'. Array 'substituindo' de impressora B será limpo
@@ -39,3 +35,6 @@ finalização de atendimentos
 -perguntar pro usuario se os equipamentos foram abastecidos
 -caso sim irá listar todas as impressoras (exceto as que o rendimento não é controlado) do cliente e perguntar quais foram abastecidas
 -caso tenha entrega de suprimentos no cliente perguntar a quantidade de cada suprimento que foi entregue
+
+informações úteis
+-colocar informação de data de instalação e data de troca
