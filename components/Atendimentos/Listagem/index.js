@@ -1,11 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
+import { useDados } from '../../../contexts/DadosContext'
+import { useRouter } from 'next/router'
 
 import MenuIcon from '../../../components/Icons/MenuIcon'
 import * as L from '../Lists'
 import * as S from './styles'
 
 function Atendimento ( props ) {
+    const { dispatch } = useDados()
+    const router = useRouter()
     const { colors } = useContext( ThemeContext )
     const [ atendimentos, setAtendimentos ] = useState( {} )
     const [ expandido, setExpandido ] = useState( props.expandido ? props.expandido : false )
@@ -14,6 +18,29 @@ function Atendimento ( props ) {
     useEffect( () => {
         props.atendimentos && setAtendimentos( props.atendimentos )
     }, [ props.atendimentos ] )
+
+    function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function expandirCadastro ( id ) {
+        let paginaAtual = router.pathname.replace( '/', '' )
+        setLoad( true )
+
+        setTimeout( () => {
+            router.push( {
+                pathname: paginaAtual,
+                query: {
+                    id, stack: 'cadastroatendimento'
+                }
+            } )
+        }, 200 )
+    }
+
+    function finalizarReabrirCadastro ( id ) {
+        console.log( `atendimento ${ id } finalizado` )
+    }
 
     function handleOnDragEnd ( result ) {
         if ( !result.destination ) return
@@ -41,6 +68,7 @@ function Atendimento ( props ) {
         setAtendimentos( props.atendimentos )
     }
 
+    let customProps = { expandido, atendimentos, expandirCadastro, finalizarReabrirCadastro }
     return (
         <S.Container>
             <S.Header>
@@ -53,7 +81,8 @@ function Atendimento ( props ) {
                     </S.Button>
                 </S.HeaderButtons>
             </S.Header>
-            { props.draggable ? <L.DragNDrop { ...props } { ...{ expandido, handleOnDragEnd, atendimentos } } /> : <L.Simple { ...props } { ...{ expandido, atendimentos } } /> }
+            { props.draggable ? <L.DragNDrop { ...{ ...props, handleOnDragEnd, ...customProps } } />
+                : <L.Simple { ...{ ...props, ...customProps } } /> }
         </S.Container>
     )
 }

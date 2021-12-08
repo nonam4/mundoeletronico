@@ -30,30 +30,7 @@ export function DragNDrop ( props ) {
                             <Draggable key={ id } draggableId={ id } index={ index }>
                                 { provided =>
                                     <S.Atendimentos draggable={ true } ref={ provided.innerRef } { ...provided.draggableProps } { ...provided.dragHandleProps }>
-                                        <S.AtendimentoContent>
-                                            <S.AtendimentoField>
-                                                <S.AtendimentoIndicador>Cliente</S.AtendimentoIndicador>
-                                                <S.AtendimentoDado>{ atendimentos[ id ].cliente.nomefantasia }</S.AtendimentoDado>
-                                            </S.AtendimentoField>
-                                            <S.AtendimentoField>
-                                                <S.AtendimentoIndicador>Cidade</S.AtendimentoIndicador>
-                                                <S.AtendimentoDado>{ atendimentos[ id ].cliente.endereco.cidade }</S.AtendimentoDado>
-                                            </S.AtendimentoField>
-                                            <S.AtendimentoField>
-                                                <S.AtendimentoIndicador>{ atendimentos[ id ].feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
-                                                <S.AtendimentoDado>{ getData( atendimentos[ id ].feito ? atendimentos[ id ].dados.fim : atendimentos[ id ].dados.inicio ) }</S.AtendimentoDado>
-                                            </S.AtendimentoField>
-                                            <S.AtendimentoField>
-                                                <S.AtendimentoIndicador>Motivos</S.AtendimentoIndicador>
-                                                <S.AtendimentoDado>{ atendimentos[ id ].motivo.map( motivo => `-${ motivo } ` ) }</S.AtendimentoDado>
-                                            </S.AtendimentoField>
-                                        </S.AtendimentoContent>
-                                        <S.Settings>
-                                            <S.Button hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
-                                            <S.Button hover={ props.feitos ? colors.vermelho : colors.verde } title={ props.feitos ? 'Reabrir' : 'Finalizar' }>
-                                                <MenuIcon name={ props.feitos ? 'atendimento_reabrir' : 'atendimento_finalizar' } margin='0' />
-                                            </S.Button>
-                                        </S.Settings>
+                                        <Atendimento { ...{ ...props, atendimentos, id, colors } } />
                                     </S.Atendimentos>
                                 }
                             </Draggable>
@@ -75,32 +52,39 @@ export function Simple ( props ) {
             { Object.keys( atendimentos ).map( ( id ) =>
 
                 <S.Atendimentos draggable={ false } key={ id }>
-                    <S.AtendimentoContent>
-                        <S.AtendimentoField>
-                            <S.AtendimentoIndicador>Cliente</S.AtendimentoIndicador>
-                            <S.AtendimentoDado>{ atendimentos[ id ].cliente.nomefantasia }</S.AtendimentoDado>
-                        </S.AtendimentoField>
-                        <S.AtendimentoField>
-                            <S.AtendimentoIndicador>Cidade</S.AtendimentoIndicador>
-                            <S.AtendimentoDado>{ atendimentos[ id ].cliente.endereco.cidade }</S.AtendimentoDado>
-                        </S.AtendimentoField>
-                        <S.AtendimentoField>
-                            <S.AtendimentoIndicador>{ atendimentos[ id ].feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
-                            <S.AtendimentoDado>{ getData( atendimentos[ id ].feito ? atendimentos[ id ].dados.fim : atendimentos[ id ].dados.inicio ) }</S.AtendimentoDado>
-                        </S.AtendimentoField>
-                        <S.AtendimentoField>
-                            <S.AtendimentoIndicador>Motivos</S.AtendimentoIndicador>
-                            <S.AtendimentoDado>{ atendimentos[ id ].motivo.map( motivo => `-${ motivo } ` ) }</S.AtendimentoDado>
-                        </S.AtendimentoField>
-                    </S.AtendimentoContent>
-                    <S.Settings>
-                        <S.Button hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
-                        <S.Button hover={ props.feitos ? colors.vermelho : colors.verde } title={ props.feitos ? 'Reabrir' : 'Finalizar' }>
-                            <MenuIcon name={ props.feitos ? 'atendimento_reabrir' : 'atendimento_finalizar' } margin='0' />
-                        </S.Button>
-                    </S.Settings>
+                    <Atendimento { ...{ ...props, atendimentos, id, colors } } />
                 </S.Atendimentos>
             ) }
         </S.Content>
     )
+}
+
+function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
+
+    return ( <>
+        <S.AtendimentoContent>
+            <S.AtendimentoField>
+                <S.AtendimentoIndicador>Cliente</S.AtendimentoIndicador>
+                <S.AtendimentoDado>{ atendimentos[ id ].cliente.nomefantasia }</S.AtendimentoDado>
+            </S.AtendimentoField>
+            <S.AtendimentoField>
+                <S.AtendimentoIndicador>Cidade</S.AtendimentoIndicador>
+                <S.AtendimentoDado>{ atendimentos[ id ].cliente.endereco.cidade }</S.AtendimentoDado>
+            </S.AtendimentoField>
+            <S.AtendimentoField>
+                <S.AtendimentoIndicador>{ atendimentos[ id ].feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
+                <S.AtendimentoDado>{ getData( atendimentos[ id ].feito ? atendimentos[ id ].dados.fim : atendimentos[ id ].dados.inicio ) }</S.AtendimentoDado>
+            </S.AtendimentoField>
+            <S.AtendimentoField>
+                <S.AtendimentoIndicador>Motivos</S.AtendimentoIndicador>
+                <S.AtendimentoDado>{ atendimentos[ id ].motivo.map( motivo => `-${ motivo } ` ) }</S.AtendimentoDado>
+            </S.AtendimentoField>
+        </S.AtendimentoContent>
+        <S.Settings>
+            <S.Button onClick={ () => expandirCadastro( id ) } hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
+            <S.Button onClick={ () => { finalizarReabrirCadastro( id ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
+                <MenuIcon name={ feitos ? 'atendimento_reabrir' : 'atendimento_finalizar' } margin='0' />
+            </S.Button>
+        </S.Settings>
+    </> )
 }

@@ -3,7 +3,7 @@ import { useDados } from '../contexts/DadosContext'
 import { useRouter } from 'next/router'
 
 import * as S from '../styles/atendimentos'
-
+import * as Notification from '../workers/notification'
 import * as Database from '../workers/database'
 
 import MainFrame from '../components/MainFrame'
@@ -64,11 +64,16 @@ function Atendimentos () {
         dispatch( { type: 'setAtendimentos', payload: dados } )
     }
 
+    function setCadastros ( dados ) {
+        dispatch( { type: 'setCadastros', payload: dados } )
+    }
+
     async function solicitarDados () {
 
         setLoad( true )
         Database.getAtendimentos( busca ).then( res => {
-            setAtendimentos( res.data )
+            setCadastros( res.data.cadastros )
+            setAtendimentos( res.data.atendimentos )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
             setTimeout( () => {
                 setLoad( false )
