@@ -15,7 +15,7 @@ import * as S from './styles'
 import * as Database from '../../../workers/database'
 import * as Notification from '../../../workers/notification'
 
-function Expandido () {
+function CadastroExpandido () {
 
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useDados()
@@ -400,4 +400,4 @@ function Expandido () {
     )
 }
 
-export default Expandido
+export default CadastroExpandido

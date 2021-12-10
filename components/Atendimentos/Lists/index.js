@@ -4,18 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import MenuIcon from '../../../components/Icons/MenuIcon'
 import * as S from './styles'
-
-function getData ( timestamp ) {
-    let data = new Date( timestamp[ '_seconds' ] * 1000 )
-    let dia = data.getDate() < 10 ? '0' + data.getDate() : data.getDate()
-    let mes = ( data.getMonth() + 1 ) < 10 ? '0' + ( data.getMonth() + 1 ) : data.getMonth() + 1
-    let ano = data.getFullYear()
-
-    let hora = data.getHours() < 10 ? '0' + data.getHours() : data.getHours()
-    let minutos = data.getMinutes() < 10 ? '0' + data.getMinutes() : data.getMinutes()
-
-    return `${ dia }/${ mes }/${ ano } - ${ hora }:${ minutos }`
-}
+import * as Database from '../../../workers/database'
 
 export function DragNDrop ( props ) {
     const { colors } = useContext( ThemeContext )
@@ -60,9 +49,12 @@ export function Simple ( props ) {
 }
 
 function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
-
     return ( <>
         <S.AtendimentoContent>
+            <S.AtendimentoField>
+                <S.AtendimentoIndicador>{ atendimentos[ id ].feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
+                <S.AtendimentoDado>{ Database.convertTimestamp( atendimentos[ id ].feito ? atendimentos[ id ].dados.ultimaalteracao : atendimentos[ id ].dados.inicio ) }</S.AtendimentoDado>
+            </S.AtendimentoField>
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Cliente</S.AtendimentoIndicador>
                 <S.AtendimentoDado>{ atendimentos[ id ].cliente.nomefantasia }</S.AtendimentoDado>
@@ -70,10 +62,6 @@ function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, fin
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Cidade</S.AtendimentoIndicador>
                 <S.AtendimentoDado>{ atendimentos[ id ].cliente.endereco.cidade }</S.AtendimentoDado>
-            </S.AtendimentoField>
-            <S.AtendimentoField>
-                <S.AtendimentoIndicador>{ atendimentos[ id ].feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
-                <S.AtendimentoDado>{ getData( atendimentos[ id ].feito ? atendimentos[ id ].dados.fim : atendimentos[ id ].dados.inicio ) }</S.AtendimentoDado>
             </S.AtendimentoField>
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Motivos</S.AtendimentoIndicador>

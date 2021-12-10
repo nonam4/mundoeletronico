@@ -15,26 +15,31 @@ import * as Database from '../../../workers/database'
 import * as Notification from '../../../workers/notification'
 import * as S from './styles'
 
-function Expandido () {
+function AtendimentoExpandido () {
     // variaveis do contexto, disponível em todo o sistema
     const { state, dispatch } = useDados()
     // cores do tema
     const { colors } = useContext( ThemeContext )
     const router = useRouter()
+    // variaveis disponíveis no contexto
+    const { atendimentos, menu, cadastros } = state
     // variaveis sobre a visibilidade do menu lateral
-    const { expandido, sempreVisivel } = state.menu
+    const { expandido, sempreVisivel } = menu
     // data atual
     const data = new Date()
-    // atendimento com todos os dados limpos
-    const limpo = {
-        id: data.getTime()
+    const timestamp = {
+        _seconds: data.getTime() / 1000,
+        _nanoseconds: data.getTime()
     }
+
+    // atendimento com todos os dados limpos
+    const limpo = { id: data.getTime(), cliente: {}, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
     // valor padrão do cadastro, usado apenas para comparar para desfazer alterações
     const [ cadastro, setCadastro ] = useState( limpo )
     // cadastro sendo editado no momento
-    const [ editado, setEditado ] = useState( limpo ) //somente o cliente editado
+    const [ editado, setEditado ] = useState( limpo ) //somente o cadastro editado
 
     // quando iniciar o sistema
     useEffect( () => {
@@ -42,12 +47,12 @@ function Expandido () {
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
         let queryId = router.query.id
-        /*
-        if ( queryId && state.cadastros[ queryId ] ) {
-            setCadastro( state.cadastros[ queryId ] )
-            setEditado( state.cadastros[ queryId ] )
+        if ( queryId ) {
+            let localizado = localizarAtendimento( queryId )
+            if ( !localizado ) return
+            setCadastro( localizado )
+            setEditado( localizado )
         }
-        */
 
         setLoad( false )
     }, [ router.query ] )
@@ -65,8 +70,21 @@ function Expandido () {
     }
 
     function setInAtendimentos ( cadastro ) {
-        console.log( state.atendimentos )
-        //dispatch( { type: 'setCadastros', payload: { ...state.cadastros, [ cadastro.id ]: cadastro } } )
+        dispatch( { type: 'setCadastros', payload: { ...state.cadastros, [ cadastro.id ]: cadastro } } )
+    }
+
+    function localizarAtendimento ( id ) {
+        let localizado = undefined
+
+        if ( atendimentos[ 'Em aberto' ][ id ] ) return atendimentos[ 'Em aberto' ][ id ]
+        if ( atendimentos[ 'Feitos' ][ id ] ) return atendimentos[ 'Feitos' ][ id ]
+
+        //depois filtra os dos tecnicos
+        for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
+            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ id ] ) localizado = atendimentos[ 'Tecnicos' ][ tecnico ][ id ]
+        }
+
+        return localizado
     }
 
     async function salvarCadastro () {
@@ -138,7 +156,12 @@ function Expandido () {
                     <S.Botao onClick={ () => fechar() } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0.8' /> </S.Botao>
                 </S.Botoes>
                 <S.TituloContainer>
-                    <S.Titulo> Cadastrar Atendimento </S.Titulo>
+                    <S.Titulo> { router.query.id ? 'Editar' : 'Novo' } Atendimento </S.Titulo>
+                    <div>
+                        <S.DadosCadastro>ID do atendimento: <b> { editado.id } </b></S.DadosCadastro>
+                        <S.DadosCadastro>Data do cadastro: <b> { Database.convertTimestamp( editado.dados.inicio ) } </b></S.DadosCadastro>
+                        <S.DadosCadastro>Última alteração: <b>  { Database.convertTimestamp( editado.dados.ultimaalteracao ) } </b></S.DadosCadastro>
+                    </div>
                 </S.TituloContainer>
 
             </S.View>
@@ -146,4 +169,4 @@ function Expandido () {
     )
 }
 
-export default Expandido
+export default AtendimentoExpandido

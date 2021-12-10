@@ -15,7 +15,7 @@ function Atendimentos () {
     const router = useRouter()
     // variaveis do contexto, disponível em todo o sistema
     const { state, dispatch } = useDados()
-    // atendimentos disponíveis no contexto
+    // variaveis disponíveis no contexto
     const { atendimentos, menu, cadastros } = state
     // variaveis sobre a visibilidade do menu lateral
     const { expandido, sempreVisivel } = menu

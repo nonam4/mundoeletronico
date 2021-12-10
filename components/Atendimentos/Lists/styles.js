@@ -45,6 +45,12 @@ export const AtendimentoField = styled.div`
     cursor: inherit;
     border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
     :nth-of-type(1) {
+        min-width: fit-content;
+        @media only screen and (max-width: 1060px) {
+            border: none;
+        }
+    }
+    :nth-of-type(2) {
         min-width: 200px;
         @media only screen and (max-width: 817px) {
             min-width: 100%;
@@ -59,16 +65,10 @@ export const AtendimentoField = styled.div`
             border: none;
         }
     }
-    :nth-of-type(2) {
+    :nth-of-type(3) {
         min-width: 115px;
         @media only screen and (max-width: 367px) {
             min-width: 100%;
-            border: none;
-        }
-    }
-    :nth-of-type(3) {
-        min-width: fit-content;
-        @media only screen and (max-width: 1060px) {
             border: none;
         }
     }

@@ -188,7 +188,7 @@ export const Spacer = styled.div`
     max-width: 0.8rem;
     height: 1px;
 `
-export const DadosColetor = styled.div`
+export const DadosCadastro = styled.div`
     width: 100%;
     font-size: 12px;
     color: ${ ( { theme } ) => theme.colors.floating };
@@ -211,37 +211,5 @@ export const Listagem = styled.div`
         background: ${ ( { theme } ) => theme.colors.highlight };
         border: 0.3rem solid ${ ( { theme } ) => theme.colors.background };
         background-clip: padding-box;
-    }
-`
-export const HorarioContainer = styled.div`
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding-right: 0.8rem;
-    margin-top: 0.5rem;
-`
-export const HorarioSubcontainer = styled.div`
-    width: 16.66%; 
-    
-    div {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    @media only screen and (max-width: 700px) {
-        width: 33.33%;
-        margin-bottom: 0.8rem;
-    }
-`
-export const Horario = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0.4rem 0.8rem 0 0 !important;
-
-    svg {
-        width: 16px;
-        height: 16px;
     }
 `
