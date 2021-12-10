@@ -37,4 +37,4 @@ finalização de atendimentos
 -caso tenha entrega de suprimentos no cliente perguntar a quantidade de cada suprimento que foi entregue
 
 informações úteis
--colocar informação de data de instalação e data de troca
+-colocar informação de data de instalação e data de troca de cada impressora
