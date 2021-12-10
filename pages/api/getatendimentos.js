@@ -23,8 +23,7 @@ export default async ( req, res ) => {
     //atendimentos[ 'Tecnicos' ][ 'Tec1' ] = test
     //atendimentos[ 'Tecnicos' ][ 'Tec2' ] = test1
     //atendimentos[ 'Feitos' ] = test
-    //define que os dados ficarão em cache por no minimo 60 segundos, depois revalida tudo novamente
-    res.setHeader( 'Cache-Control', 's-maxage=3600, stale-while-revalidade' )
+
     res.status( 200 ).send( { atendimentos, cadastros } )
 }
 /*

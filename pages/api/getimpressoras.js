@@ -175,7 +175,6 @@ export default async ( req, res ) => {
                 break
         }
     } )
-    //define que os dados ficarão em cache por no minimo 60 segundos, depois revalida tudo novamente
-    if ( process.env.NODE_ENV === 'development' ) res.setHeader( 'Cache-Control', 's-maxage=60000, stale-while-revalidade' )
+
     res.status( 200 ).send( { cadastros, historico } )
 }

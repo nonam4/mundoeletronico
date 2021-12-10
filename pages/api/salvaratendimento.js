@@ -15,11 +15,8 @@ export default async ( req, res ) => {
             }
         } )
         if ( !usuario.permissoes.atendimentos.modificar ) return res.status( 403 ).send( 'Usuário sem permissão para isso!' )
-        /*
         return database.doc( `/atendimentos/${ atendimento.id }` ).set( atendimento, { merge: true } ).then( () => {
             res.status( 200 ).send( 'Salvo' )
         } )
-        */
-        res.status( 200 ).send( 'Salvo' )
     } )
 }

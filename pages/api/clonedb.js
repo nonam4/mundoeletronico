@@ -137,7 +137,6 @@ export default async ( req, res ) => {
         }
         await batch.commit()
     } ).catch( err => {
-        console.log( 'erro ao receber ', err )
         res.status( 400 ).send( `Não clonou. Usando usuario ${ process.env.USER } - erro ${ err }` )
     } )
     res.status( 200 ).send( `Clonado usando usuario ${ process.env.USER }` )
