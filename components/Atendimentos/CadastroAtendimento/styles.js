@@ -213,3 +213,37 @@ export const Listagem = styled.div`
         background-clip: padding-box;
     }
 `
+export const ListaNomesContainer = styled.div`
+    width: 100%;
+    display: block;
+    justify-content: space-between;
+    align-items: flex-end;
+`
+export const ListaNomes = styled.div`
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 300px;
+    background: ${ ( { theme } ) => theme.colors.menus };
+    ::-webkit-scrollbar {
+        width: 1.1rem;
+        background: ${ ( { theme } ) => theme.colors.menus };
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        background: ${ ( { theme } ) => theme.colors.highlight };
+        border: 0.3rem solid ${ ( { theme } ) => theme.colors.menus };
+        background-clip: padding-box;
+    }
+`
+export const ItemListaNomes = styled.div`
+    width: 100%;
+    border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    cursor: pointer;
+    padding: 0.5rem;
+    
+    :hover {
+        background: ${ ( { theme } ) => theme.colors.highlight };
+    }
+`

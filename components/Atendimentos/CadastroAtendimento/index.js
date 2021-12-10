@@ -38,6 +38,8 @@ function AtendimentoExpandido () {
     const [ editado, setEditado ] = useState( limpo ) //somente o cadastro editado
     // controla a busca de clientes na lista quando for criar um atendimento
     const [ buscaCliente, setBuscaCliente ] = useState( '' )
+    // controla se deve mostrar a lista de nomes ao buscar cadastros
+    const [ mostrarListaNomes, setMostrarListaNomes ] = useState( false )
 
     // quando iniciar o sistema
     useEffect( () => {
@@ -55,10 +57,16 @@ function AtendimentoExpandido () {
         setLoad( false )
     }, [ router.query ] )
 
+    useEffect( () => {
+        if ( buscaCliente === '' ) return
+
+    }, [ buscaCliente ] )
+
     // volta o valor do cadastro editado para o padrão
     useEffect( () => {
         if ( !rollback ) return
         setEditado( JSON.parse( JSON.stringify( cadastro ) ) )
+        setBuscaCliente( '' )
         setRollback( false )
     }, [ rollback ] )
 
@@ -145,7 +153,54 @@ function AtendimentoExpandido () {
     }
 
     function handleBuscarCliente ( e ) {
-        setBuscaCliente( e.target.value )
+        setBuscaCliente( e.target.value.toLowerCase() )
+    }
+
+    function handleFocusBusca ( mostrar ) {
+        // não irá esconder a lista se a busca for diferente de vazio
+        if ( !mostrar && buscaCliente !== '' ) return
+        setMostrarListaNomes( mostrar )
+    }
+
+    function setCliente ( cadastro ) {
+        setMostrarListaNomes( false )
+        setBuscaCliente( cadastro.nomefantasia )
+
+        let dados = {
+            nomefantasia: cadastro.nomefantasia,
+            razaosocial: cadastro.razaosocial,
+            cpfcnpj: cadastro.cpfcnpj,
+            contato: cadastro.contato,
+            endereco: cadastro.endereco
+        }
+
+        setEditado( set( 'cliente', dados, editado ) )
+    }
+
+    function renderListaNomes () {
+        let views = []
+
+        function compare ( nome ) {
+            let busca = buscaCliente.normalize( 'NFD' ).replace( /[^a-zA-Zs]/g, '' )
+            // somente precisa definir o nome como lowercase pois a busca sempre será
+            // remove todas as pontuações na hora da comparação
+            return nome.toLowerCase().normalize( 'NFD' ).replace( /[^a-zA-Zs]/g, '' ).indexOf( busca ) > -1
+        }
+
+        for ( let tipo in cadastros ) {
+            for ( let id in cadastros[ tipo ] ) {
+
+                let cadastro = cadastros[ tipo ][ id ]
+                let nome = undefined
+
+                if ( compare( cadastro.razaosocial ) ) nome = cadastro.razaosocial
+                if ( compare( cadastro.nomefantasia ) ) nome = cadastro.nomefantasia
+
+                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.id } onClick={ () => setCliente( cadastro ) }> { nome } </S.ItemListaNomes> )
+            }
+        }
+
+        return views
     }
 
     return (
@@ -168,7 +223,14 @@ function AtendimentoExpandido () {
 
                 <S.LinhaContainer>
                     <S.LinhaSubContainer>
-                        <S.Linha> <TextField placeholder={ 'Cliente' } onChange={ ( e ) => handleBuscarCliente( e ) } value={ buscaCliente } icon={ false } maxLength={ 50 } /> </S.Linha>
+                        <S.ListaNomesContainer >
+                            <S.Linha>
+                                <TextField placeholder={ 'Cliente' } onFocus={ () => handleFocusBusca( true ) } onBlur={ () => handleFocusBusca( false ) } onChange={ ( e ) => handleBuscarCliente( e ) } value={ buscaCliente } icon={ false } maxLength={ 50 } />
+                            </S.Linha>
+                            { buscaCliente !== '' && mostrarListaNomes && <S.ListaNomes>
+                                { renderListaNomes() }
+                            </S.ListaNomes> }
+                        </S.ListaNomesContainer>
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
 
