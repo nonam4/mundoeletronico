@@ -7,26 +7,43 @@ export default async ( req, res ) => {
         'Feitos': {},
         'Tecnicos': {}
     }
+    let cadastros = {
+        fornecedor: {},
+        particular: {}
+    }
 
-    let cadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
-    let dados = await database.collection( '/atendimentos/' ).get()
-    dados.forEach( dado => {
+    let listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
+    listaCadastros.forEach( itemCadastro => {
 
-        let atendimento = dado.data()
-        atendimento.id = dado.id
+        let cadastro = itemCadastro.data()
+
+        if ( cadastro.tipo === 'fornecedor' ) return cadastros[ 'fornecedor' ][ cadastro.id ] = cadastro
+        if ( cadastro.tipo === 'particular' ) return cadastros[ 'particular' ][ cadastro.id ] = cadastro
+    } )
+
+    let listaAtendimentos = await database.collection( '/atendimentos/' ).get()
+    listaAtendimentos.forEach( itemAtendimento => {
+
+        let atendimento = itemAtendimento.data()
+        atendimento.id = itemAtendimento.id
 
         if ( atendimento.feito ) { atendimentos[ 'Feitos' ] = { ...atendimentos[ 'Feitos' ], [ atendimento.id ]: atendimento } }
         else if ( atendimento.responsavel === '' ) { atendimentos[ 'Em aberto' ] = { ...atendimentos[ 'Em aberto' ], [ atendimento.id ]: atendimento } }
         else { atendimentos[ 'Tecnicos' ][ atendimento.responsavel ] = { ...atendimentos[ 'Tecnicos' ][ atendimento.responsavel ], [ atendimento.id ]: atendimento } }
     } )
 
-    //atendimentos[ 'Tecnicos' ][ 'Tec1' ] = test
-    //atendimentos[ 'Tecnicos' ][ 'Tec2' ] = test1
-    //atendimentos[ 'Feitos' ] = test
+    res.status( 200 ).send( { atendimentos, cadastros } )
+}
+
+/*
+
+    atendimentos[ 'Tecnicos' ][ 'Tec1' ] = test
+    atendimentos[ 'Tecnicos' ][ 'Tec2' ] = test1
+    atendimentos[ 'Feitos' ] = test
 
     res.status( 200 ).send( { atendimentos, cadastros } )
 }
-/*
+
 let test = {
     "8irckIPbEIfXjaSADTUu": {
         "cliente": {

@@ -15,14 +15,14 @@ function Atendimentos () {
     const router = useRouter()
     // variaveis do contexto, disponível em todo o sistema
     const { state, dispatch } = useDados()
+    // atendimentos disponíveis no contexto
+    const { atendimentos, menu, cadastros } = state
     // variaveis sobre a visibilidade do menu lateral
-    const { expandido, sempreVisivel } = state.menu
+    const { expandido, sempreVisivel } = menu
     // referência do campo de busca para focar automático no ctrl + f
     const buscaRef = useRef( null )
     // busca nos atendimentos
     const [ busca, setBusca ] = useState( '' )
-    // atendimentos disponíveis no contexto
-    const { atendimentos } = state
     //  array de atendimentos filtrados pelo campo de busca, item loca, não interfere no contexto
     const [ atendimentosFiltrados, setAtendimentosFiltrados ] = useState( { 'Tecnicos': {} } )
 
@@ -72,7 +72,7 @@ function Atendimentos () {
 
         setLoad( true )
         Database.getAtendimentos( busca ).then( res => {
-            setCadastros( res.data.cadastros )
+            setCadastros( { ...res.data.cadastros, locacao: cadastros[ 'locacao' ] } )
             setAtendimentos( res.data.atendimentos )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
             setTimeout( () => {

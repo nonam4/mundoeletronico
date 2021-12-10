@@ -57,9 +57,13 @@ export default async ( req, res ) => {
         return false
     }
 
-    let cadastros = {}
+    let cadastros = {
+        locacao: {},
+        fornecedor: {},
+        particular: {}
+    }
     let historico = {}
-    let dados = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).where( 'tipo', '==', 'locacao' ).orderBy( 'nomefantasia' ).get()
+    let listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
     let listaHistorico = await database.collection( '/historico' ).get()
 
     listaHistorico.forEach( itemHistorico => {
@@ -96,9 +100,13 @@ export default async ( req, res ) => {
         }
     } )
 
-    dados.forEach( dado => {
+    listaCadastros.forEach( itemCadastro => {
 
-        let cadastro = dado.data()
+        let cadastro = itemCadastro.data()
+
+        if ( cadastro.tipo === 'fornecedor' ) return cadastros[ 'fornecedor' ][ cadastro.id ] = cadastro
+        if ( cadastro.tipo === 'particular' ) return cadastros[ 'particular' ][ cadastro.id ] = cadastro
+
         cadastro.impresso = 0
         cadastro.excedentes = 0
         cadastro.impressorasAtivas = 0
@@ -110,7 +118,7 @@ export default async ( req, res ) => {
         for ( let serial in impressoras ) {
 
             let impressora = impressoras[ serial ]
-            impressora.contadores = { [ data ]: dado.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
+            impressora.contadores = { [ data ]: itemCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
             let contadores = impressora.contadores[ data ]
             let impresso = 0
             if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
@@ -162,16 +170,16 @@ export default async ( req, res ) => {
 
         switch ( listando ) {
             case 'todos':
-                cadastros[ cadastro.id ] = cadastro
+                cadastros[ 'locacao' ][ cadastro.id ] = cadastro
                 break
             case 'excedentes':
-                if ( cadastro.excedentes > 0 ) cadastros[ cadastro.id ] = cadastro
+                if ( cadastro.excedentes > 0 ) cadastros[ 'locacao' ][ cadastro.id ] = cadastro
                 break
             case 'atrasos':
-                if ( cadastro.atraso ) cadastros[ cadastro.id ] = cadastro
+                if ( cadastro.atraso ) cadastros[ 'locacao' ][ cadastro.id ] = cadastro
                 break
             case 'abastecimentos':
-                if ( cadastro.abastecimento ) cadastros[ cadastro.id ] = cadastro
+                if ( cadastro.abastecimento ) cadastros[ 'locacao' ][ cadastro.id ] = cadastro
                 break
         }
     } )

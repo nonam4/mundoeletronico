@@ -79,7 +79,7 @@ function Impressoras () {
         }
 
         // se a busca estiver vazia vai definir os cadastros filtrados com os dados do contexto
-        if ( filtros.busca === '' ) return setCadastrosFiltrados( cadastros )
+        if ( filtros.busca === '' ) return setCadastrosFiltrados( cadastros[ 'locacao' ] )
 
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
@@ -139,8 +139,8 @@ function Impressoras () {
         return () => {
             let filtrados = {}
 
-            for ( let id in cadastros ) {
-                let cliente = cadastros[ id ]
+            for ( let id in cadastros[ 'locacao' ] ) {
+                let cliente = cadastros[ 'locacao' ][ id ]
 
                 if ( compararString( limparString( cliente.nomefantasia ), buscaLimpa )
                     || compararString( limparString( cliente.razaosocial ), buscaLimpa )

@@ -7,7 +7,7 @@ import * as S from './styles'
 
 import Icon from '../../../components/Icons/MenuIcon'
 
-function ClienteResumo ( props ) {
+function CadastroResumo ( props ) {
     const router = useRouter()
     const { dispatch } = useDados()
     const { colors } = useContext( ThemeContext )
@@ -98,4 +98,4 @@ function ClienteResumo ( props ) {
     )
 }
 
-export default ClienteResumo
+export default CadastroResumo
