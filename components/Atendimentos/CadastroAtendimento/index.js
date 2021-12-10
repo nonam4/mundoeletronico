@@ -27,11 +27,7 @@ function AtendimentoExpandido () {
     const { expandido, sempreVisivel } = menu
     // data atual
     const data = new Date()
-    const timestamp = {
-        _seconds: data.getTime() / 1000,
-        _nanoseconds: data.getTime()
-    }
-
+    const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
     // atendimento com todos os dados limpos
     const limpo = { id: data.getTime(), cliente: {}, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
@@ -40,6 +36,8 @@ function AtendimentoExpandido () {
     const [ cadastro, setCadastro ] = useState( limpo )
     // cadastro sendo editado no momento
     const [ editado, setEditado ] = useState( limpo ) //somente o cadastro editado
+    // controla a busca de clientes na lista quando for criar um atendimento
+    const [ buscaCliente, setBuscaCliente ] = useState( '' )
 
     // quando iniciar o sistema
     useEffect( () => {
@@ -146,6 +144,10 @@ function AtendimentoExpandido () {
         return JSON.stringify( editado ) != JSON.stringify( cadastro )
     }
 
+    function handleBuscarCliente ( e ) {
+        setBuscaCliente( e.target.value )
+    }
+
     return (
         <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
             <Header />
@@ -163,6 +165,12 @@ function AtendimentoExpandido () {
                         <S.DadosCadastro>Última alteração: <b>  { Database.convertTimestamp( editado.dados.ultimaalteracao ) } </b></S.DadosCadastro>
                     </div>
                 </S.TituloContainer>
+
+                <S.LinhaContainer>
+                    <S.LinhaSubContainer>
+                        <S.Linha> <TextField placeholder={ 'Cliente' } onChange={ ( e ) => handleBuscarCliente( e ) } value={ buscaCliente } icon={ false } maxLength={ 50 } /> </S.Linha>
+                    </S.LinhaSubContainer>
+                </S.LinhaContainer>
 
             </S.View>
         </S.Container>
