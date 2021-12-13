@@ -109,7 +109,7 @@ function Impressoras () {
         // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
             setHistorico( res.data.historico )
-            setCadastros( res.data.cadastros )
+            setCadastros( { ...cadastros, locacao: res.data.cadastros } )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
             setTimeout( () => {
                 setLoad( false )
