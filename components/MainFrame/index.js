@@ -5,6 +5,8 @@ import { useEffect, useContext } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 import usePersistedState from '../../hooks/usePersistedState'
 
+import * as Database from '../../workers/database'
+
 import SideMenu from '../SideMenu'
 
 import CadastroCliente from '../Clientes/CadastroCliente'
@@ -45,15 +47,23 @@ export default function Index ( { children } ) {
         if ( !state.usuario && !state.autenticado ) return setUsuario( null )
     }, [ state.autenticado ] )
 
-    function toggleLoad () {
-        dispatch( { type: 'setLoad', payload: !state.load } )
-    }
-
     function prepararApp () {
         // primeiro tenta atualizar o usuário nas variáveis de ambiente
         // sempre que precisar buscaremos o login aqui ao invés do localstorage
         dispatch( { type: 'setUsuario', payload: usuario } )
-        toggleLoad()
+        /*
+        Database.getAll().then( res => {
+
+            setHistorico( res.data.historico )
+            setCadastros( res.data.cadastros )
+            setAtendimentos( res.data.atendimentos )
+
+        } ).catch( err => {
+            setLoad( false )
+            Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
+            console.error( err )
+        } )
+        */
     }
 
     return (

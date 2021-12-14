@@ -29,13 +29,16 @@ function AtendimentoExpandido () {
     const data = new Date()
     const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
     // atendimento com todos os dados limpos
-    const limpo = { id: data.getTime(), cliente: {}, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
+    const limpo = { id: data.getTime(), cliente: undefined, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
     // valor padrão do cadastro, usado apenas para comparar para desfazer alterações
     const [ cadastro, setCadastro ] = useState( limpo )
     // cadastro sendo editado no momento
     const [ editado, setEditado ] = useState( limpo ) //somente o cadastro editado
+    // variaveis referente ao cliente do atendimento
+    const [ cliente, setCliente ] = useState( undefined )
+    const [ endereco, setEndereco ] = useState( undefined )
     // controla a busca de clientes na lista quando for criar um atendimento
     const [ buscaCliente, setBuscaCliente ] = useState( '' )
     // controla se deve mostrar a lista de nomes ao buscar cadastros
@@ -49,9 +52,10 @@ function AtendimentoExpandido () {
         let queryId = router.query.id
         if ( queryId ) {
             let localizado = localizarAtendimento( queryId )
+
             if ( !localizado ) return
-            setCadastro( localizado )
-            setEditado( localizado )
+            setCadastro( JSON.parse( JSON.stringify( localizado ) ) )
+            setEditado( JSON.parse( JSON.stringify( localizado ) ) )
         }
 
         setLoad( false )
@@ -65,10 +69,29 @@ function AtendimentoExpandido () {
     // volta o valor do cadastro editado para o padrão
     useEffect( () => {
         if ( !rollback ) return
+
         setEditado( JSON.parse( JSON.stringify( cadastro ) ) )
         setBuscaCliente( '' )
+        setCliente( undefined )
+        setEndereco( undefined )
+
         setRollback( false )
     }, [ rollback ] )
+
+    useEffect( () => {
+        if ( !editado.cliente ) return
+        let dados = cadastros[ editado.cliente.tipo ][ editado.cliente.id ]
+        // se o cliente não existir mais (por ser excluido por exemplo)
+        if ( !dados ) {
+            Notification.notificate( 'Erro', 'O cliente do atendimento não existe!', 'danger' )
+            fechar()
+            return
+        }
+
+        setCliente( dados )
+        setBuscaCliente( dados.nomefantasia )
+        setEndereco( dados.endereco )
+    }, [ editado ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -162,19 +185,10 @@ function AtendimentoExpandido () {
         setMostrarListaNomes( mostrar )
     }
 
-    function setCliente ( cadastro ) {
+    function setClienteAtendimento ( { id, tipo, nomefantasia } ) {
         setMostrarListaNomes( false )
-        setBuscaCliente( cadastro.nomefantasia )
-
-        let dados = {
-            nomefantasia: cadastro.nomefantasia,
-            razaosocial: cadastro.razaosocial,
-            cpfcnpj: cadastro.cpfcnpj,
-            contato: cadastro.contato,
-            endereco: cadastro.endereco
-        }
-
-        setEditado( set( 'cliente', dados, editado ) )
+        setBuscaCliente( nomefantasia )
+        setEditado( set( 'cliente', { id, tipo }, editado ) )
     }
 
     function renderListaNomes () {
@@ -196,7 +210,7 @@ function AtendimentoExpandido () {
                 if ( compare( cadastro.razaosocial ) ) nome = cadastro.razaosocial
                 if ( compare( cadastro.nomefantasia ) ) nome = cadastro.nomefantasia
 
-                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.id } onClick={ () => setCliente( cadastro ) }> { nome } </S.ItemListaNomes> )
+                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.id } onClick={ () => setClienteAtendimento( cadastro ) }> { nome } </S.ItemListaNomes> )
             }
         }
 
@@ -231,6 +245,38 @@ function AtendimentoExpandido () {
                                 { renderListaNomes() }
                             </S.ListaNomes> }
                         </S.ListaNomesContainer>
+                        { cliente && <S.DadosCliente>
+
+                            <S.ContainerDadoCliente>
+                                <S.TituloDadoCliente> Endereço </S.TituloDadoCliente>
+                                <S.TextoDadoCliente>{ `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }</S.TextoDadoCliente>
+                            </S.ContainerDadoCliente>
+
+                            <S.ContainerDadoCliente>
+                                <S.TituloDadoCliente> Contato </S.TituloDadoCliente>
+                                <S.TextoDadoCliente>{ `${ cliente.contato.telefone } - ${ cliente.contato.celular }` }</S.TextoDadoCliente>
+                            </S.ContainerDadoCliente>
+
+                            <S.SubcontainerDadoCliente>
+
+                                <S.ContainerDadoCliente>
+                                    <S.TituloDadoCliente> Chave do cliente </S.TituloDadoCliente>
+                                    <S.TextoDadoCliente>{ cliente.id }</S.TextoDadoCliente>
+                                </S.ContainerDadoCliente>
+
+                                <S.ContainerDadoCliente>
+                                    <S.TituloDadoCliente> Versão do coletor </S.TituloDadoCliente>
+                                    <S.TextoDadoCliente>{ cliente.sistema.versao }</S.TextoDadoCliente>
+                                </S.ContainerDadoCliente>
+
+                                <S.ContainerDadoCliente>
+                                    <S.TituloDadoCliente> PC com coletor </S.TituloDadoCliente>
+                                    <S.TextoDadoCliente>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente>
+                                </S.ContainerDadoCliente>
+
+                            </S.SubcontainerDadoCliente>
+
+                        </S.DadosCliente> }
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
 

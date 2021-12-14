@@ -4,6 +4,9 @@ export function autenticar ( username, password ) {
     return axios.post( '/api/login', { username, password } )
 }
 
+export async function getAll () {
+}
+
 export async function getImpressoras ( filtros ) {
     const defaults = { listando: 'todos', data: getDatas()[ 0 ].value, busca: '' }
     return await axios.get( '/api/getimpressoras', { params: { filtros: filtros || defaults } } )

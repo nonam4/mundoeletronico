@@ -83,6 +83,7 @@ function Impressoras () {
 
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
+        setLoad( false )
     }, [ filtros.busca, cadastros ] )
 
     // garante que o load será fechado quando o stack mudar
@@ -109,11 +110,9 @@ function Impressoras () {
         // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
             setHistorico( res.data.historico )
-            setCadastros( { ...cadastros, locacao: res.data.cadastros } )
+            setCadastros( res.data.cadastros )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
-            setTimeout( () => {
-                setLoad( false )
-            }, 200 )
+            setLoad( false )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )

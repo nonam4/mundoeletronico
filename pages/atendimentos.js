@@ -72,12 +72,10 @@ function Atendimentos () {
 
         setLoad( true )
         Database.getAtendimentos( busca ).then( res => {
-            setCadastros( { ...res.data.cadastros, locacao: cadastros[ 'locacao' ] } )
+            setCadastros( res.data.cadastros )
             setAtendimentos( res.data.atendimentos )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
-            setTimeout( () => {
-                setLoad( false )
-            }, 200 )
+            setLoad( false )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )

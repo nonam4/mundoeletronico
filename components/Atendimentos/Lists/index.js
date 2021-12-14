@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { useDados } from '../../../contexts/DadosContext'
 
 import MenuIcon from '../../../components/Icons/MenuIcon'
 import * as S from './styles'
@@ -49,23 +50,30 @@ export function Simple ( props ) {
 }
 
 function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
+    // variaveis do contexto, disponível em todo o sistema
+    const { state } = useDados()
+    // variaveis disponíveis no contexto
+    const { cadastros } = state
+    let atendimento = atendimentos[ id ]
+    let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.id ]
+
     return ( <>
         <S.AtendimentoContent>
             <S.AtendimentoField>
-                <S.AtendimentoIndicador>{ atendimentos[ id ].feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
-                <S.AtendimentoDado>{ Database.convertTimestamp( atendimentos[ id ].feito ? atendimentos[ id ].dados.ultimaalteracao : atendimentos[ id ].dados.inicio ) }</S.AtendimentoDado>
+                <S.AtendimentoIndicador>{ atendimento.feito ? 'Feito em' : 'Aberto em' }</S.AtendimentoIndicador>
+                <S.AtendimentoDado>{ Database.convertTimestamp( atendimento.feito ? atendimento.dados.ultimaalteracao : atendimento.dados.inicio ) }</S.AtendimentoDado>
             </S.AtendimentoField>
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Cliente</S.AtendimentoIndicador>
-                <S.AtendimentoDado>{ atendimentos[ id ].cliente.nomefantasia }</S.AtendimentoDado>
+                <S.AtendimentoDado>{ cliente.nomefantasia }</S.AtendimentoDado>
             </S.AtendimentoField>
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Cidade</S.AtendimentoIndicador>
-                <S.AtendimentoDado>{ atendimentos[ id ].cliente.endereco.cidade }</S.AtendimentoDado>
+                <S.AtendimentoDado>{ cliente.endereco.cidade }</S.AtendimentoDado>
             </S.AtendimentoField>
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Motivos</S.AtendimentoIndicador>
-                <S.AtendimentoDado>{ atendimentos[ id ].motivo.map( motivo => `-${ motivo } ` ) }</S.AtendimentoDado>
+                <S.AtendimentoDado>{ atendimento.motivo.map( motivo => `-${ motivo } ` ) }</S.AtendimentoDado>
             </S.AtendimentoField>
         </S.AtendimentoContent>
         <S.Settings>
