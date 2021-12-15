@@ -24,7 +24,7 @@ function Atendimento ( props ) {
         dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function expandirCadastro ( id ) {
+    function expandirCadastro ( chave ) {
         let paginaAtual = router.pathname.replace( '/', '' )
         setLoad( true )
 
@@ -32,7 +32,7 @@ function Atendimento ( props ) {
             router.push( {
                 pathname: paginaAtual,
                 query: {
-                    id, stack: 'cadastroatendimento'
+                    chave, stack: 'cadastroatendimento'
                 }
             } )
         }, 200 )

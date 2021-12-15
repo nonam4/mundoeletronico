@@ -39,6 +39,7 @@ export const Botao = styled.button`
     height: fit-content;
     background: none;
     margin: 0;
+    margin-left: ${ ( { marginLeft } ) => marginLeft ? `${ marginLeft }rem` : '0px' };
     border: none;
     padding: 0;
     cursor: pointer;
@@ -102,6 +103,7 @@ export const Linha = styled.div`
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
     position: relative;
     margin-top: 0.5rem;
+    align-items: flex-end;
 
     @media only screen and (max-width: 600px) {
         min-width: ${ ( { important, minWidth } ) => important ? `${ minWidth }` : 'unset' };
@@ -256,7 +258,7 @@ export const DadosCliente = styled.div`
 `
 export const ContainerDadoCliente = styled.div`
     width: fit-content;
-    padding: 0.5rem;
+    padding: 0.3rem 0.5rem;
 `
 export const SubcontainerDadoCliente = styled.div`
     width: 100%;

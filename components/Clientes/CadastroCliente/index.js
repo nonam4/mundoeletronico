@@ -97,7 +97,8 @@ function Expandido () {
                     query: {
                         stack: router.query.stack,
                         id: router.query.id,
-                        data: router.query.data
+                        data: router.query.data,
+                        chave: router.query.chave
                     }
                 } )
             }, [ 200 ] )

@@ -49,9 +49,9 @@ function AtendimentoExpandido () {
 
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
-        let queryId = router.query.id
-        if ( queryId ) {
-            let localizado = localizarAtendimento( queryId )
+        let chaveAtendimento = router.query.chave
+        if ( chaveAtendimento ) {
+            let localizado = localizarAtendimento( chaveAtendimento )
 
             if ( !localizado ) return
             setCadastro( JSON.parse( JSON.stringify( localizado ) ) )
@@ -170,6 +170,23 @@ function AtendimentoExpandido () {
         }, [ 200 ] )
     }
 
+    function editarCadastro ( id ) {
+        let paginaAtual = router.pathname.replace( '/', '' )
+
+        setLoad( true )
+        setTimeout( () => {
+            router.push( {
+                pathname: paginaAtual,
+                query: {
+                    stack: router.query.stack,
+                    stack1: 'cadastrocliente', id,
+                    data: router.query.data,
+                    chave: router.query.chave
+                }
+            } )
+        }, 200 )
+    }
+
     function compareParentData () {
         if ( !cadastro ) return false
         return JSON.stringify( editado ) != JSON.stringify( cadastro )
@@ -240,6 +257,7 @@ function AtendimentoExpandido () {
                         <S.ListaNomesContainer >
                             <S.Linha>
                                 <TextField placeholder={ 'Cliente' } onFocus={ () => handleFocusBusca( true ) } onBlur={ () => handleFocusBusca( false ) } onChange={ ( e ) => handleBuscarCliente( e ) } value={ buscaCliente } icon={ false } maxLength={ 50 } />
+                                { cliente && buscaCliente === cliente.nomefantasia && <S.Botao onClick={ () => editarCadastro( cliente.id ) } hover={ colors.azul } title='Editar Cliente' marginLeft={ '0.8' }> <MenuIcon name='usuario_editar' margin='0' /> </S.Botao> }
                             </S.Linha>
                             { buscaCliente !== '' && mostrarListaNomes && <S.ListaNomes>
                                 { renderListaNomes() }
