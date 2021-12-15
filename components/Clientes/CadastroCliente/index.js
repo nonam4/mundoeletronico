@@ -55,7 +55,6 @@ function Expandido () {
         let queryId = router.query.id
         if ( queryId && state.cadastros[ 'locacao' ][ queryId ] ) {
 
-            console.log( state.cadastros[ 'locacao' ][ queryId ].horarios )
             setCadastro( state.cadastros[ 'locacao' ][ queryId ] )
             setEditado( state.cadastros[ 'locacao' ][ queryId ] )
         }
