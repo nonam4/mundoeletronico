@@ -245,7 +245,7 @@ function AtendimentoExpandido () {
                                 { renderListaNomes() }
                             </S.ListaNomes> }
                         </S.ListaNomesContainer>
-                        { cliente && <S.DadosCliente>
+                        { cliente && buscaCliente === cliente.nomefantasia && <S.DadosCliente>
 
                             <S.ContainerDadoCliente>
                                 <S.TituloDadoCliente> Endereço </S.TituloDadoCliente>
@@ -253,8 +253,8 @@ function AtendimentoExpandido () {
                             </S.ContainerDadoCliente>
 
                             <S.ContainerDadoCliente>
-                                <S.TituloDadoCliente> Contato </S.TituloDadoCliente>
-                                <S.TextoDadoCliente>{ `${ cliente.contato.telefone } - ${ cliente.contato.celular }` }</S.TextoDadoCliente>
+                                <S.TituloDadoCliente> { `${ cliente.contato.telefone ? 'Telefone' : '' }${ cliente.contato.telefone && cliente.contato.celular ? ' | ' : '' }${ cliente.contato.celular ? 'Celular' : '' }` }</S.TituloDadoCliente>
+                                <S.TextoDadoCliente>{ `${ cliente.contato.telefone ? cliente.contato.telefone : '' }${ cliente.contato.telefone && cliente.contato.celular ? ' | ' : '' }${ cliente.contato.celular ? cliente.contato.celular : '' }` }</S.TextoDadoCliente>
                             </S.ContainerDadoCliente>
 
                             <S.SubcontainerDadoCliente>

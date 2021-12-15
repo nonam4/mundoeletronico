@@ -77,7 +77,11 @@ export const LinhaContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding-right: 0.8rem;
+    padding: 0 0.8rem 0.8rem 0.8rem;
+    margin: 0.8rem 0.8rem 0.8rem 0;
+    border: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    border-radius: 5px;
+    background-color: ${ ( { theme } ) => theme.colors.menus };
 
     @media only screen and (max-width: 600px) {
         display: block;
