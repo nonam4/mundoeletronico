@@ -22,7 +22,7 @@ function AtendimentoExpandido () {
     const { colors } = useContext( ThemeContext )
     const router = useRouter()
     // variaveis disponíveis no contexto
-    const { atendimentos, menu, cadastros } = state
+    const { atendimentos, menu, cadastros, tecnicos } = state
     // variaveis sobre a visibilidade do menu lateral
     const { expandido, sempreVisivel } = menu
     // data atual
@@ -43,6 +43,17 @@ function AtendimentoExpandido () {
     const [ buscaCliente, setBuscaCliente ] = useState( '' )
     // controla se deve mostrar a lista de nomes ao buscar cadastros
     const [ mostrarListaNomes, setMostrarListaNomes ] = useState( false )
+    // opções de status de atendimento
+    const statusAtendimento = [ { label: 'Não concluído', value: false }, { label: 'Finalizado', value: true } ]
+    // controla se terá entrega de suprimentos
+    const [ entregaToners, setEntregaToners ] = useState( false )
+
+
+    const [ listaToners, setListaToners ] = useState( [ { label: '', quantidade: 1, value: '' } ] )
+    const listadetoners = {
+        '1234567890123': { value: '1234567890123', estoque: 7, label: 'toner de teste' },
+        '1234567890124': { value: '1234567890124', estoque: 7, label: 'outro de teste' }
+    }
 
     // quando iniciar o sistema
     useEffect( () => {
@@ -234,6 +245,51 @@ function AtendimentoExpandido () {
         return views
     }
 
+    function handleResponsavelChange ( e ) {
+        setEditado( set( 'responsavel', e.target.value, editado ) )
+    }
+
+    function handleStatusChange ( e ) {
+        if ( e.target.value === 'false' ) return setEditado( set( 'feito', false, editado ) )
+        setEditado( set( 'feito', true, editado ) )
+    }
+
+    function renderListaToners () {
+        let views = []
+
+        function converterArray ( lista ) {
+            let array = []
+
+            for ( let id in lista ) {
+                let item = lista[ id ]
+                array.push( item )
+            }
+            return array
+        }
+
+        for ( let index in listaToners ) {
+            let toner = listaToners[ index ]
+
+            views.push(
+                <S.Linha key={ index } minWidth={ '140px' } maxWidth={ '100%' } forceHover={ true }>
+                    <S.SubTitulo> Modelo </S.SubTitulo>
+                    <Select valor={ toner.value } options={ converterArray( listadetoners ) } onChange={ ( e ) => selecionarToner( e.target.value, index ) } />
+                </S.Linha>
+            )
+        }
+        return views
+    }
+
+    function selecionarToner ( value, index ) {
+
+        let lista = [ ...listaToners ]
+        let toner = lista[ index ]
+        toner.value = listadetoners[ value ].value
+        toner.label = listadetoners[ value ].label
+        lista[ index ] = toner
+        setListaToners( [ ...lista ] )
+    }
+
     return (
         <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
             <Header />
@@ -298,6 +354,42 @@ function AtendimentoExpandido () {
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
 
+                <S.TituloContainer>
+                    <S.Titulo> Dados do atendimento </S.Titulo>
+                </S.TituloContainer>
+
+                <S.LinhaContainer>
+                    <S.LinhaSubContainer>
+                        <S.SobLinha>
+
+                            <S.Linha minWidth={ '140px' } maxWidth={ '100%' } forceHover={ true }>
+                                <S.SubTitulo> Responsável </S.SubTitulo>
+                                <Select valor={ editado.responsavel } options={ tecnicos } onChange={ handleResponsavelChange } />
+                            </S.Linha>
+
+                            <S.Spacer />
+
+                            <S.Linha minWidth={ '140px' } maxWidth={ '250px' } forceHover={ true }>
+                                <S.SubTitulo> Status </S.SubTitulo>
+                                <Select valor={ editado.feito } options={ statusAtendimento } onChange={ handleStatusChange } />
+                            </S.Linha>
+
+                        </S.SobLinha>
+                    </S.LinhaSubContainer>
+                </S.LinhaContainer>
+
+                <S.TituloContainer>
+                    <S.Titulo> Toners e suprimentos </S.Titulo>
+                </S.TituloContainer>
+
+                <S.LinhaContainer>
+                    <S.Linha>
+                        <Checkbox text={ 'Entrega de toners?' } changeReturn={ ( checked ) => setEntregaToners( checked ) } checked={ entregaToners } paddingLeft={ '0' } />
+                    </S.Linha>
+                    { entregaToners && <S.LinhaSubContainer>
+                        { renderListaToners() }
+                    </S.LinhaSubContainer> }
+                </S.LinhaContainer>
             </S.View>
         </S.Container>
     )

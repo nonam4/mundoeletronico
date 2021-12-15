@@ -4,19 +4,21 @@ export const Container = styled.div`
     width: ${ ( { width } ) => width };
     height: ${ ( { height } ) => height };
     margin: 8px;
-    padding: 0 8px;
+    padding: 0;
+    padding-left: ${ ( { paddingLeft } ) => paddingLeft ? `${ paddingLeft }px` : '8px' };
+    padding-right: 8px;
     display: flex;
     align-items: center;
 `
 export const Input = styled.input.attrs( { type: 'checkbox' } )`
     display: none;
-    :checked + label::after {
-        transform: rotate(-45deg) scale(1);
+        :checked + label::after {
+        transform: rotate( -45deg ) scale( 1 );
     }
-    :checked + label::before {
+        :checked + label::before {
         border: 2px solid ${ ( { theme } ) => theme.colors.hover };
     }
-    :focus + label::before {
+        :focus + label::before {
         outline: 0;
     }
 `
@@ -28,7 +30,7 @@ export const Label = styled.label`
     padding-left: 40px;
     position: relative;
     cursor: pointer;
-    ::before {
+        ::before {
         box-sizing: border-box;
         content: '';
         position: absolute;
@@ -40,7 +42,7 @@ export const Label = styled.label`
         border: 2px solid ${ ( { theme } ) => theme.colors.borders };
         transition: all ease 0.15s;
     }
-    ::after {
+        ::after {
         box-sizing: border-box;
         transition: all ease 0.15s;
         content: '';
@@ -49,13 +51,13 @@ export const Label = styled.label`
         height: 8px;
         border: solid ${ ( { theme } ) => theme.colors.hover };
         border-width: 0 0 2px 2px;
-        transform: rotate(-45deg) scale(0);
+        transform: rotate( -45deg ) scale( 0 );
         position: absolute;
         top: 5px;
         left: 5px;
     }
-    :hover {
-        ::before {
+        :hover {
+            ::before {
             border: 2px solid ${ ( { theme } ) => theme.colors.hover };
         }
     }

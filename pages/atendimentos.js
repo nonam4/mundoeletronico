@@ -68,12 +68,17 @@ function Atendimentos () {
         dispatch( { type: 'setCadastros', payload: dados } )
     }
 
+    function setTecnicos ( dados ) {
+        dispatch( { type: 'setTecnicos', payload: dados } )
+    }
+
     async function solicitarDados () {
 
         setLoad( true )
         Database.getAtendimentos( busca ).then( res => {
             setCadastros( res.data.cadastros )
             setAtendimentos( res.data.atendimentos )
+            setTecnicos( res.data.tecnicos )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
             setLoad( false )
         } ).catch( err => {

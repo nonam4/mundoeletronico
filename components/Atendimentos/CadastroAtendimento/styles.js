@@ -75,9 +75,6 @@ export const SubTitulo = styled.label`
 `
 export const LinhaContainer = styled.div`
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
     padding: 0 0.8rem 0.8rem 0.8rem;
     margin: 0.8rem 0.8rem 0.8rem 0;
     border: solid 1px ${ ( { theme } ) => theme.colors.borders };
@@ -90,10 +87,6 @@ export const LinhaContainer = styled.div`
 `
 export const LinhaSubContainer = styled.div`
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
 `
 export const Linha = styled.div`
     width: 100%;
@@ -121,8 +114,7 @@ export const Linha = styled.div`
     }
 
     select {
-        text-align-last: center;
-        width: fit-content;
+        text-align-last: left;
         font-weight: bold;
         padding: 0 0.5rem 0.3rem;
         border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };

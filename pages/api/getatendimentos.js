@@ -12,6 +12,14 @@ export default async ( req, res ) => {
         particular: {},
         locacao: {}
     }
+    let tecnicos = [ { label: 'Em aberto', value: '' } ]
+
+    let listaTecnicos = await database.collection( '/usuarios/' ).get()
+    listaTecnicos.forEach( itemTecnico => {
+        let tecnico = itemTecnico.data()
+
+        tecnicos.push( { label: tecnico.nome, value: tecnico.nome } )
+    } )
 
     let listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
     listaCadastros.forEach( itemCadastro => {
@@ -34,5 +42,5 @@ export default async ( req, res ) => {
         else { atendimentos[ 'Tecnicos' ][ atendimento.responsavel ] = { ...atendimentos[ 'Tecnicos' ][ atendimento.responsavel ], [ atendimento.id ]: atendimento } }
     } )
 
-    res.status( 200 ).send( { atendimentos, cadastros } )
+    res.status( 200 ).send( { atendimentos, cadastros, tecnicos } )
 }

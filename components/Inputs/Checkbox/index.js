@@ -7,6 +7,7 @@ function Checkbox ( props ) {
         text: 'Clique aqui...',
         width: '250px',
         height: '22px',
+        paddingLeft: '8px'
     }
 
     useEffect( () => {
@@ -15,12 +16,12 @@ function Checkbox ( props ) {
     }, [ props.checked ] )
 
     function handleChecked () {
+        props.changeReturn( !checked )
         setChecked( !checked )
-        props.changeReturn()
     }
 
     return (
-        <S.Container width={ props.width || settings.width } height={ props.height || settings.height } checked={ props.checked }>
+        <S.Container width={ props.width || settings.width } height={ props.height || settings.height } checked={ props.checked } paddingLeft={ props.paddingLeft || settings.paddingLeft }>
             <S.Input checked={ checked } onChange={ handleChecked } />
             <S.Label onClick={ handleChecked }> { props.text || settings.text } </S.Label>
         </S.Container>
