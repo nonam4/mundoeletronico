@@ -77,7 +77,11 @@ export const LinhaContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding-right: 0.8rem;
+    padding: 0 0.8rem 0.8rem 0.8rem;
+    margin: 0.8rem 0.8rem 0.8rem 0;
+    border: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    border-radius: 5px;
+    background-color: ${ ( { theme } ) => theme.colors.menus };
 
     @media only screen and (max-width: 600px) {
         display: block;
@@ -97,7 +101,6 @@ export const Linha = styled.div`
     min-width: ${ ( { minWidth } ) => minWidth ? `${ minWidth }` : '0px' };
     max-width: ${ ( { maxWidth } ) => maxWidth ? `${ maxWidth }` : 'unset' };
     position: relative;
-    margin-top: 0.5rem;
 
     @media only screen and (max-width: 600px) {
         min-width: ${ ( { important, minWidth } ) => important ? `${ minWidth }` : 'unset' };
@@ -215,30 +218,32 @@ export const Listagem = styled.div`
 `
 export const HorarioContainer = styled.div`
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding-right: 0.8rem;
-    margin-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 0.5rem;
+    margin: 0.8rem 0.8rem 0.8rem 0;
+
+    @media only screen and (max-width: 1050px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
 `
-export const HorarioSubcontainer = styled.div`
-    width: 16.66%; 
-    
+export const HorarioSubcontainer = styled.div` 
+    padding: 0.5rem;
+    border: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    border-radius: 5px;
+    background-color: ${ ( { theme } ) => theme.colors.menus };
+
     div {
         width: 100%;
         margin: 0;
         padding: 0;
-    }
-
-    @media only screen and (max-width: 700px) {
-        width: 33.33%;
-        margin-bottom: 0.8rem;
     }
 `
 export const Horario = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 0.4rem 0.8rem 0 0 !important;
+    padding-top: 0.4rem !important;
 
     svg {
         width: 16px;

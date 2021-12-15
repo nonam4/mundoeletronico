@@ -13,10 +13,11 @@ export const Content = styled.input`
     color: ${ ( { theme } ) => theme.colors.texts };
     transition: all linear 0.05s;
     font-weight: bold;
-    :focus {
+
+    :hover, :focus, :not(:placeholder-shown){
         + span {
             left: 0;
-            width: 100%;
+            width: 100%; 
         }
     }
 `

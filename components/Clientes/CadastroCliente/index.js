@@ -108,6 +108,8 @@ function Expandido () {
 
     async function salvarCadastro () {
 
+        if ( erroPreenchimentoHorarios() ) return Notification.notificate( 'Erro', 'Algum horário está faltando ou incorreto!', 'danger' )
+
         if ( editado.nomefantasia === '' || editado.nomefantasia.length < 5 ) return Notification.notificate( 'Erro', 'Nome fantasia em branco ou inválido!', 'danger' )
         if ( editado.razaosocial === '' || editado.razaosocial.length < 5 ) return Notification.notificate( 'Erro', 'Razão social em branco ou inválida!', 'danger' )
         if ( editado.cpfcnpj === '' || editado.cpfcnpj.length < 14 ) return Notification.notificate( 'Erro', 'CPF/CNPJ branco ou inválido!', 'danger' )
@@ -146,6 +148,33 @@ function Expandido () {
             console.error( err )
             Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
         } )
+    }
+
+    function erroPreenchimentoHorarios () {
+
+        for ( let dia of dias ) {
+            let horario = editado.horarios[ dia.index ]
+            let horarios = horario.horarios
+            if ( !horario.aberto ) continue
+
+            let a = Number( horarios[ 0 ].substring( 0, 2 ) ) // primeiro horário de abertura
+            let b = Number( horarios[ 1 ].substring( 0, 2 ) ) // primeiro horário de fechamento (almoço)
+            let c = Number( horarios[ 2 ].substring( 0, 2 ) ) // segundo horário de abertura
+            let d = Number( horarios[ 3 ].substring( 0, 2 ) ) // segundo horário de fechamento (ir embora)
+
+            // se os dois primeiros campos de horário estiverem vazios dê erro
+            if ( horarios[ 0 ] === '' || horarios[ 1 ] === '' ) return true
+            // se o primeiro horário for maior que o segundo dê erro
+            if ( a >= b ) return true
+            // se os dois segundos campos estiverem vazios ignora a verificação
+            if ( horarios[ 2 ] === '' && horarios[ 3 ] === '' ) continue
+            // se os dois primeiros campos estiverem ok e um dos segundos estiver preenchido o outro não pode estar vazio
+            if ( horarios[ 2 ] !== '' && horarios[ 3 ] === '' ) return true
+            if ( horarios[ 2 ] === '' && horarios[ 3 ] !== '' ) return true
+            // se o primeiro horário for maior que o segundo dê erro
+            if ( c >= d ) return true
+        }
+        return false
     }
 
     function compareParentData () {
@@ -251,7 +280,7 @@ function Expandido () {
 
         if ( isNaN( input ) ) return
 
-        if ( input === '' ) return setEditado( set( `horarios.${ dia }.horarios.${ index }`, ' ', editado ) )
+        if ( input === '' ) return setEditado( set( `horarios.${ dia }.horarios.${ index }`, '', editado ) )
         //se estiver apenas os dois primeiros numeros e eles forem maiores que 23 definirá como 23
         if ( Number( input ) > 23 && input.length === 2 ) return setEditado( set( `horarios.${ dia }.horarios.${ index }`, '23', editado ) )
         if ( input.length === 1 || input.length === 2 ) return setEditado( set( `horarios.${ dia }.horarios.${ index }`, input, editado ) )
@@ -317,14 +346,14 @@ function Expandido () {
                 <S.HorarioSubcontainer key={ dia.index }>
                     <Checkbox text={ dia.nome } changeReturn={ () => setHorarioAberto( dia.index ) } checked={ editado.horarios[ dia.index ].aberto } />
                     { editado.horarios[ dia.index ].aberto && <S.Horario>
-                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 0 ) } value={ getHorario( dia.index, 0 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 0 ) } />
+                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 0 ) } value={ getHorario( dia.index, 0 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 0 ) } placeholder={ '00:00' } />
                         <S.Spacer /> - <S.Spacer />
-                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 1 ) } value={ getHorario( dia.index, 1 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 1 ) } />
+                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 1 ) } value={ getHorario( dia.index, 1 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 1 ) } placeholder={ '00:00' } />
                     </S.Horario> }
                     { editado.horarios[ dia.index ].aberto && duasLinhasHorarios( dia.index ) && <S.Horario>
-                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 2 ) } value={ getHorario( dia.index, 2 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 2 ) } />
+                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 2 ) } value={ getHorario( dia.index, 2 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 2 ) } placeholder={ '00:00' } />
                         <S.Spacer /> - <S.Spacer />
-                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 3 ) } value={ getHorario( dia.index, 3 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 3 ) } />
+                        <SimpleTextField onChange={ ( e ) => handleHorarioChange( e, dia.index, 3 ) } value={ getHorario( dia.index, 3 ) } maxLength={ 5 } onBlur={ () => handleBlurHorario( dia.index, 3 ) } placeholder={ '00:00' } />
                     </S.Horario> }
                     { editado.horarios[ dia.index ].aberto && !duasLinhasHorarios( dia.index ) && <S.Horario>
                         <S.Botao onClick={ () => adicionarSegundaLinhaHorarios( dia.index ) } hover={ colors.azul } title='Adicionar'> <MenuIcon name='arrow_dwn' margin='0' /> </S.Botao>
