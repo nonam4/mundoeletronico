@@ -83,6 +83,7 @@ function Impressoras () {
 
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
+
         setLoad( false )
     }, [ filtros.busca, cadastros ] )
 

@@ -53,9 +53,11 @@ function Expandido () {
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
         let queryId = router.query.id
-        if ( queryId && state.cadastros[ queryId ] ) {
-            setCadastro( state.cadastros[ queryId ] )
-            setEditado( state.cadastros[ queryId ] )
+        if ( queryId && state.cadastros[ 'locacao' ][ queryId ] ) {
+
+            console.log( state.cadastros[ 'locacao' ][ queryId ].horarios )
+            setCadastro( state.cadastros[ 'locacao' ][ queryId ] )
+            setEditado( state.cadastros[ 'locacao' ][ queryId ] )
         }
 
         setLoad( false )
@@ -108,8 +110,6 @@ function Expandido () {
 
     async function salvarCadastro () {
 
-        if ( erroPreenchimentoHorarios() ) return Notification.notificate( 'Erro', 'Algum horário está faltando ou incorreto!', 'danger' )
-
         if ( editado.nomefantasia === '' || editado.nomefantasia.length < 5 ) return Notification.notificate( 'Erro', 'Nome fantasia em branco ou inválido!', 'danger' )
         if ( editado.razaosocial === '' || editado.razaosocial.length < 5 ) return Notification.notificate( 'Erro', 'Razão social em branco ou inválida!', 'danger' )
         if ( editado.cpfcnpj === '' || editado.cpfcnpj.length < 14 ) return Notification.notificate( 'Erro', 'CPF/CNPJ branco ou inválido!', 'danger' )
@@ -120,6 +120,7 @@ function Expandido () {
         if ( editado.endereco.numero === '' ) return Notification.notificate( 'Erro', 'Endereço/Número em branco ou inválido!', 'danger' )
         if ( editado.endereco.cidade === '' || editado.endereco.cidade.length < 4 ) return Notification.notificate( 'Erro', 'Endereço/Cidade em branco ou inválido!', 'danger' )
         if ( editado.endereco.estado === '' || editado.endereco.estado.length < 2 ) return Notification.notificate( 'Erro', 'Endereço/Estado em branco ou inválido!', 'danger' )
+        if ( erroPreenchimentoHorarios() ) return Notification.notificate( 'Erro', 'Algum horário está faltando ou incorreto!', 'danger' )
 
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
@@ -342,6 +343,7 @@ function Expandido () {
     function renderDias () {
         let views = []
         for ( let dia of dias ) {
+
             views.push(
                 <S.HorarioSubcontainer key={ dia.index }>
                     <Checkbox text={ dia.nome } changeReturn={ () => setHorarioAberto( dia.index ) } checked={ editado.horarios[ dia.index ].aberto } />
