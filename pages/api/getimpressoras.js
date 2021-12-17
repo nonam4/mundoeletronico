@@ -62,9 +62,17 @@ export default async ( req, res ) => {
         fornecedor: {},
         particular: {}
     }
+    let tecnicos = [ { label: 'Em aberto', value: '' } ]
     let historico = {}
     let listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
     let listaHistorico = await database.collection( '/historico' ).get()
+    let listaTecnicos = await database.collection( '/usuarios/' ).get()
+
+    listaTecnicos.forEach( itemTecnico => {
+        let tecnico = itemTecnico.data()
+
+        tecnicos.push( { label: tecnico.nome, value: tecnico.nome } )
+    } )
 
     listaHistorico.forEach( itemHistorico => {
         let serial = itemHistorico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
@@ -184,5 +192,5 @@ export default async ( req, res ) => {
         }
     } )
 
-    res.status( 200 ).send( { cadastros, historico } )
+    res.status( 200 ).send( { cadastros, historico, tecnicos } )
 }

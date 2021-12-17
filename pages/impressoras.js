@@ -105,6 +105,10 @@ function Impressoras () {
         dispatch( { type: 'setHistorico', payload: dados } )
     }
 
+    function setTecnicos ( dados ) {
+        dispatch( { type: 'setTecnicos', payload: dados } )
+    }
+
     function solicitarDados () {
         // sempre que for buscar algo no database mostre o load
         setLoad( true )
@@ -112,6 +116,7 @@ function Impressoras () {
         Database.getImpressoras( filtros ).then( res => {
             setHistorico( res.data.historico )
             setCadastros( res.data.cadastros )
+            setTecnicos( res.data.tecnicos )
             // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
             setLoad( false )
         } ).catch( err => {
