@@ -115,7 +115,6 @@ function AtendimentoExpandido () {
             quantidade: 1
         }
         // como é o primeiro suprimento adicionado na lista pode simplesmente definir ela
-        console.log( 'called' )
         setListaSuprimentos( [ suprimento ] )
     }, [ entregaSuprimentos ] )
 
@@ -341,6 +340,10 @@ function AtendimentoExpandido () {
         setListaSuprimentos( [ ...lista ] )
     }
 
+    function adicionarSuprimento () {
+
+    }
+
     return (
         <S.Container expandido={ expandido } sempreVisivel={ sempreVisivel }>
             <Header />
@@ -350,6 +353,7 @@ function AtendimentoExpandido () {
                     { compareParentData() && <S.Botao onClick={ () => salvarCadastro() } hover={ colors.azul } title='Salvar'> <MenuIcon name='salvar' margin='0.8' /> </S.Botao> }
                     <S.Botao onClick={ () => fechar() } hover={ colors.azul } title='Fechar'> <MenuIcon name='fechar' margin='0.8' /> </S.Botao>
                 </S.Botoes>
+
                 <S.TituloContainer>
                     <S.Titulo> { router.query.id ? 'Editar' : 'Novo' } Atendimento </S.Titulo>
                     <div>
@@ -439,6 +443,9 @@ function AtendimentoExpandido () {
                     </S.Linha>
                     { entregaSuprimentos && <S.LinhaSubContainer>
                         { renderListaToners() }
+                        <S.Linha>
+                            <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
+                        </S.Linha>
                     </S.LinhaSubContainer> }
                 </S.LinhaContainer>
             </S.View>
