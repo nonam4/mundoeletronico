@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export function autenticar ( username, password ) {
-    return axios.post( '/api/login', { username, password } )
+export async function autenticar ( username, password ) {
+    return await axios.post( '/api/login', { username, password } )
 }
 
 export async function getAll () {
