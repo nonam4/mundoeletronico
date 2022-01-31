@@ -1,27 +1,44 @@
-import { useState, useEffect } from 'react'
 const fs = window.require( 'fs' )
 const { app } = window.require( '@electron/remote' )
 
-export async function iniciar () {
-    const defaults = { proxy: false, dhcp: true }
+class Storage {
+    constructor() {
+        this.paths = {
+            json: `${ app.getAppPath() }/settings.json`,
+            logs: `${ app.getAppPath() }/logs/`
+        }
 
-    fs.readFile( jsonPath(), 'utf8', ( err, dados ) => {
-        if ( err ) createLog( `Impossível obter dados iniciais -> ${ err }` )
-        if ( err ) return defaults
-        return JSON.parse( dados )
-    } )
+        // valores padrões
+        this.dados = { proxy: false, dhcp: true, tema: 'claro' }
+    }
+
+    init ( callback ) {
+        let paths = this.paths
+
+        fs.readFile( paths.json, 'utf8', ( err, dados ) => {
+            if ( err ) this.createLog( `Impossível ler dados iniciais de configuração -> ${ err }` )
+            if ( !err ) this.dados = JSON.parse( dados )
+            callback()
+        } )
+    }
+
+    get ( key ) {
+        return this.dados[ key ]
+    }
+
+    set ( value, callback ) {
+        this.dados = value
+        fs.writeFile( paths.json, JSON.stringify( value ), err => {
+            if ( err ) this.createLog( `Impossível gravar dados de configuração -> ${ err }` )
+            callback()
+        } )
+    }
+
+    createLog ( log ) {
+        fs.writeFile( `${ paths.logs }${ new Date().getTime() }.txt`, String( log ), err => {
+            if ( err ) console.log( err )
+        } )
+    }
 }
 
-export function createLog ( log ) {
-    fs.writeFile( logsPath() + `${ new Date().getTime() }.txt`, String( log ), err => {
-        if ( err ) console.log( err )
-    } )
-}
-
-function jsonPath () {
-    return `${ app.getAppPath() }/settings.json`
-}
-
-function logsPath () {
-    return `${ app.getAppPath() }/logs/`
-}
+export default Storage

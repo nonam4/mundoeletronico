@@ -5,6 +5,8 @@ import { useTela } from '../../contexts/TelaContext'
 import usePersistedState from '../../hooks/usePersistedState'
 
 import Load from '../Load'
+import Configuracoes from '../Configuracoes'
+
 // temas
 import claro from '../../styles/temas/claro'
 import escuro from '../../styles/temas/escuro'
@@ -17,10 +19,7 @@ function MainPage () {
     const [ theme, setTheme ] = useState( claro )
 
     function selectTheme ( title ) {
-        console.log( title )
         switch ( title ) {
-            case 'claro':
-                return claro
             case 'escuro':
                 return escuro
             default:
@@ -45,9 +44,16 @@ function MainPage () {
         if ( dadosState.tema != theme.title ) setTheme( selectTheme( dadosState.tema ) )
     }, [ dadosState.tema ] )
 
+    useEffect( () => {
+        if ( dadosState.tema === null ) return
+        tela.dispatch( { type: 'setLoad', payload: false } )
+    }, [ dadosState.id ] )
+
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
+            { ( !dadosState.id || dadosState.id === '' ) && <Configuracoes /> }
+            { dadosState.id && dadosState.id !== '' && <div></div> }
             <Load show={ tela.state.load } />
         </ThemeProvider>
     )

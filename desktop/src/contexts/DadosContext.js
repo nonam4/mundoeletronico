@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from 'react'
 
 const initialData = {
-    id: undefined,
+    id: null,
     local: '',
     proxy: {
         active: false,
