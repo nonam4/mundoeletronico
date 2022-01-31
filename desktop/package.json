@@ -1,5 +1,6 @@
 {
     "name": "mundoeletronico",
+    "version": "0.1.0",
     "private": true,
     "repository": {
         "type": "git",
@@ -9,48 +10,70 @@
     "bugs": {
         "url": "https://github.com/nonam4/mundoeletronico/issues"
     },
-    "main": "public/main.js",
+    "main": "public/electron.js",
     "homepage": "./",
     "scripts": {
-        "next:dev": "next dev",
-        "start": "concurrently -k \"cross-env BROWSER=none npm run next:dev\" \"npm run electron\"",
-        "build": "",
-        "electron": "wait-on tcp:3000 && electron .",
-        "windows": "electron-builder --ia32 --dir",
-        "linux": "electron-builder --x64 --dir"
+        "react:start": "react-scripts start",
+        "react:build": "react-scripts build",
+        "react:test": "react-scripts test",
+        "react:eject": "react-scripts eject",
+        "electron:start": "wait-on tcp:3000 && electron .",
+        "start": "concurrently -k \"cross-env BROWSER=none npm run react:start\" \"npm run electron:start\"",
+        "build": "npm run react:build && electron-builder -c.extraMetadata.main=build/electron.js"
     },
     "dependencies": {
-        "@electron/remote": "^2.0.4",
+        "@electron/remote": "^1.0.2",
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-scripts": "4.0.1",
+        "web-vitals": "^0.2.4",
         "axios": "^0.25.0",
-        "electron": "^16.0.8",
-        "electron-builder": "^22.14.5",
+        "electron-is-dev": "^2.0.0",
         "electron-download-manager": "^2.1.2",
         "net-snmp": "^3.5.8",
-        "next": "^12.0.9",
-        "react": "17.0.2",
-        "react-dom": "17.0.2",
         "react-notifications-component": "^3.1.0",
-        "styled-components": "^5.3.3"
+        "styled-components": "^5.3.3",
+        "bootstrap": "^5.0.0-beta1"
     },
     "devDependencies": {
-        "concurrently": "^7.0.0",
+        "concurrently": "^5.3.0",
         "cross-env": "^7.0.3",
-        "electron-is-dev": "^2.0.0",
-        "eslint": "7.32.0",
-        "eslint-config-next": "12.0.9",
-        "wait-on": "^6.0.0"
+        "electron": "^11.2.1",
+        "electron-builder": "^22.9.1",
+        "wait-on": "^5.2.1"
     },
     "build": {
-        "appId": "ioiprinters",
-        "linux": {
-            "icon": "public/icon.png",
-            "target": [
-                "deb"
-            ]
-        },
-        "win": {
-            "target": "NSIS",
-            "icon": "icon.ico"
+        "extends": null,
+        "appId": "com.mundoeletronico",
+        "files": [
+            "dist/**/*",
+            "build/**/*",
+            "node_modules/**/*",
+            "package.json"
+        ],
+        "directories": {
+            "buildResources": "assets"
         }
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
     }
 }
