@@ -1,4 +1,4 @@
-export default {
+const tema = {
     title: 'claro',
     colors: {
         switchColor: '#0070f3',
@@ -19,3 +19,5 @@ export default {
         magenta: '#ff00ff',
     }
 }
+
+export default tema

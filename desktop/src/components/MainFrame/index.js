@@ -41,13 +41,8 @@ function MainPage () {
     useEffect( () => {
         if ( dadosState.tema === undefined ) return
         // se o tema do contexto não for vazio e for diferente do tema local, atualiza o tema local
-        if ( dadosState.tema != theme.title ) setTheme( selectTheme( dadosState.tema ) )
+        if ( dadosState.tema !== theme.title ) setTheme( selectTheme( dadosState.tema ) )
     }, [ dadosState.tema ] )
-
-    useEffect( () => {
-        if ( dadosState.tema === null ) return
-        tela.dispatch( { type: 'setLoad', payload: false } )
-    }, [ dadosState.id ] )
 
     return (
         <ThemeProvider { ...{ theme } }>

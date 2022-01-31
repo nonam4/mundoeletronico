@@ -22,12 +22,17 @@ function Configuracoes () {
     const [ proxyUser, setProxyuser ] = useState( '' )
     const [ proxyPass, setProxyPass ] = useState( '' )
 
+    useEffect( () => {
+        // quando essa tela iniciar esconderá o load
+        setLoad( false )
+    }, [] )
+
     function setLoad ( valor ) {
         tela.dispatch( { type: 'setLoad', payload: valor } )
     }
 
     function formularioValido () {
-        if ( userid.length < 13 ) {
+        if ( userid.length != 13 ) {
             Notification.notificate( 'Atenção', 'Usuário em branco ou inválido!', 'warning' )
             return false
         }
@@ -45,16 +50,26 @@ function Configuracoes () {
     return (
         <S.Container>
             <S.Logo src='/icon.ico' />
-            <>
+
+            <S.SubCointaners>
+
                 <TextContainer>
-                    <TextField onChange={ e => setUserid( e.target.value.toLowerCase() ) } value={ userid } placeholder={ 'ID do cadastro' } icon={ 'usuario' } />
+                    <TextField onChange={ e => setUserid( e.target.value.toLowerCase() ) } value={ userid } placeholder={ 'ID do cadastro' } icon={ 'usuario' } maxLength={ 13 } />
                 </TextContainer>
                 <TextContainer>
                     <TextField onChange={ e => setLocal( e.target.value ) } value={ local } placeholder={ 'Local de instalação' } icon={ 'coletor_chave' } />
                 </TextContainer>
                 <Checkbox text={ 'Usar Proxy?' } changeReturn={ () => setProxyAtivo( !proxyAtivo ) } />
-                <Button text={ 'Verificar' } onClick={ verificarDados } />
-            </>
+
+            </S.SubCointaners>
+
+            <S.Divisor />
+
+            <S.SubCointaners>
+
+            </S.SubCointaners>
+
+            <Button text={ 'Verificar' } onClick={ verificarDados } />
         </S.Container>
     )
 }

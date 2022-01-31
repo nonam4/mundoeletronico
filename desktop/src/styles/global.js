@@ -28,25 +28,22 @@ export default createGlobalStyle`
     }
     html {
         position: fixed;
-        height: 100%;
+        height: 100vh;
         width: 100vw;
     }
     body {
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         overflow: hidden;
         background: ${ ( { theme } ) => theme.colors.background };
         font-size: 14px;
         color: ${ ( { theme } ) => theme.colors.texts };
     }
-    #__next {
-        height: 100%;
-        width: 100%;
-        min-width: 320px;
+    #root{
+        height: 100vh;
+        width: 100vw;
         display: flex;
-        flex-direction: row-reverse;
         overflow: hidden;
-        overflow-y: auto;
     }
     .notification {
         padding: 0px !important;
