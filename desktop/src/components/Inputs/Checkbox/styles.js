@@ -3,9 +3,9 @@ import styled from 'styled-components'
 export const Container = styled.div`
     width: ${ ( { width } ) => width };
     height: ${ ( { height } ) => height };
-    margin: 8px;
+    margin: 0.4rem 0.8rem;
     padding: 0;
-    padding-left: ${ ( { paddingLeft } ) => paddingLeft ? `${ paddingLeft }px` : '8px' };
+    padding-left: ${ ( { paddingLeft } ) => paddingLeft ? `${ paddingLeft }` : '8px' };
     padding-right: 8px;
     display: flex;
     align-items: center;

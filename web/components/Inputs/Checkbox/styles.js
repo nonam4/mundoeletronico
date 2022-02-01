@@ -5,7 +5,7 @@ export const Container = styled.div`
     height: ${ ( { height } ) => height };
     margin: 8px;
     padding: 0;
-    padding-left: ${ ( { paddingLeft } ) => paddingLeft ? `${ paddingLeft }px` : '8px' };
+    padding-left: ${ ( { paddingLeft } ) => paddingLeft ? `${ paddingLeft }` : '8px' };
     padding-right: 8px;
     display: flex;
     align-items: center;
