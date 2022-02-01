@@ -12,7 +12,7 @@ const initialData = {
     },
     dhcp: {
         active: true,
-        ips: []
+        ips: ''
     },
     tema: undefined
 }

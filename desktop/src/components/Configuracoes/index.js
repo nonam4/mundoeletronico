@@ -8,6 +8,7 @@ import Checkbox from '../Inputs/Checkbox'
 import Button from '../Inputs/Button'
 
 import * as Notification from '../../workers/notification'
+import * as DHCP from '../../workers/dhcp'
 import * as S from './styles'
 
 function Configuracoes () {
@@ -15,22 +16,37 @@ function Configuracoes () {
     const dados = useDados()
     const tela = useTela()
 
+    const [ ipDhcp, setIpDhcp ] = useState( undefined )
     const [ userId, setUserId ] = useState( '' )
     const [ local, setLocal ] = useState( '' )
     const [ proxyAtivo, setProxyAtivo ] = useState( false )
-    const [ proxyHost, setProxyHost ] = useState( '192.168.2.254' )
+    const [ proxyHost, setProxyHost ] = useState( '' )
     const [ proxyPort, setProxyPort ] = useState( '8080' )
     const [ proxyUser, setProxyUser ] = useState( '' )
     const [ proxyPass, setProxyPass ] = useState( '' )
     const [ dhcpAtivo, setDhcpAtivo ] = useState( false )
-    const [ faixasIp, setFaixasIp ] = useState( '192.168.2;' )
+    const [ faixasIp, setFaixasIp ] = useState( '' )
     const [ primeiraTelaPreenchida, setPrimeiraTelaPreenchida ] = useState( false ) // se a primeira tela de dados está preenchida
     const [ segundaTelaPreenchida, setSegundaTelaPreenchida ] = useState( false ) // se a segunda tela de dados está preenchida
 
     useEffect( () => {
-        // quando essa tela iniciar esconderá o load
-        setLoad( false )
+        async function pegarIpDhcp () {
+            setIpDhcp( await DHCP.pegatIpDhcp() )
+        }
+        pegarIpDhcp()
     }, [] )
+
+    useEffect( () => {
+        if ( !ipDhcp ) return // se ainda não tiver pego o IP via DHCP então não faça nada
+
+        // define o host do proxy
+        setProxyHost( `${ ipDhcp }.254` )
+        // define as faixas de IP com o ip do dhcp
+        setFaixasIp( `${ ipDhcp };` )
+
+        // por fim esconde o load
+        setLoad( false )
+    }, [ ipDhcp ] )
 
     function setLoad ( valor ) {
         tela.dispatch( { type: 'setLoad', payload: valor } )
@@ -81,7 +97,9 @@ function Configuracoes () {
     }
 
     function verificarDados () {
-        formularioValido()
+        if ( !formularioValido() ) return
+
+
     }
 
     function handleIdChange ( value ) {
