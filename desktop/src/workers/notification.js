@@ -1,7 +1,7 @@
-import { store } from 'react-notifications-component'
+import { Store } from 'react-notifications-component'
 
 export function notificate ( titulo, mensagem, tipo ) {
-    let notification = store.addNotification( {
+    let notification = Store.addNotification( {
         title: titulo,
         message: mensagem,
         type: tipo,
@@ -17,5 +17,5 @@ export function notificate ( titulo, mensagem, tipo ) {
 }
 
 export function removeNotification ( notification ) {
-    store.removeNotification( notification )
+    Store.removeNotification( notification )
 }

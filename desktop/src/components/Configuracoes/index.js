@@ -37,7 +37,7 @@ function Configuracoes () {
             return false
         }
         if ( local.length < 3 ) {
-            Notification.notificate( 'Atenção', 'Local de instalação em branco ou muito curto!', 'warning' )
+            Notification.notificate( 'Atenção', 'Local de instalação vazio ou muito curto!', 'warning' )
             return false
         }
         return true
@@ -45,26 +45,22 @@ function Configuracoes () {
 
     function verificarDados () {
         console.log( 'verificando' )
+        formularioValido()
     }
 
     return (
         <S.Container>
             <S.Logo src='/icon.ico' />
-
             <S.SubCointaner>
                 <S.DivisorContainerEsquerda>
-
                     <TextContainer width={ '310px' }>
-                        <TextField onChange={ e => setUserid( e.target.value.toLowerCase() ) } value={ userid } placeholder={ 'ID do cadastro' } icon={ 'coletor_chave' } maxLength={ 13 } />
+                        <TextField onChange={ e => setUserid( e.target.value.toLowerCase() ) } value={ userid } placeholder={ 'ID do cadastro' } icon={ 'usuario_id' } maxLength={ 13 } />
                     </TextContainer>
                     <TextContainer width={ '310px' }>
                         <TextField onChange={ e => setLocal( e.target.value ) } value={ local } placeholder={ 'Local de instalação' } icon={ 'coletor_pc' } />
                     </TextContainer>
-
                 </S.DivisorContainerEsquerda>
-
                 <S.Divisor />
-
                 <S.DivisorContainerDireita>
                     <Checkbox text={ 'Usar Proxy?' } paddingLeft={ '9px' } changeReturn={ () => setProxyAtivo( !proxyAtivo ) } />
                     { proxyAtivo && <>
@@ -83,10 +79,8 @@ function Configuracoes () {
                             <TextField onChange={ e => setProxyPass( e.target.value ) } value={ proxyPass } placeholder={ 'Senha do proxy' } icon={ 'coletor_chave' } />
                         </TextContainer>
                     </> }
-
                 </S.DivisorContainerDireita>
             </S.SubCointaner>
-
             <S.Button> <Button text={ 'Verificar' } onClick={ verificarDados } /> </S.Button>
         </S.Container>
     )
