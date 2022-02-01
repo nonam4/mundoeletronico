@@ -45,7 +45,7 @@ export const Highlight = styled.span`
     position: absolute;
     bottom: 0;
     left: 50%;
-    border-bottom: solid 2px ${ ( { theme } ) => theme.colors.hover };
+    border-bottom: solid 2px ${ ( { theme, disabled } ) => disabled ? theme.colors.borders : theme.colors.hover };
 `
 export const Viewer = styled.div`
     cursor: pointer;

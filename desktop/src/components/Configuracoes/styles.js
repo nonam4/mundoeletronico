@@ -9,33 +9,22 @@ export const Container = styled.div`
     justify-content: center;
 `
 export const SubCointaner = styled.div`
-    width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-`
-export const DivisorContainerEsquerda = styled.div`
     width: 350px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
 `
-export const DivisorContainerDireita = styled.div`
-    width: 350px;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
-`
 export const Linha = styled.div`
     display: flex;
 `
 export const Divisor = styled.div`
-    width: 0px;
-    height: 75%;
+    width: 100%;
+    border-radius: 5px;
+    background: ${ ( { theme } ) => theme.colors.menus };
     border: solid 1px ${ ( { theme } ) => theme.colors.borders };
+    padding: 0.4rem 0 0.4rem 0;
 `
 export const Logo = styled.img`
     width: 12rem;
@@ -49,4 +38,8 @@ export const TextFileds = styled.div`
 `
 export const Button = styled.div`
     margin-bottom: 0.8rem;
+`
+export const Info = styled.div`
+    font-size: 12px;
+    text-align: center;
 `

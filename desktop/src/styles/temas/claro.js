@@ -12,7 +12,7 @@ const tema = {
         borders: '#dbdbdb',
         floating: '#9f9f9f',
         azul: '#0070f3',
-        vermelho: '#d30909',
+        vermelho: '#a70505',
         verde: '#00b221',
         amarelo: '#f1c40f',
         laranja: '#ff6b21',

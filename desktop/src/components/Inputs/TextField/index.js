@@ -9,6 +9,7 @@ function TextField ( props ) {
         placeholder: 'Digite aqui...',
         icon: 'undefined',
         maxLength: 23,
+        disabled: false
     }
     const [ shown, setShown ] = useState( false )
     const [ type, setType ] = useState( props.type || settings.type )
@@ -23,11 +24,11 @@ function TextField ( props ) {
 
     return (
         <S.Container>
-            <S.Input ref={ props.useRef } onFocus={ props.onFocus } onBlur={ props.onBlur } type={ type } icon={ props.icon } onChange={ props.onChange } value={ props.value } maxLength={ props.maxLength || settings.maxLength } placeholder={ ' ' } />
+            <S.Input disabled={ props.disabled ? 'disabled' : '' } ref={ props.useRef } onFocus={ props.onFocus } onBlur={ props.onBlur } type={ type } icon={ props.icon } onChange={ props.onChange } value={ props.value } maxLength={ props.maxLength || settings.maxLength } placeholder={ ' ' } />
             <S.Content>
                 { props.icon !== false && <Icon name={ props.icon || settings.icon } /> }
                 <S.Label icon={ props.icon }> { props.placeholder || settings.placeholder } </S.Label>
-                <S.Highlight />
+                <S.Highlight disabled={ props.disabled || settings.disabled } />
             </S.Content>
             { props.type === 'password' && <S.Viewer onClick={ () => setShown( !shown ) }> <Icon size={ 20 } name={ shown ? 'senha_esconder' : 'senha_mostrar' } /> </S.Viewer> }
         </S.Container>

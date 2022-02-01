@@ -25,6 +25,7 @@ export const Input = styled.input.attrs( { type: 'checkbox' } )`
 export const Label = styled.label`
     width: 100%;
     height: 22px;
+    line-height: 22px;
     color: ${ ( { theme } ) => theme.colors.texts };
     display: block;
     padding-left: 40px;
