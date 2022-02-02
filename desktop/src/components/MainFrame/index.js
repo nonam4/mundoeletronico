@@ -2,21 +2,27 @@ import { useEffect, useState } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useDados } from '../../contexts/DadosContext'
 import { useTela } from '../../contexts/TelaContext'
-import usePersistedState from '../../hooks/usePersistedState'
 
 import Load from '../Load'
 import Configuracoes from '../Configuracoes'
+import Listagem from '../Listagem'
 
 // temas
 import claro from '../../styles/temas/claro'
 import escuro from '../../styles/temas/escuro'
 import GlobalStyle from '../../styles/global'
 
+import * as Database from '../../workers/database'
+import Storage from '../../workers/storage'
+import * as Logs from '../../workers/storage'
+import * as Notification from '../../workers/notification'
+
 function MainPage () {
     const dados = useDados() // variaveis do contexto
     const tela = useTela() // variaveis do contexto
-    const [ dadosState, setDadosState ] = usePersistedState( dados.state )
     const [ theme, setTheme ] = useState( claro )
+    const [ storageInciado, setStorageIniciado ] = useState( false )
+    const storage = new Storage()
 
     function selectTheme ( title ) {
         switch ( title ) {
@@ -27,28 +33,53 @@ function MainPage () {
         }
     }
 
-    // monitora toda alteração no contexto de dados e salva em arquivo local no disco
     useEffect( () => {
-        setDadosState( dados.state )
-    }, [ dados.state ] )
+        storage.init( () => {
+            dados.dispatch( {
+                type: 'setAll', payload: {
+                    id: storage.get( 'id' ),
+                    local: storage.get( 'local' ),
+                    proxy: storage.get( 'proxy' ),
+                    dhcp: storage.get( 'dhcp' ),
+                    tema: storage.get( 'tema' )
+                }
+            } )
+
+            setStorageIniciado( true )
+        } )
+    }, [] )
 
     useEffect( () => {
-        if ( dadosState.tema === undefined ) return
+        if ( dados.state.tema === undefined ) return
         // se o tema do contexto for vazio define o tema local
         dados.dispatch( { type: 'setTema', payload: theme.title } )
     }, [ theme ] )
 
     useEffect( () => {
-        if ( dadosState.tema === undefined ) return
+        if ( dados.state.tema === undefined ) return
         // se o tema do contexto não for vazio e for diferente do tema local, atualiza o tema local
-        if ( dadosState.tema !== theme.title ) setTheme( selectTheme( dadosState.tema ) )
-    }, [ dadosState.tema ] )
+        if ( dados.state.tema !== theme.title ) setTheme( selectTheme( dados.state.tema ) )
+    }, [ dados.state.tema ] )
+
+    useEffect( () => {
+        console.log( dados.state )
+        if ( !dados.state.id || dados.state.id === '' ) return
+
+        Database.pegarDados( dados.state ).then( res => {
+            console.log( 'res data ', res.data )
+        } ).catch( err => {
+            Logs.createLog( `Erro ao receber dados do servidor - ${ err }` )
+            Notification.notificate( 'Erro', 'Erro ao receber dados do servidor!', 'danger' )
+        } )
+    }, [ dados.state.id ] )
 
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
-            { ( !dadosState.id || dadosState.id === '' ) && <Configuracoes /> }
-            { dadosState.id && dadosState.id !== '' && <div></div> }
+            { storageInciado && <>
+                { ( !dados.state.id || dados.state.id === '' ) && <Configuracoes /> }
+                { dados.state.id && dados.state.id !== '' && <Listagem /> }
+            </> }
             <Load show={ tela.state.load } />
         </ThemeProvider>
     )

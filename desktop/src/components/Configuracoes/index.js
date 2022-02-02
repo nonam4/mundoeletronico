@@ -9,13 +9,15 @@ import Button from '../Inputs/Button'
 
 import * as Notification from '../../workers/notification'
 import * as DHCP from '../../workers/dhcp'
+import Storage from '../../workers/storage'
 import * as S from './styles'
 
 function Configuracoes () {
+    const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
+    const storage = new Storage()
     const { colors } = useContext( ThemeContext )
     const dados = useDados()
     const tela = useTela()
-
     const [ ipDhcp, setIpDhcp ] = useState( undefined )
     const [ userId, setUserId ] = useState( '' )
     const [ local, setLocal ] = useState( '' )
@@ -34,6 +36,8 @@ function Configuracoes () {
             setIpDhcp( await DHCP.pegatIpDhcp() )
         }
         pegarIpDhcp()
+        createWindow()
+        handleWindowClose()
     }, [] )
 
     useEffect( () => {
@@ -48,12 +52,28 @@ function Configuracoes () {
         setLoad( false )
     }, [ ipDhcp ] )
 
+    function createWindow () {
+        // determina se irá criar uma janela pedindo os dados de configuração
+        if ( dados.state.id && dados.state.id !== '' ) return
+        if ( currentWindow.isVisible() ) return
+        // se for preciso criar uma nova janela, chama a função diretamente do /public/electron.js
+        window.require( '@electron/remote' ).require( './electron.js' ).callCreateWindow( true )
+    }
+
+    function handleWindowClose () {
+        // cuida para que não feche a janela enquanto não preencher os dados
+        currentWindow.on( 'close', () => {
+            Notification.notificate( 'Atenção', 'Entre em contato com o Suporte \n47 99964-9667!', 'danger' )
+            return false
+        } )
+    }
+
     function setLoad ( valor ) {
         tela.dispatch( { type: 'setLoad', payload: valor } )
     }
 
     function formularioValido () {
-        if ( userId.length != 13 ) {
+        if ( userId.length !== 13 ) {
             Notification.notificate( 'Atenção', 'Usuário em branco ou inválido!', 'warning' )
             return false
         }
@@ -97,9 +117,31 @@ function Configuracoes () {
     }
 
     function verificarDados () {
-        if ( !formularioValido() ) return
 
+        let settings = {
+            id: userId, local,
+            proxy: {
+                active: proxyAtivo,
+                user: proxyUser,
+                pass: proxyPass,
+                host: proxyHost,
+                port: proxyPort
+            },
+            dhcp: {
+                active: dhcpAtivo,
+                ips: faixasIp
+            },
+            tema: dados.state.tema
+        }
 
+        setLoad( true )
+        if ( !formularioValido() ) return setLoad( false )
+
+        storage.set( settings, () => {
+            dados.dispatch( {
+                type: 'setAll', payload: settings
+            } )
+        } )
     }
 
     function handleIdChange ( value ) {

@@ -4,19 +4,31 @@ const { app } = window.require( '@electron/remote' )
 class Storage {
     constructor() {
         this.paths = {
-            json: `${ app.getAppPath() }/settings.json`,
-            logs: `${ app.getAppPath() }/logs/`
+            json: `${ app.getAppPath() }/settings.json`
         }
 
         // valores padrões
-        this.dados = { proxy: false, dhcp: true, tema: 'claro' }
+        this.dados = {
+            id: undefined,
+            local: '',
+            proxy: {
+                active: false,
+                user: '',
+                pass: '',
+                host: '',
+                port: ''
+            },
+            dhcp: {
+                active: true,
+                ips: ''
+            },
+            tema: undefined
+        }
     }
 
     init ( callback ) {
-        let paths = this.paths
-
-        fs.readFile( paths.json, 'utf8', ( err, dados ) => {
-            if ( err ) this.createLog( `Impossível ler dados iniciais de configuração -> ${ err }` )
+        fs.readFile( this.paths.json, 'utf8', ( err, dados ) => {
+            if ( err ) createLog( `Impossível ler dados iniciais de configuração -> ${ err }` )
             if ( !err ) this.dados = JSON.parse( dados )
             callback()
         } )
@@ -28,17 +40,17 @@ class Storage {
 
     set ( value, callback ) {
         this.dados = value
-        fs.writeFile( paths.json, JSON.stringify( value ), err => {
-            if ( err ) this.createLog( `Impossível gravar dados de configuração -> ${ err }` )
+        fs.writeFile( this.paths.json, JSON.stringify( value ), err => {
+            if ( err ) createLog( `Impossível gravar dados de configuração -> ${ err }` )
             callback()
         } )
     }
+}
+export default Storage
 
-    createLog ( log ) {
-        fs.writeFile( `${ paths.logs }${ new Date().getTime() }.txt`, String( log ), err => {
-            if ( err ) console.log( err )
-        } )
-    }
+export function createLog ( log ) {
+    fs.writeFile( `${ app.getAppPath() }/logs/${ new Date().getTime() }.txt`, String( log ), err => {
+        if ( err ) console.log( err )
+    } )
 }
 
-export default Storage

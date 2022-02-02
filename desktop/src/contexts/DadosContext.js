@@ -34,6 +34,8 @@ function dadosReducer ( state, action ) {
             return { ...state, dhcp: payload }
         case 'setTema':
             return { ...state, tema: payload }
+        case 'setAll':
+            return { ...payload }
         default:
             return state
     }

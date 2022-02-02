@@ -51,4 +51,10 @@ export default createGlobalStyle`
         box-shadow: none !important;
         transition: all ease 0.15s !important;
     }
+    .rnc__notification-container--bottom-center{
+        left: calc(50% - 163px) !important;
+    }
+    .rnc__notification-message {
+        white-space: pre-wrap;
+    }
 `
