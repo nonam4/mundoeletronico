@@ -93,6 +93,15 @@ export default async ( req, res ) => {
             return false
         }
 
+        function ordenarHistorico () {
+            const desordenado = historico[ serial ]
+            const ordenado = Object.keys( desordenado ).sort().reduce( ( obj, key ) => {
+                obj[ key ] = desordenado[ key ]
+                return obj
+            }, {} )
+            return ordenado
+        }
+
         for ( let linhaHistorico in dadosHistorico.contadores ) {
 
             let idHistorico = linhaHistorico.split( ' - ' )
@@ -106,6 +115,8 @@ export default async ( req, res ) => {
 
             if ( pegarMesAtualAnteriror( dataHistorico ) ) historico[ serial ][ linhaHistorico ] = `${ dataHistorico[ 2 ] }/${ dataHistorico[ 1 ] }/${ dataHistorico[ 0 ] } - ${ horaHistorico }:${ minutosHistorico }: ${ dadosHistorico.contadores[ linhaHistorico ] } págs`
         }
+
+        historico[ serial ] = ordenarHistorico()
     } )
 
     listaCadastros.forEach( itemCadastro => {
@@ -126,6 +137,7 @@ export default async ( req, res ) => {
         for ( let serial in impressoras ) {
 
             let impressora = impressoras[ serial ]
+            impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
             impressora.contadores = { [ data ]: itemCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
             let contadores = impressora.contadores[ data ]
             let impresso = 0
