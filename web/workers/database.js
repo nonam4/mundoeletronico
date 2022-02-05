@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export async function autenticar ( username, password ) {
-    return await axios.post( '/api/login', { username, password } )
+    return await axios.post( '/api/web/login', { username, password } )
 }
 
 export async function getAll () {
@@ -9,19 +9,19 @@ export async function getAll () {
 
 export async function getImpressoras ( filtros ) {
     const defaults = { listando: 'todos', data: getDatas()[ 0 ].value, busca: '' }
-    return await axios.get( '/api/getimpressoras', { params: { filtros: filtros || defaults } } )
+    return await axios.get( '/api/web/getimpressoras', { params: { filtros: filtros || defaults } } )
 }
 
 export async function salvarCadastro ( usuario, alterado ) {
-    return await axios.post( '/api/salvarcadastro', { usuario, cliente: alterado } )
+    return await axios.post( '/api/web/salvarcadastro', { usuario, cliente: alterado } )
 }
 
 export async function getAtendimentos ( busca ) {
-    return await axios.get( '/api/getatendimentos', { params: { busca } } )
+    return await axios.get( '/api/web/getatendimentos', { params: { busca } } )
 }
 
 export async function salvarAtendimento ( usuario, alterado ) {
-    return await axios.post( '/api/salvaratendimento', { usuario, atendimento: alterado } )
+    return await axios.post( '/api/web/salvaratendimento', { usuario, atendimento: alterado } )
 }
 
 export function getDatas () {

@@ -81,7 +81,8 @@ function Expandido () {
     }
 
     function setInCadastros ( cadastro ) {
-        dispatch( { type: 'setCadastros', payload: { ...state.cadastros, [ cadastro.id ]: cadastro } } )
+        // atualiza o cadastro no state para atualizar os dados em todas as outras telas
+        dispatch( { type: 'setCadastros', payload: set( `${ cadastro.tipo }.${ cadastro.id }`, cadastro, state.cadastros ) } )
     }
 
     function fechar () {

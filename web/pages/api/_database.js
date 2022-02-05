@@ -1,15 +1,18 @@
-import * as admin from 'firebase-admin'
+import { initializeApp, cert } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
 
 function initialize () {
+
+    const CREDENTIALS = JSON.parse( process.env.CREDENTIALS )
     try {
         // se o app já estiver iniciado já retorna ele
-        return admin.firestore()
+        return getFirestore()
     } catch ( err ) {
         // caso o app não esteja iniciado, inicie e depois retorne
-        admin.initializeApp( {
-            credential: admin.credential.cert( JSON.parse( process.env.CREDENTIALS ) )
+        initializeApp( {
+            credential: cert( CREDENTIALS )
         } )
-        return admin.firestore()
+        return getFirestore()
     }
 }
 

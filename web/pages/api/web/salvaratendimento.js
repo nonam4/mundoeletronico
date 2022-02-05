@@ -1,4 +1,4 @@
-import database from './_database.js'
+import database from '../_database.js'
 import bcrypt from 'bcryptjs'
 
 export default async ( req, res ) => {
