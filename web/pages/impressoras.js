@@ -135,8 +135,8 @@ function Impressoras () {
         }
 
         // compara se a entrada tem alguma informação da busca
-        function compararString ( compare, str ) {
-            if ( compare.indexOf( str ) > -1 ) return true
+        function compararString ( compare ) {
+            if ( compare.indexOf( buscaLimpa ) > -1 ) return true
             return false
         }
 
@@ -147,14 +147,15 @@ function Impressoras () {
             for ( let id in cadastros[ 'locacao' ] ) {
                 let cliente = cadastros[ 'locacao' ][ id ]
 
-                if ( compararString( limparString( cliente.nomefantasia ), buscaLimpa )
-                    || compararString( limparString( cliente.razaosocial ), buscaLimpa )
-                    || compararString( cliente.id, buscaLimpa )
-                    || compararString( cliente.cpfcnpj, buscaLimpa )
-                    || compararString( cliente.contato.email, buscaLimpa )
-                    || compararString( cliente.contato.telefone, buscaLimpa )
-                    || compararString( cliente.contato.celular, buscaLimpa )
-                    || compararString( limparString( cliente.endereco.rua ), buscaLimpa ) ) {
+                if ( compararString( limparString( cliente.nomefantasia ) )
+                    || compararString( limparString( cliente.razaosocial ) )
+                    || compararString( cliente.id )
+                    || compararString( cliente.cpfcnpj )
+                    || compararString( cliente.contato.email )
+                    || compararString( cliente.contato.telefone )
+                    || compararString( cliente.contato.celular )
+                    || compararString( limparString( cliente.endereco.rua ) )
+                    || compararString( limparString( cliente.endereco.cidade ) ) ) {
 
                     filtrados[ cliente.id ] = cliente
                     continue
