@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import packageInfo from '../../../package.json'
 
 import { createLog } from '../../workers/storage'
@@ -6,6 +6,7 @@ import { useTela } from '../../contexts/TelaContext'
 import { useDados } from '../../contexts/DadosContext'
 import * as Database from '../../workers/database'
 import * as Notification from '../../workers/notification'
+import * as SNMP from '../../workers/snmp'
 
 function Listagem () {
     const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
@@ -104,10 +105,30 @@ function Listagem () {
         console.log( 'atualizando ', url )
     }
 
-    function buscarImpressoras () {
+    async function buscarImpressoras () {
         console.log( 'buscando impressoras' )
+        let ips = []
+        if ( dados.state.dhcp.active ) ips = await DHCP.pegatIpDhcp().split( ';' )
+        if ( !dados.state.dhcp.active ) ips = dados.state.dhcp.ips.split( ';' )
 
-        setLoad( false )
+        for ( let ip of ips ) {
+            for ( let x = 0; x < 255; x++ ) {
+                SNMP.verificarIp( `${ ip }.${ x }` ).then( ( impressora ) => {
+                    console.log( impressora )
+
+                    impressora.pegarDados().then( () => {
+                        if ( !impressora.modelo || !impressora.serial || !impressora.leitura ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
+                        gravarImpressora( dados.state.id, impressora, dados.state.proxy ).then( res => {
+                            console.log( res, ' - impressora gravada com sucesso' )
+                        } ).catch( err => {
+                            // em caso de erro ao buscar atualizações
+                            Notification.notificate( 'Erro', `Erro ao salvar dados da impressora - IP: ${ impressora.ip }`, 'danger' )
+                            createLog( `Erro ao salvar dados da impressora - IP: ${ impressora.ip } - Erro: ${ err }` )
+                        } )
+                    } )
+                } )
+            }
+        }
     }
 
     return (

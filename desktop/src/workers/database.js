@@ -26,6 +26,10 @@ export async function checkUpdates ( os, versaoLocal, proxy ) {
     return await axios.request( getRequestSettings( 'get', 'checkupdates', { os, versaoLocal }, proxy ) )
 }
 
+export async function salvarImpressora ( id, dados, proxy ) {
+    return await axios.request( getRequestSettings( 'post', 'salvarimpressora', { id, dados }, proxy ) )
+}
+
 export function getDatas () {
     let datas = []
     let data = new Date()
