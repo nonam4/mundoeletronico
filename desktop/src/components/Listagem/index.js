@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from 'react'
 
 import { useTela } from '../../contexts/TelaContext'
+import * as Database from '../../workers/database'
 
 function Listagem () {
     const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
     const tela = useTela()
 
     useEffect( () => {
-        setLoad( false )
-        test()
+        loop()
 
         handleWindowClose()
         if ( currentWindow.isVisible() ) return
@@ -33,11 +33,17 @@ function Listagem () {
         tela.dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function test () {
+    // loop principal do sistema, a cada hora irá realizar a mesma ação novamente
+    function loop () {
+
+        checkUpdates()
         setTimeout( () => {
-            console.log( 'working' )
-            test()
-        }, 5000 )
+            loop()
+        }, 3600000 )
+    }
+
+    function checkUpdates () {
+
     }
 
     return (

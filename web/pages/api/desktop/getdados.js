@@ -2,7 +2,7 @@ import database from '../_database.js'
 
 export default async ( req, res ) => {
 
-    const { data, id, local } = JSON.parse( req.query.filtros )
+    const { data, id } = JSON.parse( req.query.filtros )
     let dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     let historico = {}
 

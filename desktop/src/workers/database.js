@@ -1,27 +1,36 @@
 import axios from 'axios'
 import packageInfo from '../../package.json'
 
-export async function pegarDados ( { id, local, proxy } ) {
-
-    let reqSettings = {
-        url: 'http://mundoeletronico.vercel.app/api/coletor/getdados',
-        params: {
-            id: id,
-            local: local,
-            versao: packageInfo.version,
-            os: process.platform
-        }
+function getRequestSettings ( proxy, endpoint, params ) {
+    let requestSettings = {
+        url: `http://mundoeletronico.vercel.app/api/coletor/${ endpoint }`,
+        params
     }
-    if ( proxy.active ) {
-        reqSettings.proxy = {
-            host: proxy.host,
-            port: proxy.port,
-            auth: {
-                username: proxy.user,
-                password: proxy.pass
-            }
+    // se o proxy não estiver ativo já retorna
+    if ( proxy.active ) requestSettings.proxy = {
+        host: proxy.host,
+        port: proxy.port,
+        auth: {
+            username: proxy.user,
+            password: proxy.pass
         }
     }
 
-    return await axios.get( reqSettings )
+    return requestSettings
+}
+
+export async function getDados ( { id, local, proxy } ) {
+
+    let params = {
+        id: id,
+        local: local,
+        versao: packageInfo.version,
+        os: process.platform
+    }
+
+    return await axios.get( getRequestSettings )
+}
+
+export async function checkUpdates ( os, versaoLocal ) {
+    return await axios.get( '' )
 }
