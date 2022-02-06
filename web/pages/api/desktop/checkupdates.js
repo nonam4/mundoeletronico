@@ -1,7 +1,7 @@
 import database from '../_database.js'
 
 export default async ( req, res ) => {
-    const { os, versaoLocal } = JSON.parse( req.query.filtros )
+    const { os, versaoLocal } = req.query
     let sistema = await database.collection( '/sistema/desktop' ).get()
 
     function atualizar ( local, server ) {

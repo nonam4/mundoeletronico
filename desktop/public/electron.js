@@ -30,6 +30,27 @@ function createWindow ( show ) {
         e.preventDefault()
         return false
     } )
+
+
+    const filter = {
+        urls: [ 'https://mundoeletronico.vercel.app/*' ] // Remote API URS for which you are getting CORS error
+    }
+
+    win.webContents.session.webRequest.onBeforeSendHeaders(
+        filter,
+        ( details, callback ) => {
+            details.requestHeaders.Origin = `https://mundoeletronico.vercel.app/*`
+            callback( { requestHeaders: details.requestHeaders } )
+        }
+    )
+
+    win.webContents.session.webRequest.onHeadersReceived(
+        filter,
+        ( details, callback ) => {
+            details.responseHeaders[ 'access-control-allow-origin' ] = [ '*' ]
+            callback( { responseHeaders: details.responseHeaders } )
+        }
+    )
 }
 
 // pega o ícone da janela

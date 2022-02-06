@@ -3,8 +3,7 @@ import axios from 'axios'
 function getRequestSettings ( method, endpoint, params, proxy ) {
     let requestSettings = {
         url: `http://mundoeletronico.vercel.app/api/desktop/${ endpoint }`,
-        method, params: { ...params },
-        headers: { 'Access-Control-Allow-Origin': '*' }
+        method, params: { ...params }
     }
 
     // se o proxy não estiver ativo já retorna
