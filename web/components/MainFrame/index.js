@@ -9,7 +9,7 @@ import * as Database from '../../workers/database'
 
 import SideMenu from '../SideMenu'
 
-import CadastroCliente from '../Clientes/CadastroCliente'
+import CadastroCliente from '../Cadastros/CadastroCliente'
 import CadastroImpressoras from '../Impressoras/CadastroImpressoras'
 import CadastroAtendimento from '../Atendimentos/CadastroAtendimento'
 

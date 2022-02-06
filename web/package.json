@@ -12,7 +12,7 @@
         "url": "https://github.com/nonam4/mundoeletronico/issues"
     },
     "scripts": {
-        "dev": "next dev"
+        "start": "next dev"
     },
     "dependencies": {
         "@babel/core": "^7.16.0",

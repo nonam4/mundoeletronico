@@ -13,7 +13,7 @@ export async function getImpressoras ( filtros ) {
 }
 
 export async function salvarCadastro ( usuario, alterado ) {
-    return await axios.post( '/api/salvarcliente', { usuario, cliente: alterado } )
+    return await axios.post( '/api/salvarcadastro', { usuario, cliente: alterado } )
 }
 
 export async function getAtendimentos ( busca ) {
