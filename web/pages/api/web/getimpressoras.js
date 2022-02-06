@@ -3,6 +3,17 @@ import database from '../_database.js'
 export default async ( req, res ) => {
 
     const { data, listando } = JSON.parse( req.query.filtros )
+    const listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
+    const listaHistorico = await database.collection( '/historico' ).get()
+    const listaTecnicos = await database.collection( '/usuarios/' ).get()
+
+    let cadastros = {
+        locacao: {},
+        fornecedor: {},
+        particular: {}
+    }
+    let tecnicos = [ { label: 'Em aberto', value: '' } ]
+    let historico = {}
 
     function getDatas () {
         let datas = []
@@ -56,17 +67,6 @@ export default async ( req, res ) => {
 
         return false
     }
-
-    let cadastros = {
-        locacao: {},
-        fornecedor: {},
-        particular: {}
-    }
-    let tecnicos = [ { label: 'Em aberto', value: '' } ]
-    let historico = {}
-    let listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
-    let listaHistorico = await database.collection( '/historico' ).get()
-    let listaTecnicos = await database.collection( '/usuarios/' ).get()
 
     listaTecnicos.forEach( itemTecnico => {
         let tecnico = itemTecnico.data()
