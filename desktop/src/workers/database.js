@@ -2,7 +2,7 @@ import axios from 'axios'
 
 function getRequestSettings ( method, endpoint, params, proxy ) {
     let requestSettings = {
-        url: `http://mundoeletronico.vercel.app/api/coletor/${ endpoint }`,
+        url: `http://mundoeletronico.vercel.app/api/desktop/${ endpoint }`,
         method, params: { ...params }
     }
 

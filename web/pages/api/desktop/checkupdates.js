@@ -4,6 +4,9 @@ export default async ( req, res ) => {
     const { os, versaoLocal } = JSON.parse( req.query.filtros )
     let sistema = await database.collection( '/sistema/desktop' ).get()
 
+    // evita erros com o CORS
+    res.header( "Access-Control-Allow-Origin", "*" )
+
     function atualizar ( local, server ) {
         if ( typeof local !== 'object' ) local = local.toString().split( '.' )
         if ( typeof server !== 'object' ) server = server.toString().split( '.' )

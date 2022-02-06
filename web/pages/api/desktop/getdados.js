@@ -5,6 +5,9 @@ export default async ( req, res ) => {
     let dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     let historico = {}
 
+    // evita erros com o CORS
+    res.header( "Access-Control-Allow-Origin", "*" )
+
     // se o cadastro for excluido retorna um erro
     if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
 
