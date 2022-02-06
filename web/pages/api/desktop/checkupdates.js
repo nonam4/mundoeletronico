@@ -2,7 +2,7 @@ import database from '../_database.js'
 
 export default async ( req, res ) => {
     const { os, versaoLocal } = req.query
-    let sistema = await database.collection( '/sistema/desktop' ).get()
+    const sistema = await database.doc( '/sistema/desktop' ).get()
 
     function atualizar ( local, server ) {
         if ( typeof local !== 'object' ) local = local.toString().split( '.' )
