@@ -56,8 +56,8 @@ function Configuracoes () {
         // determina se irá criar uma janela pedindo os dados de configuração
         if ( dados.state.id && dados.state.id !== '' ) return
         if ( currentWindow.isVisible() ) return
-        // se for preciso criar uma nova janela, chama a função diretamente do /public/electron.js
-        window.require( '@electron/remote' ).require( './electron.js' ).callCreateWindow( true )
+        // se for preciso abra a janela atual que está somente escondida
+        currentWindow.show()
     }
 
     function handleWindowClose () {

@@ -37,7 +37,9 @@ export const Logo = styled.img`
     margin-bottom: 50px;
 `
 export const Text = styled.div`
-    padding: 0.8rem;
+    position: absolute;
+    bottom: 70px;
+    text-align: center;
 `
 export const Loader = styled.div`
     position: relative;

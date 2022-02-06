@@ -57,17 +57,15 @@ app.on( 'ready', () => {
     createWindow( false )
 } )
 
-exports.callCreateWindow = function callCreateWindow ( show ) {
-    createWindow( show )
-}
-
 exports.criarTray = function criarTray () {
     let tray = new Tray( getIcon() )
     tray.setToolTip( 'Mundo Eletrônico' )
 
     tray.setContextMenu( Menu.buildFromTemplate( [ {
         label: 'Abrir', click: () => {
-            createWindow( true )
+            // pega todas as janelas possíveis, terá somente uma que é a janela atual
+            // mostre ela pois ela está somente escondida
+            BrowserWindow.getAllWindows()[ 0 ].show()
             tray.destroy()
         }
     } ] ) )

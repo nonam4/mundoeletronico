@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import packageInfo from '../../../package.json'
 
 import { createLog } from '../../workers/storage'
@@ -98,12 +98,14 @@ function Listagem () {
 
     function selfUpdate ( url ) {
         setUpdate( true )
+
         console.log( 'atualizando ', url )
     }
 
     function buscarImpressoras () {
-        setLoad( false )
         console.log( 'buscando impressoras' )
+
+        setLoad( false )
     }
 
     return (
