@@ -6,6 +6,8 @@ require( '@electron/remote/main' ).initialize()
 
 function createWindow ( show ) {
 
+    // URLs que o CORS vai aceitar
+    const corsUrls = { urls: [ 'https://mundoeletronico.vercel.app/*' ] }
     const win = new BrowserWindow( {
         width: 800,
         height: 600,
@@ -31,24 +33,16 @@ function createWindow ( show ) {
         return false
     } )
 
-
-    const filter = {
-        urls: [ 'https://mundoeletronico.vercel.app/*' ] // Remote API URS for which you are getting CORS error
-    }
-
+    // evita que dê erro no CORS
     win.webContents.session.webRequest.onBeforeSendHeaders(
-        filter,
-        ( details, callback ) => {
-            details.requestHeaders.Origin = `https://mundoeletronico.vercel.app/*`
-            callback( { requestHeaders: details.requestHeaders } )
+        corsUrls, ( _details, callback ) => {
+            callback( { requestHeaders: { Origin: '*' } } )
         }
     )
 
     win.webContents.session.webRequest.onHeadersReceived(
-        filter,
-        ( details, callback ) => {
-            details.responseHeaders[ 'access-control-allow-origin' ] = [ '*' ]
-            callback( { responseHeaders: details.responseHeaders } )
+        corsUrls, ( _details, callback ) => {
+            callback( { responseHeaders: { 'Access-Control-Allow-Origin': [ '*' ] } } )
         }
     )
 }

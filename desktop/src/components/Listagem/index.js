@@ -68,7 +68,6 @@ function Listagem () {
         // se o cadastro não existir ou não estiver ativo irá retornar erro 40x
         // esse erro já vai direto para o catch
         Database.getDados( dados.state.id, data, dados.state.proxy ).then( res => {
-            console.log( res.data )
             setHistorico( res.data.historico )
             setCadastro( res.data.cadastro )
             // se o cadastro for válido busque por atualizações do sistema
