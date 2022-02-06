@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import packageInfo from '../../../package.json'
 
 import { createLog } from '../../workers/storage'
@@ -17,10 +17,7 @@ function Listagem () {
     useEffect( () => {
         // inicia o loop principal do sistema
         loop()
-
         handleWindowClose()
-        if ( currentWindow.isVisible() ) return
-        // cria o ícone na tray do sistema se a janela não estiver visível
         criarTray()
     }, [] )
 
@@ -34,6 +31,8 @@ function Listagem () {
     }
 
     function criarTray () {
+        // cria o ícone na tray do sistema se a janela não estiver visível
+        if ( currentWindow.isVisible() ) return
         window.require( '@electron/remote' ).require( './electron.js' ).criarTray()
     }
 
@@ -75,9 +74,12 @@ function Listagem () {
         } ).catch( err => {
             // em caso de erro ao buscar atualizações
             Notification.notificate( 'Erro', 'Cadastro inválido ou inexistente', 'danger' )
-            setLoad( false )
             createLog( `Cadastro inválido ou inexistente -> ${ err }` )
             console.error( err )
+            // se o erro for 404 é porque o cadastro não foi encontrado ou foi excluido
+            // nesse caso iremos remover a ID dos arquivos locais
+            if ( err.response.status === 404 ) return dados.dispatch( { type: 'setId', payload: '' } )
+            setLoad( false )
         } )
     }
 

@@ -13,9 +13,7 @@ import claro from '../../styles/temas/claro'
 import escuro from '../../styles/temas/escuro'
 import GlobalStyle from '../../styles/global'
 
-import * as Database from '../../workers/database'
 import Storage from '../../workers/storage'
-import * as Logs from '../../workers/storage'
 import * as Notification from '../../workers/notification'
 
 function MainPage () {
@@ -61,6 +59,11 @@ function MainPage () {
         // se o tema do contexto não for vazio e for diferente do tema local, atualiza o tema local
         if ( dados.state.tema !== theme.title ) setTheme( selectTheme( dados.state.tema ) )
     }, [ dados.state.tema ] )
+
+    useEffect( () => {
+        if ( !storageInciado ) return
+        storage.set( dados.state, () => { } )
+    }, [ dados.state ] )
 
     return (
         <ThemeProvider { ...{ theme } }>
