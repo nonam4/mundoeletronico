@@ -2,7 +2,7 @@ import database from '../_database.js'
 
 export default async ( req, res ) => {
     const { data, id } = req.query
-    let dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
+    const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     let historico = {}
 
     // se o cadastro for excluido retorna um erro
@@ -136,7 +136,7 @@ export default async ( req, res ) => {
         contadores.adicionaltroca = 0
 
         // pega o histórico dessa impressora
-        let dadosHistorico = await database.collection( `/historico/${ impressora.serial }` ).get()
+        const dadosHistorico = await database.collection( `/historico/${ impressora.serial }` ).get()
         processarHistorico( { id: impressora.serial, dados: dadosHistorico } )
 
         impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
