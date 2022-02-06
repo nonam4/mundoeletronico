@@ -1,12 +1,9 @@
 import database from '../_database.js'
 
 export default async ( req, res ) => {
-    console.log( req.query )
-
-    const { data, id } = JSON.parse( req.query )
+    const { data, id } = req.query
     let dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     let historico = {}
-
 
     // se o cadastro for excluido retorna um erro
     if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
@@ -124,7 +121,7 @@ export default async ( req, res ) => {
     for ( let serial in impressoras ) {
 
         let impressora = impressoras[ serial ]
-        impressora.contadores = { [ data ]: itemCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
+        impressora.contadores = { [ data ]: dadosCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
         let contadores = impressora.contadores[ data ]
         let impresso = 0
         if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
