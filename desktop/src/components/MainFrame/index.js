@@ -4,6 +4,7 @@ import { useDados } from '../../contexts/DadosContext'
 import { useTela } from '../../contexts/TelaContext'
 
 import Load from '../Load'
+import Update from '../Update'
 import Configuracoes from '../Configuracoes'
 import Listagem from '../Listagem'
 
@@ -61,18 +62,6 @@ function MainPage () {
         if ( dados.state.tema !== theme.title ) setTheme( selectTheme( dados.state.tema ) )
     }, [ dados.state.tema ] )
 
-    useEffect( () => {
-        console.log( dados.state )
-        if ( !dados.state.id || dados.state.id === '' ) return
-
-        Database.pegarDados( dados.state ).then( res => {
-            console.log( 'res data ', res.data )
-        } ).catch( err => {
-            Logs.createLog( `Erro ao receber dados do servidor - ${ err }` )
-            Notification.notificate( 'Erro', 'Erro ao receber dados do servidor!', 'danger' )
-        } )
-    }, [ dados.state.id ] )
-
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
@@ -81,6 +70,7 @@ function MainPage () {
                 { dados.state.id && dados.state.id !== '' && <Listagem /> }
             </> }
             <Load show={ tela.state.load } />
+            <Update show={ tela.state.update } />
         </ThemeProvider>
     )
 }

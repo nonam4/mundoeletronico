@@ -1,7 +1,10 @@
 import { createContext, useContext, useReducer } from 'react'
 
 const initialData = {
-    load: true
+    load: true,
+    update: false,
+    cadastro: {},
+    historico: {}
 }
 
 // Context
@@ -13,6 +16,12 @@ function telaReducer ( state, action ) {
     switch ( action.type ) {
         case 'setLoad':
             return { ...state, load: payload }
+        case 'setUpdate':
+            return { ...state, update: payload }
+        case 'setCadastro':
+            return { ...state, cadastro: payload }
+        case 'setHistorico':
+            return { ...state, historico: payload }
         default:
             return state
     }

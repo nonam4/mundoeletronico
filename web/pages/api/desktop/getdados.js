@@ -6,6 +6,7 @@ export default async ( req, res ) => {
     let dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     let historico = {}
 
+
     // se o cadastro for excluido retorna um erro
     if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
 

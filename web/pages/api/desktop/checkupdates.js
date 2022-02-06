@@ -23,5 +23,5 @@ export default async ( req, res ) => {
     }
 
     if ( atualizar( versaoLocal, sistema.data().versaoatual ) ) return res.status( 200 ).send( { updateUrl: getUpdateUrl() } )
-    res.status( 200 ).send( { updateUrl: undefined } )
+    res.status( 200 ).send( 'Ok' )
 }

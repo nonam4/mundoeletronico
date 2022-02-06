@@ -30,6 +30,11 @@ function createWindow ( show ) {
         e.preventDefault()
         return false
     } )
+
+    //cuida para que o CORS não bloqueie as chamadas às APIs
+    win.webContents.session.webRequest.onBeforeSendHeaders( ( details, callback ) => {
+        callback( { requestHeaders: { Origin: 'https://mundoeletronico.vercel.app/', ...details.requestHeaders } } )
+    } )
 }
 
 // pega o ícone da janela
