@@ -3,7 +3,7 @@ import database from '../_database.js'
 export default async ( req, res ) => {
     const { data, id } = req.query
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
-    let historico = {}
+    const listaHistorico = await database.collection( '/historico' ).get()
 
     // se o cadastro for excluido retorna um erro
     if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
@@ -61,9 +61,78 @@ export default async ( req, res ) => {
         return false
     }
 
-    function processarHistorico ( historico ) {
-        let serial = historico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
-        let dadosHistorico = historico.dados
+    let cadastro = dadosCadastro.data()
+    // se o cadastro estiver desativado
+    if ( !cadastro.ativo ) return res.status( 401 ).send( 'Cadastro inativo!' )
+
+    cadastro.impresso = 0
+    cadastro.excedentes = 0
+    cadastro.impressorasAtivas = 0
+    cadastro.atraso = false
+    cadastro.abastecimento = false
+
+    let impressorasAtrasadas = 0 //variável de controle de impressoras com atrasos em leituras
+    let impressoras = cadastro.impressoras
+    for ( let serial in impressoras ) {
+
+        let impressora = impressoras[ serial ]
+        impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
+        impressora.contadores = { [ data ]: dadosCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
+        let contadores = impressora.contadores[ data ]
+        let impresso = 0
+        if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
+        if ( ( impressora.contador - impressora.tintas.abastecido ) >= impressora.tintas.capacidade ) cadastro.abastecimento = true
+        if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
+
+        cadastro.impressorasAtivas += 1
+
+        if ( !contadores ) continue
+        //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
+        contadores.excedentes = 0
+        contadores.adicionaltroca = 0
+
+        if ( impressora.substituindo.length > 0 ) { //essa impressora está substituindo alguma outra?
+            for ( let index in impressora.substituindo ) {
+                let serialSubstituido = impressora.substituindo[ index ]
+                let impressoraSubstituida = cadastro.impressoras[ serialSubstituido ]
+
+                if ( !impressoraSubstituida || !impressoraSubstituida.contadores[ data ] ) continue //se a impressora substituida não existir ou não tiver leitura ela será ignorada
+
+                impresso += impressoraSubstituida.contadores[ data ].impresso //incrementa com o total impresso das maquinas que sairam
+                contadores.adicionaltroca += impressoraSubstituida.contadores[ data ].impresso
+            }
+        }
+
+        //após definir o valor impresso pelas maquinas que sairam, incrementamos os valores da impressora atual também
+        impresso += contadores.impresso
+        //definimos se tem excedentes com base na franquia da maquina comparado ao total impresso das trocas + impresso atual
+        if ( impresso > impressora.franquia.limite ) contadores.excedentes = impresso - impressora.franquia.limite
+        //incrementa o total impresso no controle geral do cadastro
+        cadastro.impresso += impresso
+
+        switch ( cadastro.franquia.tipo ) {
+            case 'maquina':
+                cadastro.excedentes += contadores.excedentes
+                break
+            case 'pagina':
+                if ( cadastro.impresso > cadastro.franquia.limite ) cadastro.excedentes = cadastro.impresso - cadastro.franquia.limite
+                break
+            case 'ilimitado':
+                cadastro.excedentes = cadastro.impresso
+                break
+        }
+    }
+    //se apenas uma impressora apenas estiver com atraso não irá dizer que o sistema não está coletando para esse cadastro
+    //e não o marcará como um cadastro com atraso, mas se o numero de impressoras ativas for igual que o numero de impressoras
+    //atrasadas daí sim irá indicar que não está coletandos
+    if ( impressorasAtrasadas >= cadastro.impressorasAtivas ) cadastro.atraso = true
+
+    let historico = {}
+    listaHistorico.forEach( itemHistorico => {
+        let serial = itemHistorico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
+        let dadosHistorico = itemHistorico.data()
+
+        if ( !cadastro.impressoras[ serial ] ) return
 
         historico[ serial ] = {}
 
@@ -104,78 +173,7 @@ export default async ( req, res ) => {
         }
 
         historico[ serial ] = ordenarHistorico()
-    }
-
-    let cadastro = dadosCadastro.data()
-    // se o cadastro estiver desativado
-    if ( !cadastro.ativo ) return res.status( 401 ).send( 'Cadastro inativo!' )
-
-    cadastro.impresso = 0
-    cadastro.excedentes = 0
-    cadastro.impressorasAtivas = 0
-    cadastro.atraso = false
-    cadastro.abastecimento = false
-
-    let impressorasAtrasadas = 0 //variável de controle de impressoras com atrasos em leituras
-    let impressoras = cadastro.impressoras
-    for ( let serial in impressoras ) {
-
-        let impressora = impressoras[ serial ]
-        impressora.contadores = { [ data ]: dadosCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
-        let contadores = impressora.contadores[ data ]
-        let impresso = 0
-        if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
-        if ( ( impressora.contador - impressora.tintas.abastecido ) >= impressora.tintas.capacidade ) cadastro.abastecimento = true
-        if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
-
-        cadastro.impressorasAtivas += 1
-
-        if ( !contadores ) continue
-        //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
-        contadores.excedentes = 0
-        contadores.adicionaltroca = 0
-
-        // pega o histórico dessa impressora
-        const dadosHistorico = await database.collection( `/historico/${ impressora.serial }` ).get()
-        processarHistorico( { id: impressora.serial, dados: dadosHistorico } )
-
-        impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
-
-        if ( impressora.substituindo.length > 0 ) { //essa impressora está substituindo alguma outra?
-            for ( let index in impressora.substituindo ) {
-                let serialSubstituido = impressora.substituindo[ index ]
-                let impressoraSubstituida = cadastro.impressoras[ serialSubstituido ]
-
-                if ( !impressoraSubstituida || !impressoraSubstituida.contadores[ data ] ) continue //se a impressora substituida não existir ou não tiver leitura ela será ignorada
-
-                impresso += impressoraSubstituida.contadores[ data ].impresso //incrementa com o total impresso das maquinas que sairam
-                contadores.adicionaltroca += impressoraSubstituida.contadores[ data ].impresso
-            }
-        }
-
-        //após definir o valor impresso pelas maquinas que sairam, incrementamos os valores da impressora atual também
-        impresso += contadores.impresso
-        //definimos se tem excedentes com base na franquia da maquina comparado ao total impresso das trocas + impresso atual
-        if ( impresso > impressora.franquia.limite ) contadores.excedentes = impresso - impressora.franquia.limite
-        //incrementa o total impresso no controle geral do cadastro
-        cadastro.impresso += impresso
-
-        switch ( cadastro.franquia.tipo ) {
-            case 'maquina':
-                cadastro.excedentes += contadores.excedentes
-                break
-            case 'pagina':
-                if ( cadastro.impresso > cadastro.franquia.limite ) cadastro.excedentes = cadastro.impresso - cadastro.franquia.limite
-                break
-            case 'ilimitado':
-                cadastro.excedentes = cadastro.impresso
-                break
-        }
-    }
-    //se apenas uma impressora apenas estiver com atraso não irá dizer que o sistema não está coletando para esse cadastro
-    //e não o marcará como um cadastro com atraso, mas se o numero de impressoras ativas for igual que o numero de impressoras
-    //atrasadas daí sim irá indicar que não está coletandos
-    if ( impressorasAtrasadas >= cadastro.impressorasAtivas ) cadastro.atraso = true
+    } )
 
     res.status( 200 ).send( { cadastro, historico } )
 }
