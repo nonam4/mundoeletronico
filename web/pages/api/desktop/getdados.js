@@ -2,7 +2,12 @@ import database from '../_database.js'
 
 export default async ( req, res ) => {
 
-    const { data, id } = JSON.parse( req.query.filtros )
+    const { data, id, local } = JSON.parse( req.query.filtros )
+    let dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
+    let historico = {}
+
+    // se o cadastro for excluido retorna um erro
+    if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
 
     function getDatas () {
         let datas = []
@@ -57,7 +62,6 @@ export default async ( req, res ) => {
         return false
     }
 
-    let historico = {}
     function processarHistorico ( historico ) {
         let serial = historico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
         let dadosHistorico = historico.dados
@@ -103,8 +107,9 @@ export default async ( req, res ) => {
         historico[ serial ] = ordenarHistorico()
     }
 
-    let dadosCadastro = await database.collection( `/cadastros/${ id }` ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
     let cadastro = dadosCadastro.data()
+    // se o cadastro estiver desativado
+    if ( !cadastro.ativo ) return res.status( 401 ).send( 'Cadastro inativo!' )
 
     cadastro.impresso = 0
     cadastro.excedentes = 0
