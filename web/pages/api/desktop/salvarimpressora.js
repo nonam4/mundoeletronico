@@ -69,6 +69,23 @@ export default async ( req, res ) => {
         }
     }
 
+    // se a impressora for válida e tiver registro de contador na data de gravação
+    if ( impressora.contadores[ dataAtual ] ) {
+        // define o quanto foi impresso no mês atual
+        let impresso = contador - impressora.contadores[ dataAtual ].primeiro.contador
+        let excedentes = impresso > impressora.franquia.limite ? impresso - impressora.franquia.limite : 0
+
+        impressora.contadores = {
+            [ dataAtual ]: {
+                ...impressora.contadores[ dataAtual ],
+                ultimo: {
+                    contador, dia: getData().dia
+                },
+                impresso, excedentes
+            }
+        }
+    }
+
     // se não tiver nenhum registro de contadores na data de gravação
     if ( !impressora.contadores[ dataAtual ] ) {
         // define o quanto foi impresso no mês atual
@@ -81,23 +98,6 @@ export default async ( req, res ) => {
                     contador: impressora.contador,
                     dia: getData().dia
                 }, ultimo: {
-                    contador, dia: getData().dia
-                },
-                impresso, excedentes
-            }
-        }
-    }
-
-    // se a impressora for válida e tiver registro de contador na data de gravação
-    if ( impressora.contadores[ dataAtual ] ) {
-        // define o quanto foi impresso no mês atual
-        let impresso = contador - impressora.contadores[ dataAtual ].primeiro.contador
-        let excedentes = impresso > impressora.franquia.limite ? impresso - impressora.franquia.limite : 0
-
-        impressora.contadores = {
-            [ dataAtual ]: {
-                ...impressora.contadores[ dataAtual ],
-                ultimo: {
                     contador, dia: getData().dia
                 },
                 impresso, excedentes
