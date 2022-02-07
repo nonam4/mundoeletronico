@@ -1,1 +1,0 @@
-quando for salvar uma impressora, utilize o comando '.replace( /\(|\)|\-|\s/g, '' )' para remover parenteses, traços e espaços vazios
