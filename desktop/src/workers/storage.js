@@ -22,7 +22,7 @@ class Storage {
                 active: true,
                 ips: ''
             },
-            tema: 'escuro'
+            tema: 'claro'
         }
     }
 
