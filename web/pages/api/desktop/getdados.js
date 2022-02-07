@@ -77,16 +77,17 @@ export default async ( req, res ) => {
 
         let impressora = impressoras[ serial ]
         impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
-        impressora.contadores = { [ data ]: dadosCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
-        let contadores = impressora.contadores[ data ]
         let impresso = 0
         if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
         if ( ( impressora.contador - impressora.tintas.abastecido ) >= impressora.tintas.capacidade ) cadastro.abastecimento = true
+
+        if ( !impressora.contadores ) continue
+        let contadores = impressora.contadores[ data ]
+        if ( !contadores ) continue
         if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
 
         cadastro.impressorasAtivas += 1
-
-        if ( !contadores ) continue
+        impressora.contadores = contadores //remove os contadores de outros meses e trabalha apenas com os da data escolhida
         //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
         contadores.excedentes = 0
         contadores.adicionaltroca = 0
