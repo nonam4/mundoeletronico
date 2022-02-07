@@ -5,7 +5,8 @@ export default async ( req, res ) => {
     const dataAtual = `${ getData().ano }-${ getData().mes }`
     const { id, dados } = req.body
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
-    let serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
+    const serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
+    const contador = Number( dados.contador )
     let cadastro = dadosCadastro.data()
     let impressoras = cadastro.impressoras
 
@@ -25,16 +26,13 @@ export default async ( req, res ) => {
     // se a impressora for nova
     if ( !impressoras[ serial ] ) {
         impressoras[ serial ] = {
-            contabilizar: true,
-            contador: Number( dados.contador ),
+            contabilizar: true, contador,
             contadores: {
                 [ dataAtual ]: {
                     primeiro: {
-                        contador: Number( dados.contador ),
-                        dia: getData().dia
+                        contador, dia: getData().dia
                     }, ultimo: {
-                        contador: Number( dados.contador ),
-                        dia: getData().dia
+                        contador, dia: getData().dia
                     },
                     impresso: 0, excedentes: 0
                 }
@@ -53,49 +51,53 @@ export default async ( req, res ) => {
         }
     }
 
-    let impressora = {
-        ...impressoras[ serial ], serial,
-        ip: dados.ip,
-        modelo: dados.modelo
+    // define a impressora local
+    let impressora = impressoras[ serial ]
+    impressora.contador = contador
+
+    // se não tiver nenhum registro de contadores
+    if ( !impressora.contadores ) {
+        impressora.contadores = {
+            [ dataAtual ]: {
+                primeiro: {
+                    contador, dia: getData().dia
+                }, ultimo: {
+                    contador, dia: getData().dia
+                },
+                impresso: 0, excedentes: 0
+            }
+        }
     }
 
-    // se a impressora for válida e tiver registro de contador na data de gravação
-    if ( impressora && impressora.contadores[ dataAtual ] ) {
-
-        impressora.contador = Number( dados.contador )
-        let contadores = impressora.contadores[ dataAtual ]
+    // se não tiver nenhum registro de contadores na data de gravação
+    if ( !impressora.contadores[ dataAtual ] ) {
         // define o quanto foi impresso no mês atual
-        let impresso = Number( dados.contador ) - contadores.primeiro.contador
+        let impresso = contador - impressora.contador
         let excedentes = impresso > impressora.franquia.limite ? impresso - impressora.franquia.limite : 0
 
-        contadores = {
-            ...contadores,
+        impressora.contadores = {
             [ dataAtual ]: {
-                ultimo: {
+                primeiro: {
                     contador: impressora.contador,
                     dia: getData().dia
+                }, ultimo: {
+                    contador, dia: getData().dia
                 },
                 impresso, excedentes
             }
         }
     }
 
-    // se a impressora for valida mas não tiver registro de contador na data de gravação
-    if ( impressora && !impressora.contadores[ dataAtual ] ) {
-        let contadores = impressora.contadores[ dataAtual ]
+    // se a impressora for válida e tiver registro de contador na data de gravação
+    if ( impressora.contadores[ dataAtual ] ) {
         // define o quanto foi impresso no mês atual
-        let impresso = Number( dados.contador ) - impressora.contador
+        let impresso = contador - impressora.contadores[ dataAtual ].primeiro.contador
         let excedentes = impresso > impressora.franquia.limite ? impresso - impressora.franquia.limite : 0
 
-        contadores = {
-            ...contadores,
+        impressora.contadores = {
             [ dataAtual ]: {
-                primeiro: {
-                    contador: impressora.contador,
-                    dia: getData().dia
-                }, ultimo: {
-                    contador: Number( dados.contador ),
-                    dia: getData().dia
+                ultimo: {
+                    contador, dia: getData().dia
                 },
                 impresso, excedentes
             }
