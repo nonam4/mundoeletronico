@@ -135,7 +135,7 @@ function Listagem () {
                         Notification.notificate( 'Erro', `Erro ao salvar dados da impressora - IP: ${ impressora.ip }`, 'danger' )
                         createLog( `Erro ao salvar dados da impressora encontrada no IP: ${ impressora.ip } - Erro: ${ err }` )
                     } )
-                } )
+                }, () => { } )
             }
         }
     }
