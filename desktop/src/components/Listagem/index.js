@@ -7,6 +7,7 @@ import { useDados } from '../../contexts/DadosContext'
 import * as Database from '../../workers/database'
 import * as Notification from '../../workers/notification'
 import * as SNMP from '../../workers/snmp'
+import * as DHCP from '../../workers/dhcp'
 
 function Listagem () {
     const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
@@ -106,25 +107,31 @@ function Listagem () {
     }
 
     async function buscarImpressoras () {
-        console.log( 'buscando impressoras' )
-        let ips = []
-        if ( dados.state.dhcp.active ) ips = await DHCP.pegatIpDhcp().split( ';' )
-        if ( !dados.state.dhcp.active ) ips = dados.state.dhcp.ips.split( ';' )
+        let faixas = []
+        if ( dados.state.dhcp.active ) faixas = await DHCP.pegatIpDhcp().split( ';' )
+        if ( !dados.state.dhcp.active ) faixas = dados.state.dhcp.ips.split( ';' )
 
-        for ( let ip of ips ) {
+        for ( let faixa of faixas ) {
             for ( let x = 0; x < 255; x++ ) {
-                SNMP.verificarIp( `${ ip }.${ x }` ).then( ( impressora ) => {
-                    console.log( impressora )
+                // se o ip for em branco, ou menor que 0.0.0 (5 caractéres)
+                if ( faixa.length < 5 ) return
+                const ip = `${ faixa }.${ x }`
+                console.log( ip )
+                SNMP.verificarIp( ip ).then( async ( impressora ) => {
+                    await impressora.pegarDados()
 
-                    impressora.pegarDados().then( () => {
-                        if ( !impressora.modelo || !impressora.serial || !impressora.leitura ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
-                        gravarImpressora( dados.state.id, impressora, dados.state.proxy ).then( res => {
-                            console.log( res, ' - impressora gravada com sucesso' )
-                        } ).catch( err => {
-                            // em caso de erro ao buscar atualizações
-                            Notification.notificate( 'Erro', `Erro ao salvar dados da impressora - IP: ${ impressora.ip }`, 'danger' )
-                            createLog( `Erro ao salvar dados da impressora - IP: ${ impressora.ip } - Erro: ${ err }` )
-                        } )
+                    if ( !impressora.modelo || !impressora.serial || !impressora.contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
+
+                    const { contador, serial, modelo } = impressora
+                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy ).then( res => {
+
+                        impressora.snmp.close()
+                        console.log( 'impressora gravada com sucesso - ', res )
+
+                    } ).catch( err => {
+                        // em caso de erro ao buscar atualizações
+                        Notification.notificate( 'Erro', `Erro ao salvar dados da impressora - IP: ${ impressora.ip }`, 'danger' )
+                        createLog( `Erro ao salvar dados da impressora - IP: ${ impressora.ip } - Erro: ${ err }` )
                     } )
                 } )
             }

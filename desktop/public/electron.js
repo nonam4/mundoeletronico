@@ -16,7 +16,8 @@ function createWindow ( show ) {
         icon: getIcon(),
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            webSecurity: false // previne erros de cors
         }, show
     } )
     // remove o menu da janela
@@ -32,19 +33,6 @@ function createWindow ( show ) {
         e.preventDefault()
         return false
     } )
-
-    // evita que dê erro no CORS
-    win.webContents.session.webRequest.onBeforeSendHeaders(
-        corsUrls, ( _details, callback ) => {
-            callback( { requestHeaders: { Origin: '*' } } )
-        }
-    )
-
-    win.webContents.session.webRequest.onHeadersReceived(
-        corsUrls, ( _details, callback ) => {
-            callback( { responseHeaders: { 'Access-Control-Allow-Origin': [ '*' ] } } )
-        }
-    )
 }
 
 // pega o ícone da janela

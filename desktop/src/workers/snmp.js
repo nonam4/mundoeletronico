@@ -1,6 +1,6 @@
-const SNMP = window.require( 'net-snmp' )
+import * as Impressora from './impressoras'
 import { createLog } from './storage'
-import Impressora from './impressoras'
+const SNMP = window.require( 'net-snmp' )
 
 export function verificarIp ( ip ) {
     return new Promise( ( resolve, reject ) => {
@@ -8,22 +8,20 @@ export function verificarIp ( ip ) {
         const snmp = SNMP.createSession( ip, 'public' )
         snmp.get( oid, ( err, res ) => {
 
-            const query = String( res[ 0 ] ).toLowerCase()
-
             if ( err ) {
                 createLog( `Erro ao verificar fabricante - IP: ${ ip } - Erro: ${ err }` )
                 return reject( snmp.close() )
             }
 
+            const query = `${ res[ 0 ].value }`.toLowerCase()
             if ( query.indexOf( 'switch' ) > -1 ) {
                 createLog( `Dispositivo encontrado no IP ${ ip } é um Switch e será ignorado - Resultado: ${ query }` )
                 return reject( snmp.close() )
             }
 
-
             const marca = selecionarMarca( query )
             if ( !marca ) {
-                createLog( `Impossível determinar a marca do dispositivo encontrado no IP ${ ip } - Resultado: ${ fabricante }` )
+                createLog( `Impossível determinar a marca do dispositivo encontrado no IP ${ ip } - Resultado: ${ marca }` )
                 return reject( snmp.close() )
             }
 
@@ -33,7 +31,6 @@ export function verificarIp ( ip ) {
                 return reject( snmp.close() )
             }
 
-            snmp.close()
             resolve( impressora )
         } )
     } )
@@ -53,19 +50,19 @@ function selecionarImpressora ( marca, ip, snmp ) {
         case 'brother':
             return new Impressora.Brother( snmp, ip )
         case 'canon':
-            return new printers.Canon( snmp, ip )
+            return new Impressora.Canon( snmp, ip )
         case 'epson':
-            return new printers.Epson( snmp, ip )
+            return new Impressora.Epson( snmp, ip )
         case 'hp':
-            return new printers.Hp( snmp, ip )
+            return new Impressora.Hp( snmp, ip )
         case 'lexmark':
-            return new printers.Lexmark( snmp, ip )
+            return new Impressora.Lexmark( snmp, ip )
         case 'oki':
-            return new printers.Oki( snmp, ip )
+            return new Impressora.Oki( snmp, ip )
         case 'ricoh':
-            return new printers.Ricoh( snmp, ip )
+            return new Impressora.Ricoh( snmp, ip )
         case 'samsung':
-            return new printers.Samsung( snmp, ip )
+            return new Impressora.Samsung( snmp, ip )
         default:
             return undefined
     }
