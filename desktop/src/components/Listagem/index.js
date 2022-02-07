@@ -115,7 +115,7 @@ function Listagem () {
             for ( let x = 0; x < 255; x++ ) {
 
                 // se o ip for em branco, ou menor que 0.0.0 (5 caractéres)
-                if ( faixa.length < 5 ) return
+                if ( faixa.length < 5 ) continue
 
                 const ip = `${ faixa }.${ x }`
                 SNMP.verificarIp( ip ).then( async ( impressora ) => {
