@@ -28,7 +28,7 @@ function Impressoras () {
     // cadastros disponíveis no contexto, 
     const { cadastros } = state
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
-    const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( {} )
+    const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( undefined )
     // controle do ctrl F, se pressionados com stack não faz nada
     function keyPressedListener ( e ) {
         if ( e.ctrlKey && e.key === 'f' ) {
@@ -83,14 +83,17 @@ function Impressoras () {
 
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
-
-        setLoad( false )
     }, [ filtros.busca, cadastros ] )
 
     // garante que o load será fechado quando o stack mudar
     useEffect( () => {
-        setLoad( false )
+        if ( cadastrosFiltrados ) setLoad( false )
     }, [ router.query.stack ] )
+
+    // esconde o load quando filtrar tudo certinho
+    useEffect( () => {
+        if ( cadastrosFiltrados ) setLoad( false )
+    }, [ cadastrosFiltrados ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -117,8 +120,6 @@ function Impressoras () {
             setHistorico( res.data.historico )
             setCadastros( res.data.cadastros )
             setTecnicos( res.data.tecnicos )
-            // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
-            setLoad( false )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
@@ -194,7 +195,6 @@ function Impressoras () {
                 views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], filtros, version: packageInfo.version } } /> )
             }
         }
-
         return views
     }
 

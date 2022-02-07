@@ -43,7 +43,7 @@ function Atendimentos () {
 
     // garante que o load será fechado quando o stack mudar
     useEffect( () => {
-        setLoad( false )
+        if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ) setLoad( false )
     }, [ router.query.stack ] )
 
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database ou busca local
@@ -54,6 +54,11 @@ function Atendimentos () {
         if ( busca === '' ) return setAtendimentosFiltrados( atendimentos )
         setAtendimentosFiltrados( filtrarAtendimentosPorBusca() )
     }, [ busca, atendimentos ] )
+
+    // garante que o load será escondido somente após filtrar todos os dados
+    useEffect( () => {
+        if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ) setLoad( false )
+    }, [ atendimentosFiltrados ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -79,8 +84,6 @@ function Atendimentos () {
             setCadastros( res.data.cadastros )
             setAtendimentos( res.data.atendimentos )
             setTecnicos( res.data.tecnicos )
-            // última coisa é esconder o load, com um timeout para dar tempo de atualizar tudo certinho
-            setLoad( false )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
