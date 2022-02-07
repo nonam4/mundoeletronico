@@ -113,25 +113,27 @@ function Listagem () {
 
         for ( let faixa of faixas ) {
             for ( let x = 0; x < 255; x++ ) {
+
                 // se o ip for em branco, ou menor que 0.0.0 (5 caractéres)
                 if ( faixa.length < 5 ) return
+
                 const ip = `${ faixa }.${ x }`
-                console.log( ip )
                 SNMP.verificarIp( ip ).then( async ( impressora ) => {
                     await impressora.pegarDados()
 
+                    // se os dados da impressora forem inválidos não gravará
                     if ( !impressora.modelo || !impressora.serial || !impressora.contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
 
                     const { contador, serial, modelo } = impressora
-                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy ).then( res => {
+                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy ).then( () => {
 
                         impressora.snmp.close()
-                        console.log( 'impressora gravada com sucesso - ', res )
+                        console.log( 'impressora gravada com sucesso' )
 
                     } ).catch( err => {
                         // em caso de erro ao buscar atualizações
                         Notification.notificate( 'Erro', `Erro ao salvar dados da impressora - IP: ${ impressora.ip }`, 'danger' )
-                        createLog( `Erro ao salvar dados da impressora - IP: ${ impressora.ip } - Erro: ${ err }` )
+                        createLog( `Erro ao salvar dados da impressora encontrada no IP: ${ impressora.ip } - Erro: ${ err }` )
                     } )
                 } )
             }

@@ -9,6 +9,9 @@ export function verificarIp ( ip ) {
         snmp.get( oid, ( err, res ) => {
 
             if ( err ) {
+                // se der erro por timout não cria log 
+                //pois significa que  o ip está vazio
+                if ( err.name === 'RequestTimedOutError' ) return reject( snmp.close() )
                 createLog( `Erro ao verificar fabricante - IP: ${ ip } - Erro: ${ err }` )
                 return reject( snmp.close() )
             }
