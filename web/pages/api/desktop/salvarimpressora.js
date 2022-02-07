@@ -95,8 +95,8 @@ export default async ( req, res ) => {
         let excedentes = impresso > impressora.franquia.limite ? impresso - impressora.franquia.limite : 0
 
         impressora.contadores = {
-            ...impressora.contadores,
             [ dataAtual ]: {
+                ...impressora.contadores[ dataAtual ],
                 ultimo: {
                     contador, dia: getData().dia
                 },
