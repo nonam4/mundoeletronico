@@ -1,5 +1,4 @@
 import database from '../_database.js'
-import bcrypt from 'bcryptjs'
 
 export default async ( req, res ) => {
 
@@ -12,8 +11,6 @@ export default async ( req, res ) => {
 
     // se o cadastro não estiver ativo não fará mais nada
     if ( !cadastro.ativo ) return res.status( 202 ).send( 'Nenhuma alteração foi feita!' )
-
-
 
     function getData () {
         const data = new Date()
