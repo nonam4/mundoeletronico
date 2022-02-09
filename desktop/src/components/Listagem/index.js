@@ -125,10 +125,10 @@ function Listagem () {
                     if ( !impressora.modelo || !impressora.serial || !impressora.contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
 
                     const { contador, serial, modelo } = impressora
-                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy ).then( () => {
+                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy ).then( res => {
 
                         impressora.snmp.close()
-                        console.log( 'impressora gravada com sucesso' )
+                        console.log( 'impressora gravada, recebido - ', res.data.cadastro )
 
                     } ).catch( err => {
                         // em caso de erro ao buscar atualizações
