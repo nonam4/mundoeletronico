@@ -57,7 +57,7 @@ function Login () {
         } ).catch( err => {
             // em caso de erro, define que não está mais autenticado
             toggleAutenticado()
-            Notification.notificate( 'Erro', 'Usuário ou password incorretos!', 'danger' )
+            Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )
             setLoad( false )
             console.error( err )
         } )
@@ -75,7 +75,7 @@ function Login () {
         } ).catch( err => {
             // em caso de erro, define que não está mais autenticado
             toggleAutenticado()
-            Notification.notificate( 'Erro', 'Usuário ou password incorretos!', 'danger' )
+            Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )
             setLoad( false )
             console.error( err )
         } )
@@ -87,7 +87,7 @@ function Login () {
             return false
         }
         if ( password.length < 3 ) {
-            Notification.notificate( 'Atenção', 'Password em branco ou inválida!', 'warning' )
+            Notification.notificate( 'Atenção', 'Senha em branco ou inválida!', 'warning' )
             return false
         }
         return true
