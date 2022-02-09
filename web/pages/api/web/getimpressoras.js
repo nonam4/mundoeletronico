@@ -3,16 +3,12 @@ import database from '../_database.js'
 export default async ( req, res ) => {
 
     const { data, listando } = JSON.parse( req.query.filtros )
-    const listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).orderBy( 'nomefantasia' ).get()
+    const listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).where( 'tipo', '==', 'locacao' ).orderBy( 'nomefantasia' ).get()
     const listaHistorico = await database.collection( '/historico' ).get()
-    const listaTecnicos = await database.collection( '/usuarios/' ).get()
 
     let cadastros = {
-        locacao: {},
-        fornecedor: {},
-        particular: {}
+        locacao: {}
     }
-    let tecnicos = [ { label: 'Em aberto', value: '' } ]
     let historico = {}
 
     function getDatas () {
@@ -68,12 +64,6 @@ export default async ( req, res ) => {
         return false
     }
 
-    listaTecnicos.forEach( itemTecnico => {
-        let tecnico = itemTecnico.data()
-
-        tecnicos.push( { label: tecnico.nome, value: tecnico.nome } )
-    } )
-
     listaHistorico.forEach( itemHistorico => {
         let serial = itemHistorico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
         let dadosHistorico = itemHistorico.data()
@@ -122,9 +112,6 @@ export default async ( req, res ) => {
     listaCadastros.forEach( itemCadastro => {
 
         let cadastro = itemCadastro.data()
-
-        if ( cadastro.tipo === 'fornecedor' ) return cadastros[ 'fornecedor' ][ cadastro.id ] = cadastro
-        if ( cadastro.tipo === 'particular' ) return cadastros[ 'particular' ][ cadastro.id ] = cadastro
 
         cadastro.impresso = 0
         cadastro.excedentes = 0
@@ -204,5 +191,5 @@ export default async ( req, res ) => {
         }
     } )
 
-    res.status( 200 ).send( { cadastros, historico, tecnicos } )
+    res.status( 200 ).send( { cadastros, historico } )
 }
