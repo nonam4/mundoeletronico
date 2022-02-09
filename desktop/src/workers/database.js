@@ -1,9 +1,7 @@
 import axios from 'axios'
 
 function getRequestSettings ( method, endpoint, params, proxy ) {
-    let requestSettings = {
-        url: `http://mundoeletronico.vercel.app/api/desktop/${ endpoint }`, method
-    }
+    let requestSettings = { url: `http://mundoeletronico.vercel.app/api/desktop/${ endpoint }`, method }
 
     // se o proxy não estiver ativo já retorna
     if ( proxy.active ) requestSettings.proxy = {
@@ -15,14 +13,8 @@ function getRequestSettings ( method, endpoint, params, proxy ) {
         }
     }
 
-    if ( method === 'get' ) {
-        requestSettings.params = { ...params }
-    }
-
-    if ( method === 'post' ) {
-        requestSettings.data = params
-    }
-
+    if ( method === 'get' ) requestSettings.params = { ...params }
+    if ( method === 'post' ) requestSettings.data = params
     return requestSettings
 }
 
