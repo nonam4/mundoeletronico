@@ -3,10 +3,12 @@ import database from '../_database.js'
 export default async ( req, res ) => {
     const { data, id } = req.query
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
-    const listaHistorico = await database.collection( '/historico' ).get()
 
     // se o cadastro for excluido retorna um erro
     if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
+
+    // se o cadastro existir então busca o histórico
+    const listaHistorico = await database.collection( '/historico' ).get()
 
     function getDatas () {
         let datas = []

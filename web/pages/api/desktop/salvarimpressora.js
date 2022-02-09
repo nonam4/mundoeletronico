@@ -5,6 +5,10 @@ export default async ( req, res ) => {
     const dataAtual = `${ getData().ano }-${ getData().mes }`
     const { id, dados } = req.body
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
+
+    // se o cadastro foi excluido retorna um erro
+    if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
+
     const serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
     const contador = Number( dados.contador )
     let cadastro = dadosCadastro.data()
@@ -47,7 +51,8 @@ export default async ( req, res ) => {
             tintas: {
                 abastecido: Number( dados.contador ),
                 capacidade: 'ilimitado'
-            }
+            },
+            instalada: `${ getData().dia }/${ getData().mes }/${ getData().ano }`
         }
     }
 
@@ -104,6 +109,9 @@ export default async ( req, res ) => {
             }
         }
     }
+
+    // por fim define quando ela foi vista por último no cliente
+    impressora.vistoporultimo = `${ getData().dia }/${ getData().mes }/${ getData().ano }`
 
     // somente para ter certeza que alterou os dados na variavel cadastro antes de gravar
     cadastro.impressoras[ serial ] = impressora
