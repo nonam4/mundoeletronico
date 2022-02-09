@@ -194,6 +194,6 @@ export default async ( req, res ) => {
     }, { merge: true } )
 
     return database.doc( `/cadastros/${ id }` ).set( cadastro, { merge: true } ).then( () => {
-        res.status( 200 ).send( 'Salvo' )
+        res.status( 200 ).send( { cadastro } )
     } )
 }
