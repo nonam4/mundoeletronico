@@ -75,8 +75,8 @@ function Listagem () {
             checkUpdates()
         } ).catch( err => {
             // em caso de erro ao buscar atualizações
-            Notification.notificate( 'Erro', 'Cadastro inválido ou inexistente', 'danger' )
-            createLog( `Cadastro inválido ou inexistente -> ${ err }` )
+            Notification.notificate( 'Erro', 'Cadastro inativo ou inexistente', 'danger' )
+            createLog( `Cadastro inativo ou inexistente -> ${ err }` )
             console.error( err )
             // se o erro for 404 é porque o cadastro não foi encontrado ou foi excluido
             // nesse caso iremos remover a ID dos arquivos locais
@@ -120,18 +120,26 @@ function Listagem () {
                 const ip = `${ faixa }.${ x }`
                 SNMP.verificarIp( ip ).then( async ( impressora ) => {
                     await impressora.pegarDados()
+                    const { contador, serial, modelo } = impressora
 
                     // se os dados da impressora forem inválidos não gravará
-                    if ( !impressora.modelo || !impressora.serial || !impressora.contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
+                    if ( !modelo || !serial || !contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
 
-                    const { contador, serial, modelo } = impressora
                     Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy ).then( res => {
-
+                        // primeiro de tudo finaliza a conexão snmp
                         impressora.snmp.close()
-                        console.log( 'impressora gravada, recebido - ', res.data.cadastro )
+                        // atualiza o cadastro local
+                        setCadastro( res.data.cadastro )
+                        // adiciona o contador atual da impressora ao histórico
+                        setHistorico( { ...tela.state.historico, [ serial ]: { ...tela.state.historico[ serial ], [ res.data.historico.chave ]: res.data.historico.valor } } )
+
+                        console.log( 'impressora gravada, recebido - ', res.data )
 
                     } ).catch( err => {
-                        // em caso de erro ao buscar atualizações
+                        // se o erro for 401 é por que a impressora não contabiliza
+                        if ( err.response.status === 401 ) Notification.notificate( 'Alerta', 'Impressora não contabiliza e foi ignorada', 'warning' )
+                        if ( err.response.status === 401 ) return createLog( `Impressora não contabiliza e foi ignorada - IP: ${ impressora.ip }` )
+                        // em caso de outros erros ao salvar a impressora
                         Notification.notificate( 'Erro', `Erro ao salvar dados da impressora - IP: ${ impressora.ip }`, 'danger' )
                         createLog( `Erro ao salvar dados da impressora encontrada no IP: ${ impressora.ip } - Erro: ${ err }` )
                     } )

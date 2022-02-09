@@ -5,7 +5,7 @@ export default async ( req, res ) => {
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
 
     // se o cadastro for excluido retorna um erro
-    if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
+    if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' ) // 404 inexistente
 
     // se o cadastro existir então busca o histórico
     const listaHistorico = await database.collection( '/historico' ).get()
@@ -65,7 +65,7 @@ export default async ( req, res ) => {
 
     let cadastro = dadosCadastro.data()
     // se o cadastro estiver desativado
-    if ( !cadastro.ativo ) return res.status( 401 ).send( 'Cadastro inativo!' )
+    if ( !cadastro.ativo ) return res.status( 401 ).send( 'Cadastro inativo!' ) // 401 não autorizado
 
     cadastro.impresso = 0
     cadastro.excedentes = 0

@@ -3,28 +3,26 @@ import database from '../_database.js'
 export default async ( req, res ) => {
 
     const dataAtual = `${ getData().ano }-${ getData().mes }`
+    const Date = new Date()
     const { id, dados } = req.body
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
-
-    // se o cadastro foi excluido retorna um erro
-    if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' )
-
     const serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
     const contador = Number( dados.contador )
     let cadastro = dadosCadastro.data()
     let impressoras = cadastro.impressoras
 
-    // se o cadastro não estiver ativo não fará mais nada
-    if ( !cadastro.ativo ) return res.status( 202 ).send( 'Nenhuma alteração foi feita!' )
-
     function getData () {
-        const data = new Date()
-        let ano = data.getFullYear()
-        let mes = data.getMonth() + 1
-        let dia = data.getDate()
-        let time = data.getTime()
+        let ano = Date.getFullYear()
+        let mes = Date.getMonth() + 1
+        let dia = Date.getDate()
+        let hora = Date.getHours()
+        let minutos = Date.getMinutes()
+        let time = Date.getTime()
 
-        return { ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia, time }
+        return {
+            ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia,
+            hora: hora < 10 ? `0${ hora }` : hora, minutos: minutos < 10 ? `0${ minutos }` : minutos, time
+        }
     }
 
     function removerSerialDeListaSubstituindo () {
@@ -121,7 +119,7 @@ export default async ( req, res ) => {
     // define a impressora local
     let impressora = impressoras[ serial ]
     // se não for para contabilizar a impressora (caso seja particular do cliente ou caso seja de outro fornecedor)
-    if ( !impressora.contabilizar ) return res.status( 202 ).send( 'Nenhuma alteração foi feita!' )
+    if ( !impressora.contabilizar ) return res.status( 401 ).send( 'Nenhuma alteração foi feita!' ) // 401 não autorizado
 
     // se não tiver nenhum registro de contadores
     if ( !impressora.contadores ) {
@@ -194,6 +192,10 @@ export default async ( req, res ) => {
     }, { merge: true } )
 
     return database.doc( `/cadastros/${ id }` ).set( cadastro, { merge: true } ).then( () => {
-        res.status( 200 ).send( { cadastro } )
+        res.status( 200 ).send( {
+            cadastro, historico: {
+                chave, valor: `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ contador } págs`
+            }
+        } )
     } )
 }
