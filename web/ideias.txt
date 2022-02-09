@@ -36,5 +36,5 @@ finalização de atendimentos
 -caso sim irá listar todas as impressoras (exceto as que o rendimento não é controlado) do cliente e perguntar quais foram abastecidas
 -caso tenha entrega de suprimentos no cliente perguntar a quantidade de cada suprimento que foi entregue
 
-informações úteis
--colocar informação de data de instalação e data de troca de cada impressora
+listagem de impressoras
+-mostrar as impressoras excluidas, trocadas e não contabilizadas em uma parte separada na tela expandida do cadastro

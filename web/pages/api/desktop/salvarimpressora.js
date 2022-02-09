@@ -27,6 +27,10 @@ export default async ( req, res ) => {
         return { ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia, time }
     }
 
+    function removerSerialDeListaSubstituindo ( serial ) {
+
+    }
+
     // se a impressora for nova
     if ( !impressoras[ serial ] ) {
         impressoras[ serial ] = {
@@ -110,9 +114,13 @@ export default async ( req, res ) => {
         }
     }
 
+    // remove o serial dela da lista de substituindo de outras impressoras
+    removerSerialDeListaSubstituindo( impressora.serial )
+    // define que a impressora não está substituida mais
+    // pois se o sistema encontrou ela na rede então ela está lá no local
+    impressora.substituida = false
     // por fim define quando ela foi vista por último no cliente
     impressora.vistoporultimo = `${ getData().dia }/${ getData().mes }/${ getData().ano }`
-
     // somente para ter certeza que alterou os dados na variavel cadastro antes de gravar
     cadastro.impressoras[ serial ] = impressora
 
