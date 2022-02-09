@@ -62,6 +62,7 @@ export default async ( req, res ) => {
 
     // define a impressora local
     let impressora = impressoras[ serial ]
+    // define o contador atual da impressora
     impressora.contador = contador
 
     // se não tiver nenhum registro de contadores
