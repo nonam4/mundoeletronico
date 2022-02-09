@@ -12,8 +12,8 @@ function initialize () {
         initializeApp( {
             credential: cert( CREDENTIALS )
         } )
-        return getFirestore()
     }
+    return getFirestore()
 }
 
 export default initialize()
