@@ -51,7 +51,8 @@ export async function gerarRelatorio ( cadastro, filtros, colors ) {
         case 'pagina':
             linha = escrever( `Franquia contratada: ${ cadastro.franquia.limite } páginas - Impressões contabilizadas: ${ cadastro.impresso } página${ cadastro.impresso != 1 ? 's' : '' }`, linha, 5, true )
             pdf.setFontSize( 11 )
-            linha = escrever( `Valor por excedente: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Excedentes totais: ${ cadastro.excedentes } página${ cadastro.excedentes != 1 ? 's' : '' } - Valor dos excedentes: ${ ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
+            if ( cadastro.excedenteadicional <= 0 ) linha = escrever( `Valor por excedente: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Excedentes totais: ${ cadastro.excedentes } página${ cadastro.excedentes != 1 ? 's' : '' } - Valor dos excedentes: ${ ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
+            if ( cadastro.excedenteadicional > 0 ) linha = escrever( `Valor por excedente: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Excedentes totais: ${ cadastro.excedentes } **+ ${ cadastro.excedenteadicional }** página${ cadastro.excedentes != 1 ? 's' : '' } - Valor dos excedentes: ${ ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
             pdf.setFontSize( 12 )
             break
         case 'maquina':
@@ -93,7 +94,8 @@ export async function gerarRelatorio ( cadastro, filtros, colors ) {
             linha = escrever( `Impressões contabilizadas: 0 páginas`, linha, 4 )
         }
 
-        if ( contadores && cadastro.franquia.tipo === 'maquina' ) linha = escrever( `Franquia contratada: ${ impressora.franquia.limite } páginas - Excedentes: ${ contadores.excedentes } página${ contadores.excedentes != 1 ? 's' : '' }`, linha, 4 )
+        if ( contadores && cadastro.franquia.tipo === 'maquina' && contadores.excedenteadicional <= 0 ) linha = escrever( `Franquia contratada: ${ impressora.franquia.limite } páginas - Excedentes: ${ contadores.excedentes } página${ contadores.excedentes != 1 ? 's' : '' }`, linha, 4 )
+        if ( contadores && cadastro.franquia.tipo === 'maquina' && contadores.excedenteadicional > 0 ) linha = escrever( `Franquia contratada: ${ impressora.franquia.limite } páginas - Excedentes: ${ contadores.excedentes } **+ ${ contadores.excedenteadicional }** página${ contadores.excedentes != 1 ? 's' : '' }`, linha, 4 )
         if ( contadores && impressora.substituindo.length > 0 && contadores.adicionaltroca > 0 ) {
 
             linha = escrever( '', linha, 1 ) //adiciona espaço em branco
