@@ -60,12 +60,12 @@ export default async ( req, res ) => {
         }
 
         // se a impressora estava substituida e voltou agora em um mês novo
-        // então o contador inicial desse mês vai ser o primeiro registro desse mês
-        // pois a impressora estava fora e os contadores voltarão maiores por causa de
-        // testes de impressão ou de outro cliente que usou a máquina
-        // essa diferença não pode ser cobrada do cliente e não pode calcular o quanto foi impresso
+        // então não terá nenhum excedente adicional
+        // pois a impressora estava fora os contadores voltarão maiores por causa de
+        // testes de impressão ou porque outro cliente que usou a máquina
+        // essa diferença não pode ser cobrada do cliente e não pode gerar excedentes
         // baseado no último contador registrado
-        if ( impressora.substituida ) return contador
+        if ( impressora.substituida ) return 0
 
         // se a impressora não estava substituida e agora voltou a coletar informações
         // iremos verificar quantos meses ela ficou sem coleta, para cada mês iremos abater
@@ -80,11 +80,10 @@ export default async ( req, res ) => {
         const excedentesSemColetar = impressoSemColetar > franquiaTotalMesesFora ?
             impressoSemColetar - franquiaTotalMesesFora : 0 // 10.000 maior que 9000 então define como 10.000 - 9000 = 1000
 
-        // se não existir excedentes durante o tempo sem coletar então retorna o próprio contador atual
-        if ( excedentesSemColetar <= 0 ) return contador
-        // se tiver excedentes durante o tempo sem coletar então o contador inicial
-        // será o contador atual menos as páginas excedentes 
-        return contador - excedentesSemColetar // 11.000 - 1000 = 10.000 - fazendo assim o cliente já começa o mês em débito
+        // se existir excedentes durante o tempo sem coletar então retorna o próprio excedente
+        if ( excedentesSemColetar > 0 ) return excedentesSemColetar
+        // se não existir excedentes durante o tempo sem coletar então retorna zero
+        return 0
     }
 
     // se a impressora for nova
@@ -155,21 +154,22 @@ export default async ( req, res ) => {
     if ( !impressora.contadores[ dataAtual ] ) {
         // define o contador inicial para mês atual baseado nos meses sem coleta
         // baseado na franquia da impressora e baseado se a impressora estava substituida ou não
-        const contadorInicial = calcularMesesFora()
-        let impresso = contador - contadorInicial
+        const excedenteadicional = calcularMesesFora()
+        let impresso = 0
         let excedentes = impresso > impressora.franquia.limite ? impresso - impressora.franquia.limite : 0
 
         impressora.contadores = {
             [ dataAtual ]: {
                 primeiro: {
-                    contador: contadorInicial,
-                    dia: getData().dia
+                    contador, dia: getData().dia
                 }, ultimo: {
                     contador, dia: getData().dia
                 },
                 impresso, excedentes
             }
         }
+        // se existir excedente adicional define ele no mês contabilizado
+        if ( excedenteadicional > 0 ) impressora.contadores[ dataAtual ].excedenteadicional = excedenteadicional
     }
 
     // define o contador atual da impressora

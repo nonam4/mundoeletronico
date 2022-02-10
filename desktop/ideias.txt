@@ -2,5 +2,3 @@
 
 -ao conseguir pegar leitura de um impressora que foi substituida irá verificar todas as impressoras 
 e remover seu serial da lista 'substituindo' e também irá mudar o status dela para 'substituida = false'
-
--ao encontrar 
