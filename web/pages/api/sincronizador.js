@@ -7,7 +7,15 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
+
     const Date = new Date()
+    let { chave, leitura } = req.body
+    //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
+    let velho = req.body.cliente
+
+    if ( !velho.ativo ) return database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
+    let cliente = {}
+    let franquia = {}
 
     function getData () {
         let ano = Date.getFullYear()
@@ -22,14 +30,6 @@ export default async ( req, res ) => {
             hora: hora < 10 ? `0${ hora }` : hora, minutos: minutos < 10 ? `0${ minutos }` : minutos, time
         }
     }
-
-    let { chave, leitura } = req.body
-    //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
-    let velho = req.body.cliente
-
-    if ( !velho.ativo ) return database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
-    let cliente = {}
-    let franquia = {}
 
     cliente.id = velho.id
     cliente.ativo = velho.ativo
