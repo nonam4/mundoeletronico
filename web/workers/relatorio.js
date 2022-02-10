@@ -56,8 +56,10 @@ export async function gerarRelatorio ( cadastro, filtros, colors ) {
             pdf.setFontSize( 12 )
             break
         case 'maquina':
-            linha = escrever( `Impressões contabilizadas: ${ cadastro.impresso } páginas - Excedentes totais: ${ cadastro.excedentes } página${ cadastro.excedentes != 1 ? 's' : '' }`, linha, 5, true )
-            linha = escrever( `Valor por excedente: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Valor dos excedentes: ${ ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
+            if ( cadastro.excedenteadicional <= 0 ) linha = escrever( `Impressões contabilizadas: ${ cadastro.impresso } páginas - Excedentes totais: ${ cadastro.excedentes } página${ cadastro.excedentes != 1 ? 's' : '' }`, linha, 5, true )
+            if ( cadastro.excedenteadicional > 0 ) linha = escrever( `Impressões contabilizadas: ${ cadastro.impresso } páginas - Excedentes totais: ${ cadastro.excedentes } **+ ${ cadastro.excedenteadicional }** página${ cadastro.excedentes != 1 ? 's' : '' }`, linha, 5, true )
+            if ( cadastro.excedenteadicional <= 0 ) linha = escrever( `Valor por excedente: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Valor dos excedentes: ${ ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
+            if ( cadastro.excedenteadicional > 0 ) linha = escrever( `Valor por excedente: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Valor dos excedentes: ${ ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
             break
         case 'ilimitado':
             linha = escrever( `Impressões contabilizadas: ${ cadastro.impresso } página${ cadastro.impresso != 1 ? 's' : '' } - Valor por página: ${ cadastro.franquia.vpe.toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } - Valor total: ${ ( cadastro.franquia.vpe * cadastro.impresso ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }`, linha, 5, true )
