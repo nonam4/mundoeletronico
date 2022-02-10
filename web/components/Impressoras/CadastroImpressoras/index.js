@@ -389,9 +389,10 @@ function CadastroExpandido () {
                             </S.FranquiaItem>
                             <S.FranquiaItem border={ false } bottom={ false }>
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
-                                <S.FranquiaDado>
-                                    { cadastro.excedentes > 0 ? `${ cadastro.excedentes } págs - ${ ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }` : '-' }
-                                </S.FranquiaDado>
+                                { cadastro.excedentes > 0 ?
+                                    cadastro.excedenteadicional > 0 ?
+                                        <S.FranquiaDado>{ cadastro.excedentes }<span>&nbsp;+ { cadastro.excedenteadicional } págs&nbsp;</span> - { ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } </S.FranquiaDado> :
+                                        <S.FranquiaDado>{ cadastro.excedentes } págs - { ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }</S.FranquiaDado> : '-' }
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
                     </S.FranquiaContainer> }
@@ -419,9 +420,10 @@ function CadastroExpandido () {
                             </S.FranquiaItem>
                             <S.FranquiaItem border={ false } bottom={ false }>
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
-                                <S.FranquiaDado>
-                                    { cadastro.excedentes > 0 ? `${ cadastro.excedentes } págs` : '-' }
-                                </S.FranquiaDado>
+                                { cadastro.excedentes > 0 ?
+                                    cadastro.excedenteadicional > 0 ?
+                                        <S.FranquiaDado>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } págs </span> </S.FranquiaDado> :
+                                        <S.FranquiaDado>{ cadastro.excedentes } págs</S.FranquiaDado> : '-' }
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
                     </S.FranquiaContainer> }
@@ -429,7 +431,7 @@ function CadastroExpandido () {
                     { !rollback && renderImpressoras() }
                 </S.Listagem>
             </> }
-        </S.Container>
+        </S.Container >
     )
 }
 

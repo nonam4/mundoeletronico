@@ -78,6 +78,10 @@ export const LineTitle = styled.div`
 export const LineText = styled.div`
     width: 100%;
     font-size: 18px;
+    span {
+        display: inline;
+        color: ${ ( { theme } ) => theme.colors.verde };
+    }
 `
 export const LineSubtext = styled.div`
     width: 100%;

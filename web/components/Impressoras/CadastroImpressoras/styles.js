@@ -128,6 +128,12 @@ export const FranquiaDado = styled.div`
     align-items: center;
     display: flex;
     justify-content: center;
+    span {
+        display: inline;
+        color: ${ ( { theme } ) => theme.colors.verde };
+        left: auto !important;
+        width: auto !important;
+    }
 `
 export const Listagem = styled.div`
     width: 100%;

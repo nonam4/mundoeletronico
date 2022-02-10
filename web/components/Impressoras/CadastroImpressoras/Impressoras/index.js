@@ -202,7 +202,7 @@ function Impressoras ( props ) {
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Impresso/mês </S.DadosTitulo>
                     { contadores ? contadores.adicionaltroca > 0 ?
-                        <S.DadosTrocas>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.DadosTrocas> :
+                        <S.Dados>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.Dados> :
                         <S.Dados>{ contadores.impresso } págs</S.Dados> :
                         <S.Dados>-</S.Dados>
                     }
@@ -211,7 +211,7 @@ function Impressoras ( props ) {
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
                     { contadores ? contadores.excedenteadicional && contadores.excedenteadicional > 0 ?
-                        <S.DadosTrocas>{ contadores.excedentes }<span> + { contadores.excedenteadicional } págs</span></S.DadosTrocas> :
+                        <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional } págs</span></S.Dados> :
                         contadores.excedentes > 0 ? <S.Dados>{ contadores.excedentes } págs</S.Dados> : <S.Dados>-</S.Dados> :
                         <S.Dados>-</S.Dados>
                     }

@@ -82,7 +82,8 @@ function CadastroResumo ( props ) {
                 <S.LineItem>
                     <S.LineTitle>Excedentes</S.LineTitle>
                     { cadastro.excedentes > 0 ?
-                        <S.LineText>{ cadastro.excedentes } págs</S.LineText> :
+                        cadastro.excedenteadicional > 0 ? <S.LineText>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } págs</span></S.LineText> :
+                            <S.LineText>{ cadastro.excedentes } págs</S.LineText> :
                         <S.LineText>-</S.LineText> }
                 </S.LineItem>
             </S.Line>

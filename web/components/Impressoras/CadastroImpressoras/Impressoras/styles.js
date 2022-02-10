@@ -108,6 +108,10 @@ export const Dados = styled.div`
         font-weight: bold;
         padding: 0 0.5rem 0.3rem;
     }
+    span {
+        display: inline;
+        color: ${ ( { theme } ) => theme.colors.verde };
+    }
 `
 export const DadosTrocas = styled.div`
     width: 100%;
@@ -118,10 +122,6 @@ export const DadosTrocas = styled.div`
     position: relative;
     padding-bottom: 0.3rem;
     margin-bottom: -0.3rem;
-    span {
-        display: inline;
-        color: ${ ( { theme } ) => theme.colors.verde }
-    }
 `
 export const TrocaContainer = styled.div`
     width: 100%;
