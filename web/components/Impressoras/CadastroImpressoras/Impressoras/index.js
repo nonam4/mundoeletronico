@@ -137,7 +137,7 @@ function Impressoras ( props ) {
     }
 
     return (
-        <S.Container height={ props.cadastro.franquia.tipo }>
+        <S.Container>
             <S.Titulo>
                 <S.TituloContainer>
                     <S.TituloModelo>{ impressora.modelo }</S.TituloModelo>
@@ -192,8 +192,8 @@ function Impressoras ( props ) {
                 </S.DadosSubcontainer>
             </S.DadosContainer>
 
-            <S.DadosContainer show={ props.cadastro.franquia.tipo == 'maquina' ? true : false }>
-                <S.DadosSubcontainer>
+            <S.DadosContainer>
+                <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
                     <S.DadosTitulo> Franquia </S.DadosTitulo>
                     <S.Dados>
                         { state.usuario.permissoes.clientes.financeiro && <TextField onChange={ handleDigitarFranquia } value={ franquia } onFocus={ handleFocusFranquia } onBlur={ handleBlurFranquia } /> }
@@ -208,8 +208,7 @@ function Impressoras ( props ) {
                         <S.Dados>-</S.Dados>
                     }
                 </S.DadosSubcontainer>
-
-                <S.DadosSubcontainer>
+                <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
                     <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
                     { contadores ? contadores.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                         <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional } págs</span></S.Dados> :

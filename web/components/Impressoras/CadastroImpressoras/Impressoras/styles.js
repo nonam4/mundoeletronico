@@ -11,7 +11,7 @@ export const Container = styled.div`
     padding: 0 0.8rem 0 0.8rem;
     margin: 0 0.8rem 0.8rem 0;
     box-shadow: 0px 0px 10px -8px black;
-    height: ${ ( { height } ) => height != 'maquina' ? '284px' : '340px' };
+    height: 340px;
     overflow: hidden;
     overflow-y: auto;
     ::-webkit-scrollbar {
@@ -66,17 +66,23 @@ export const TituloSubcontainer = styled.div`
 `
 export const DadosContainer = styled.div`
     width: 100%;
+    display: flex;
+    justify-content: center;
     opacity: ${ ( { show } ) => show != false ? '1' : '0' };
     z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
     max-height: ${ ( { show } ) => show != false ? '100px' : '0px' };
-    display: flex;
-    justify-content: center;
     margin-bottom: ${ ( { show } ) => show != false ? '0.8rem' : 'none' };
 `
 export const DadosSubcontainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+    white-space: nowrap;
+    opacity: ${ ( { show } ) => show != false ? '1' : '0' };
+    z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
+    max-width: ${ ( { show } ) => show != false ? '100%' : '0px' };
+    max-height: ${ ( { show } ) => show != false ? 'fit-content' : '0px' };
+
     input {
         padding-top: 0;
         padding-bottom: 0.3rem;
@@ -95,6 +101,7 @@ export const DadosTitulo = styled.div`
     padding: 0 0.5rem 0.3rem;
     text-align: center;
     cursor: default;
+    white-space: nowrap;
 `
 export const Dados = styled.div`
     width: 100%;
@@ -102,6 +109,7 @@ export const Dados = styled.div`
     text-align: center;
     padding: 0 0.5rem;
     cursor: default;
+    white-space: nowrap;
     select {
         text-align-last: center;
         width: fit-content;

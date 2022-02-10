@@ -16,8 +16,8 @@ export const Content = styled.input`
 
     :hover, :focus, :not(:placeholder-shown){
         + span {
-            left: 0;
-            width: 100%; 
+            left: 0 !important;
+            width: 100% !important; 
         }
     }
 `
