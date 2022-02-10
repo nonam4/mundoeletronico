@@ -23,7 +23,7 @@ export default async ( req, res ) => {
         }
     }
 
-    let { serial, chave, leitura, modelo, id } = req.body
+    let { chave, leitura } = req.body
     //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
     let velho = req.body.cliente
 
@@ -88,9 +88,11 @@ export default async ( req, res ) => {
                 abastecido: velha.tinta.cheio
             }
 
-            const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ leitura } págs`
-            impressora.historico = {
-                [ chave ]: valor
+            if ( chave && leitura ) {
+                const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ leitura } págs`
+                impressora.historico = {
+                    [ chave ]: valor
+                }
             }
 
             impressora.contador = 0
