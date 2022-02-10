@@ -27,7 +27,6 @@ export default async ( req, res ) => {
     //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
     let velho = req.body.cliente
 
-
     if ( !velho.ativo ) return database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
     let cliente = {}
     let franquia = {}
