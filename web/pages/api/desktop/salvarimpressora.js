@@ -111,8 +111,7 @@ export default async ( req, res ) => {
             tintas: {
                 abastecido: Number( dados.contador ),
                 capacidade: 'ilimitado'
-            },
-            instalada: `${ getData().dia }/${ getData().mes }/${ getData().ano }`
+            }
         }
     }
 
@@ -180,8 +179,11 @@ export default async ( req, res ) => {
     // define que a impressora não está substituida mais
     // pois se o sistema encontrou ela na rede então ela está lá no local
     impressora.substituida = false
-    // por fim define quando ela foi vista por último no cliente
-    impressora.vistoporultimo = `${ getData().dia }/${ getData().mes }/${ getData().ano }`
+    const dataSimples = `${ getData().dia }/${ getData().mes }/${ getData().ano }`
+    // se a impressora não tiver registro de instalação, define a data atual
+    if ( !impressora.instalada ) impressora.instalada = dataSimples
+    // define quando ela foi vista por último no cliente
+    impressora.vistoporultimo = dataSimples
 
     // histórico a ser gravado
     const chave = `${ getData().ano }.${ getData().mes }.${ getData().dia } - ${ getData().time }`
