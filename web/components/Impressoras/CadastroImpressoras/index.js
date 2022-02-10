@@ -76,8 +76,9 @@ function CadastroExpandido () {
         dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function setCadastros ( dados ) {
-        dispatch( { type: 'setCadastros', payload: dados } )
+    function setInCadastros ( cadastro ) {
+        // atualiza o cadastro no state para atualizar os dados em todas as outras telas
+        dispatch( { type: 'setCadastros', payload: set( `${ cadastro.tipo }.${ cadastro.id }`, cadastro, state.cadastros ) } )
     }
 
     function editarCadastro ( editado ) {
@@ -105,7 +106,7 @@ function CadastroExpandido () {
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
-            setCadastros( { ...state.cadastros, [ cadastro.id ]: cadastro } )
+            setInCadastros( cadastro )
         } ).catch( err => {
             Notification.removeNotification( aviso )
             console.error( err )
