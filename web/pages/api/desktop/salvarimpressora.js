@@ -182,20 +182,18 @@ export default async ( req, res ) => {
     impressora.substituida = false
     // por fim define quando ela foi vista por último no cliente
     impressora.vistoporultimo = `${ getData().dia }/${ getData().mes }/${ getData().ano }`
+
+    // histórico a ser gravado
+    const chave = `${ getData().ano }.${ getData().mes }.${ getData().dia } - ${ getData().time }`
+    const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ contador } págs`
+    // verifica se a impressora tem registro de histórico, se não cria
+    if ( !impressora.historico ) impressora.historico = {}
+    impressora.historico = { ...impressora.historico, [ chave ]: valor }
+
     // somente para ter certeza que alterou os dados na variavel cadastro antes de gravar
     cadastro.impressoras[ serial ] = impressora
 
-    const chave = `${ getData().ano }.${ getData().mes }.${ getData().dia } - ${ getData().time }`
-    await database.doc( `/historico/${ serial }` ).set( {
-        contadores: { [ chave ]: Number( impressora.contador ) },
-        modelo: impressora.modelo, usuarioAtual: `${ id } - ${ cadastro.nomefantasia }`
-    }, { merge: true } )
-
     return database.doc( `/cadastros/${ id }` ).set( cadastro, { merge: true } ).then( () => {
-        res.status( 200 ).send( {
-            cadastro, historico: {
-                chave, valor: `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ contador } págs`
-            }
-        } )
+        res.status( 200 ).send( { cadastro } )
     } )
 }

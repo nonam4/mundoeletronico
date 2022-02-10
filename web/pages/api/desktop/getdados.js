@@ -7,9 +7,6 @@ export default async ( req, res ) => {
     // se o cadastro for excluido retorna um erro
     if ( !dadosCadastro.exists ) return res.status( 404 ).send( 'Cadastro inexistente!' ) // 404 inexistente
 
-    // se o cadastro existir então busca o histórico
-    const listaHistorico = await database.collection( '/historico' ).get()
-
     function getDatas () {
         let datas = []
         let data = new Date()
@@ -61,6 +58,37 @@ export default async ( req, res ) => {
         if ( getDatas()[ 0 ].value != data ) return true
 
         return false
+    }
+
+    function filtrarHistorico ( impressora ) {
+        let historico = {}
+
+        function pegarMesAtualAnteriror ( dataHistorico ) {
+            let dataMatriz = data.split( '-' ) // separa a data matriz
+            let mesAnteriror = Number( dataMatriz[ 1 ] ) - 1 // o mes anterior inicialmente será o mes matriz atual menos 1
+            if ( mesAnteriror < 10 ) mesAnteriror = `0${ mesAnteriror }` // se o valor do mes anterior for menor que 10 adiciona o zerio no começo
+            if ( Number( dataMatriz[ 1 ] ) <= 1 ) mesAnteriror = 12 // se o valor do mes atual for 1 define o mes anterior como 12
+
+            // se a data atual for igual à data do historico ou se a data do historico for igual à data do mes anterior permite
+            return `${ dataHistorico[ 0 ] }-${ dataHistorico[ 1 ] }` === data || `${ dataHistorico[ 0 ] }-${ dataHistorico[ 1 ] }` === `${ dataMatriz[ 0 ] }-${ mesAnteriror }`
+        }
+
+        function ordenarHistorico ( desordenado ) {
+            const ordenado = Object.keys( desordenado ).sort().reduce( ( obj, key ) => {
+                obj[ key ] = desordenado[ key ]
+                return obj
+            }, {} )
+            return ordenado
+        }
+
+        for ( let id in impressora.historico ) {
+
+            let idHistorico = id.split( ' - ' ) // divide em data e time
+            let dataHistorico = idHistorico[ 0 ].split( '.' ) // pega somente a data e divide ela
+            if ( pegarMesAtualAnteriror( dataHistorico ) ) historico[ id ] = impressora.historico[ id ]
+        }
+
+        return ordenarHistorico( historico )
     }
 
     let cadastro = dadosCadastro.data()
@@ -124,59 +152,16 @@ export default async ( req, res ) => {
                 cadastro.excedentes = cadastro.impresso
                 break
         }
+
+        // pegará o histórico local dentro da impressora
+        // ele já é gravado corretamente e legível
+        if ( impressora.historico ) impressora.historico = filtrarHistorico( impressora )
+        if ( !impressora.historico ) impressora.historico = {}
     }
     //se apenas uma impressora apenas estiver com atraso não irá dizer que o sistema não está coletando para esse cadastro
     //e não o marcará como um cadastro com atraso, mas se o numero de impressoras ativas for igual que o numero de impressoras
     //atrasadas daí sim irá indicar que não está coletandos
     if ( impressorasAtrasadas >= cadastro.impressorasAtivas ) cadastro.atraso = true
 
-    let historico = {}
-    listaHistorico.forEach( itemHistorico => {
-        let serial = itemHistorico.id.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
-        let dadosHistorico = itemHistorico.data()
-
-        if ( !cadastro.impressoras[ serial ] ) return
-
-        historico[ serial ] = {}
-
-        function pegarMesAtualAnteriror ( dataHistorico ) {
-
-            let dataMatriz = data.split( '-' ) // separa a data matriz em numeros separados
-
-            let mesAnteriror = Number( dataMatriz[ 1 ] ) - 1 // o mes anterior inicialmente será o mes matriz atual menos 1
-            if ( mesAnteriror < 10 ) mesAnteriror = `0${ mesAnteriror }` // se o valor do mes anterior for menor que 10 adiciona o zerio no começo
-            if ( Number( dataMatriz[ 1 ] ) <= 1 ) mesAnteriror = 12 // se o valor do mes atual for 1 define o mes anterior como 12
-
-            // se a data atual for igual à data do historico ou se a data do historico for igual à data do mes anterior permite
-            if ( `${ dataHistorico[ 0 ] }-${ dataHistorico[ 1 ] }` === data || `${ dataHistorico[ 0 ] }-${ dataHistorico[ 1 ] }` === `${ dataMatriz[ 0 ] }-${ mesAnteriror }` ) return true
-            return false
-        }
-
-        function ordenarHistorico () {
-            const desordenado = historico[ serial ]
-            const ordenado = Object.keys( desordenado ).sort().reduce( ( obj, key ) => {
-                obj[ key ] = desordenado[ key ]
-                return obj
-            }, {} )
-            return ordenado
-        }
-
-        for ( let linhaHistorico in dadosHistorico.contadores ) {
-
-            let idHistorico = linhaHistorico.split( ' - ' )
-            let dataHistorico = idHistorico[ 0 ].split( '.' )
-            let horarioHistorico = new Date( Number( idHistorico[ 1 ] ) )
-
-            let horaHistorico = horarioHistorico.getHours()
-            if ( horaHistorico < 10 ) horaHistorico = `0${ horaHistorico }`
-            let minutosHistorico = horarioHistorico.getMinutes()
-            if ( minutosHistorico < 10 ) minutosHistorico = `0${ minutosHistorico }`
-
-            if ( pegarMesAtualAnteriror( dataHistorico ) ) historico[ serial ][ linhaHistorico ] = `${ dataHistorico[ 2 ] }/${ dataHistorico[ 1 ] }/${ dataHistorico[ 0 ] } - ${ horaHistorico }:${ minutosHistorico }: ${ dadosHistorico.contadores[ linhaHistorico ] } págs`
-        }
-
-        historico[ serial ] = ordenarHistorico()
-    } )
-
-    res.status( 200 ).send( { cadastro, historico } )
+    res.status( 200 ).send( { cadastro } )
 }

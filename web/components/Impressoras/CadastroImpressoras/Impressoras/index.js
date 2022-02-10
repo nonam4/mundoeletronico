@@ -127,14 +127,12 @@ function Impressoras ( props ) {
 
     function renderHistoricoContadores () {
         let views = []
-        let historico = state.historico[ impressora.serial ] //remove espaço em branco do serial
 
-        for ( let itemHistorico in historico ) {
-            views.push( <S.DropdownHistoricoItem key={ itemHistorico } > { historico[ itemHistorico ] } </S.DropdownHistoricoItem> )
+        for ( let historico in impressora.historico ) {
+            views.push( <S.DropdownHistoricoItem key={ historico } > { impressora.historico[ historico ] } </S.DropdownHistoricoItem> )
         }
 
-        if ( views.length > 0 ) return views
-        return false
+        return views.length > 0 ? views : false
     }
 
     return (
