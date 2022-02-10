@@ -44,10 +44,25 @@ export const Titulo = styled.div`
     font-size: 16px;
     line-height: 3;
 `
+export const TituloContainer = styled.div`
+    height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+`
+export const TituloModelo = styled.div`
+    line-height: 16px;
+`
+export const TituloSerial = styled.div`
+    font-size: 12px;
+    line-height: 12px;
+    color: ${ ( { theme } ) => theme.colors.floating };
+`
 export const TituloSubcontainer = styled.div`
     height: 100%;
     display: flex;
     align-items: center;
+    height: 48px;
 `
 export const DadosContainer = styled.div`
     width: 100%;

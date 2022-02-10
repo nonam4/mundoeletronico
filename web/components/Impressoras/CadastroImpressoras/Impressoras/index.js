@@ -138,7 +138,10 @@ function Impressoras ( props ) {
     return (
         <S.Container height={ props.cadastro.franquia.tipo }>
             <S.Titulo>
-                { impressora.modelo }
+                <S.TituloContainer>
+                    <S.TituloModelo>{ impressora.modelo }</S.TituloModelo>
+                    <S.TituloSerial>{ impressora.serial }</S.TituloSerial>
+                </S.TituloContainer>
                 <S.TituloSubcontainer>
                     { props.cadastro.impressorasAtivas > 1 && renderSeriaisTrocas() && <S.Dropdown>
                         <Botao title={ 'Substituir' } hover={ colors.azul }><MenuIcon name={ 'impressora_trocar' } margin='0' /></Botao>
@@ -164,20 +167,27 @@ function Impressoras ( props ) {
 
             <S.DadosContainer>
                 <S.DadosSubcontainer>
-                    <S.DadosTitulo> Serial </S.DadosTitulo>
-                    <S.Dados> { impressora.serial } </S.Dados>
-                </S.DadosSubcontainer>
-                <S.DadosSubcontainer>
                     <S.DadosTitulo> IP </S.DadosTitulo>
                     <S.Dados> { impressora.ip } </S.Dados>
                 </S.DadosSubcontainer>
                 <S.DadosSubcontainer>
-                    <S.DadosTitulo> Impresso/mês </S.DadosTitulo>
-                    { contadores ? contadores.adicionaltroca > 0 ?
-                        <S.DadosTrocas>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.DadosTrocas> :
-                        <S.Dados>{ contadores.impresso } págs</S.Dados> :
-                        <S.Dados>-</S.Dados>
-                    }
+                    <S.DadosTitulo> Data/instalação </S.DadosTitulo>
+                    <S.Dados> { impressora.instalada ? impressora.instalada : '-' } </S.Dados>
+                </S.DadosSubcontainer>
+                <S.DadosSubcontainer>
+                    <S.DadosTitulo> Vista/último </S.DadosTitulo>
+                    <S.Dados> { impressora.vistoporultimo ? impressora.vistoporultimo : '-' } </S.Dados>
+                </S.DadosSubcontainer>
+            </S.DadosContainer>
+
+            <S.DadosContainer>
+                <S.DadosSubcontainer>
+                    <S.DadosTitulo> Inicial/mês </S.DadosTitulo>
+                    <S.Dados> { contadores ? `${ contadores.primeiro.dia } de ${ meses[ data[ 1 ] ] } - ${ contadores.primeiro.contador } págs` : '-' } </S.Dados>
+                </S.DadosSubcontainer>
+                <S.DadosSubcontainer>
+                    <S.DadosTitulo> Final/mês </S.DadosTitulo>
+                    <S.Dados> { contadores ? `${ contadores.ultimo.dia } de ${ meses[ data[ 1 ] ] } - ${ contadores.ultimo.contador } págs` : '-' } </S.Dados>
                 </S.DadosSubcontainer>
             </S.DadosContainer>
 
@@ -190,19 +200,16 @@ function Impressoras ( props ) {
                     </S.Dados>
                 </S.DadosSubcontainer>
                 <S.DadosSubcontainer>
+                    <S.DadosTitulo> Impresso/mês </S.DadosTitulo>
+                    { contadores ? contadores.adicionaltroca > 0 ?
+                        <S.DadosTrocas>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.DadosTrocas> :
+                        <S.Dados>{ contadores.impresso } págs</S.Dados> :
+                        <S.Dados>-</S.Dados>
+                    }
+                </S.DadosSubcontainer>
+                <S.DadosSubcontainer>
                     <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
                     <S.Dados> { contadores ? `${ contadores.excedentes } págs` : '-' } </S.Dados>
-                </S.DadosSubcontainer>
-            </S.DadosContainer>
-
-            <S.DadosContainer>
-                <S.DadosSubcontainer>
-                    <S.DadosTitulo> Inicial/mês </S.DadosTitulo>
-                    <S.Dados> { contadores ? `${ contadores.primeiro.dia } de ${ meses[ data[ 1 ] ] } - ${ contadores.primeiro.contador } págs` : '-' } </S.Dados>
-                </S.DadosSubcontainer>
-                <S.DadosSubcontainer>
-                    <S.DadosTitulo> Final/mês </S.DadosTitulo>
-                    <S.Dados> { contadores ? `${ contadores.ultimo.dia } de ${ meses[ data[ 1 ] ] } - ${ contadores.ultimo.contador } págs` : '-' } </S.Dados>
                 </S.DadosSubcontainer>
             </S.DadosContainer>
 
