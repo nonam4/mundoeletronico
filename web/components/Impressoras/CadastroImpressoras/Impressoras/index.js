@@ -16,6 +16,7 @@ function Impressoras ( props ) {
     { label: '10000 págs', value: '10000' }, { label: '15000 págs', value: '15000' }, { label: '20000 págs', value: '20000' } ]
     const meses = { '01': 'Jan', '02': 'Fev', '03': 'Mar', '04': 'Abr', '05': 'Mai', '06': 'Jun', '07': 'Jul', '08': 'Ago', '09': 'Set', '10': 'Out', '11': 'Nov', '12': 'Dez' }
     const contadores = props.impressora.contadores[ props.data ]
+    const cadastro = props.cadastro
     const data = props.data.split( '-' )
     //variaveis alteráveis pelo usuário
     const [ impressora, setImpressora ] = useState( props.impressora )
@@ -210,7 +211,7 @@ function Impressoras ( props ) {
 
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
-                    { contadores ? contadores.excedenteadicional && contadores.excedenteadicional > 0 ?
+                    { contadores ? contadores.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                         <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional } págs</span></S.Dados> :
                         contadores.excedentes > 0 ? <S.Dados>{ contadores.excedentes } págs</S.Dados> : <S.Dados>-</S.Dados> :
                         <S.Dados>-</S.Dados>

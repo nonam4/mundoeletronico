@@ -333,7 +333,7 @@ function CadastroExpandido () {
                 }
             }
 
-            views.push( <Impressoras key={ serial } { ...{ data, impressora, setObjectData, cadastro, rollback, setCadastro, recalcularDados } } /> )
+            views.push( <Impressoras key={ serial } { ...{ data, impressora, cadastro, setObjectData, cadastro, rollback, setCadastro, recalcularDados } } /> )
         }
         return views
     }
@@ -390,7 +390,7 @@ function CadastroExpandido () {
                             <S.FranquiaItem border={ false } bottom={ false }>
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
                                 { cadastro.excedentes > 0 ?
-                                    cadastro.excedenteadicional > 0 ?
+                                    cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                                         <S.FranquiaDado>{ cadastro.excedentes }<span>&nbsp;+ { cadastro.excedenteadicional } págs&nbsp;</span> - { ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } </S.FranquiaDado> :
                                         <S.FranquiaDado>{ cadastro.excedentes } págs - { ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }</S.FranquiaDado> : '-' }
                             </S.FranquiaItem>
@@ -421,7 +421,7 @@ function CadastroExpandido () {
                             <S.FranquiaItem border={ false } bottom={ false }>
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
                                 { cadastro.excedentes > 0 ?
-                                    cadastro.excedenteadicional > 0 ?
+                                    cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                                         <S.FranquiaDado>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } págs </span> </S.FranquiaDado> :
                                         <S.FranquiaDado>{ cadastro.excedentes } págs</S.FranquiaDado> : '-' }
                             </S.FranquiaItem>
