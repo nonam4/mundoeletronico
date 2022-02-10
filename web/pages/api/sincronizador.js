@@ -7,11 +7,26 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
+    const Date = new Date()
+
+    function getData () {
+        let ano = Date.getFullYear()
+        let mes = Date.getMonth() + 1
+        let dia = Date.getDate()
+        let hora = Date.getHours()
+        let minutos = Date.getMinutes()
+        let time = Date.getTime()
+
+        return {
+            ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia,
+            hora: hora < 10 ? `0${ hora }` : hora, minutos: minutos < 10 ? `0${ minutos }` : minutos, time
+        }
+    }
 
     let { serial, chave, leitura, modelo, id } = req.body
+    //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
     let velho = req.body.cliente
 
-    if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
 
     if ( !velho.ativo ) return database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
     let cliente = {}
@@ -72,6 +87,11 @@ export default async ( req, res ) => {
             if ( velha.tinta ) impressora.tintas = {
                 capacidade: velha.tinta.capacidade,
                 abastecido: velha.tinta.cheio
+            }
+
+            const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ leitura } págs`
+            impressora.historico = {
+                [ chave ]: valor
             }
 
             impressora.contador = 0
