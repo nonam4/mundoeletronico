@@ -97,6 +97,7 @@ export default async ( req, res ) => {
 
     cadastro.impresso = 0
     cadastro.excedentes = 0
+    cadastro.excedenteadicional = 0
     cadastro.impressorasAtivas = 0
     cadastro.atraso = false
     cadastro.abastecimento = false
@@ -141,7 +142,7 @@ export default async ( req, res ) => {
         //incrementa o total impresso no controle geral do cadastro
         cadastro.impresso += impresso
         // adiciona o excedente adicional aos excedentes do cadastro
-        if ( contadores.excedenteadicional ) cadastro.excedentes += contadores.excedenteadicional
+        if ( contadores.excedenteadicional ) cadastro.excedenteadicional += contadores.excedenteadicional
         switch ( cadastro.franquia.tipo ) {
             case 'maquina':
                 cadastro.excedentes += contadores.excedentes
