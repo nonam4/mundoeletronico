@@ -8,7 +8,6 @@ import database from './_database.js'
 
 export default async ( req, res ) => {
 
-    const Date = new Date()
     let { chave, leitura } = req.body
     //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
     let velho = req.body.cliente
@@ -18,6 +17,7 @@ export default async ( req, res ) => {
     let franquia = {}
 
     function getData () {
+        const Date = new Date()
         let ano = Date.getFullYear()
         let mes = Date.getMonth() + 1
         let dia = Date.getDate()
