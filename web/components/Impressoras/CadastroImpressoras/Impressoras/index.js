@@ -168,16 +168,28 @@ function Impressoras ( props ) {
 
             <S.DadosContainer>
                 <S.DadosSubcontainer>
-                    <S.DadosTitulo> IP </S.DadosTitulo>
-                    <S.Dados> { impressora.ip } </S.Dados>
+                    <S.DadosTitulo> Impresso/mês </S.DadosTitulo>
+                    { contadores ? contadores.adicionaltroca > 0 ?
+                        <S.Dados>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.Dados> :
+                        <S.Dados>{ contadores.impresso } págs</S.Dados> :
+                        <S.Dados>-</S.Dados>
+                    }
                 </S.DadosSubcontainer>
-                <S.DadosSubcontainer>
-                    <S.DadosTitulo> Data/instalação </S.DadosTitulo>
-                    <S.Dados> { impressora.instalada ? impressora.instalada : '-' } </S.Dados>
+                <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
+                    <S.DadosTitulo> Franquia </S.DadosTitulo>
+                    <S.Dados>
+                        { state.usuario.permissoes.clientes.financeiro && <TextField onChange={ handleDigitarFranquia } value={ franquia } onFocus={ handleFocusFranquia } onBlur={ handleBlurFranquia } /> }
+                        { !state.usuario.permissoes.clientes.financeiro && franquia }
+                    </S.Dados>
                 </S.DadosSubcontainer>
-                <S.DadosSubcontainer>
-                    <S.DadosTitulo> Vista/último </S.DadosTitulo>
-                    <S.Dados> { impressora.vistoporultimo ? impressora.vistoporultimo : '-' } </S.Dados>
+
+                <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
+                    <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
+                    { contadores ? contadores.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
+                        <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional }</span> págs</S.Dados> :
+                        contadores.excedentes > 0 ? <S.Dados>{ contadores.excedentes } págs</S.Dados> : <S.Dados>-</S.Dados> :
+                        <S.Dados>-</S.Dados>
+                    }
                 </S.DadosSubcontainer>
             </S.DadosContainer>
 
@@ -193,28 +205,17 @@ function Impressoras ( props ) {
             </S.DadosContainer>
 
             <S.DadosContainer>
-                <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
-                    <S.DadosTitulo> Franquia </S.DadosTitulo>
-                    <S.Dados>
-                        { state.usuario.permissoes.clientes.financeiro && <TextField onChange={ handleDigitarFranquia } value={ franquia } onFocus={ handleFocusFranquia } onBlur={ handleBlurFranquia } /> }
-                        { !state.usuario.permissoes.clientes.financeiro && franquia }
-                    </S.Dados>
+                <S.DadosSubcontainer>
+                    <S.DadosTitulo> IP </S.DadosTitulo>
+                    <S.Dados> { impressora.ip } </S.Dados>
                 </S.DadosSubcontainer>
                 <S.DadosSubcontainer>
-                    <S.DadosTitulo> Impresso/mês </S.DadosTitulo>
-                    { contadores ? contadores.adicionaltroca > 0 ?
-                        <S.Dados>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.Dados> :
-                        <S.Dados>{ contadores.impresso } págs</S.Dados> :
-                        <S.Dados>-</S.Dados>
-                    }
+                    <S.DadosTitulo> Data/instalação </S.DadosTitulo>
+                    <S.Dados> { impressora.instalada ? impressora.instalada : '-' } </S.Dados>
                 </S.DadosSubcontainer>
-                <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
-                    <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
-                    { contadores ? contadores.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
-                        <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional }</span> págs</S.Dados> :
-                        contadores.excedentes > 0 ? <S.Dados>{ contadores.excedentes } págs</S.Dados> : <S.Dados>-</S.Dados> :
-                        <S.Dados>-</S.Dados>
-                    }
+                <S.DadosSubcontainer>
+                    <S.DadosTitulo> Vista/último </S.DadosTitulo>
+                    <S.Dados> { impressora.vistoporultimo ? impressora.vistoporultimo : '-' } </S.Dados>
                 </S.DadosSubcontainer>
             </S.DadosContainer>
 
