@@ -273,7 +273,8 @@ function CadastroExpandido () {
             if ( impresso > impressora.franquia.limite ) contadores.excedentes = impresso - impressora.franquia.limite
             //incrementa o total impresso no controle geral do cadastro
             cadastro.impresso += impresso
-
+            // adiciona o excedente adicional aos excedentes do cadastro
+            if ( contadores.excedenteadicional ) cadastro.excedentes += contadores.excedenteadicional
             switch ( cadastro.franquia.tipo ) {
                 case 'maquina':
                     cadastro.excedentes += contadores.excedentes
