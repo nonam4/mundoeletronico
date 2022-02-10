@@ -110,7 +110,7 @@ export const DadosTrocas = styled.div`
 `
 export const TrocaContainer = styled.div`
     width: 100%;
-    margin-top: 1px;
+    margin-top: 5px;
     border-top: solid 1px ${ ( { theme } ) => theme.colors.borders };
     padding-top: 0.8rem;
     margin-bottom: 0.8rem;
