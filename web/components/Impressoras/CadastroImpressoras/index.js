@@ -20,6 +20,7 @@ function CadastroExpandido () {
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useDados()
     const router = useRouter()
+    const [ permissoes, setPermissoes ] = useState( state.usuario.permissoes )
 
     // pega os filtros passados pela URL
     const [ filtros, setFiltros ] = useState( undefined )
@@ -358,13 +359,13 @@ function CadastroExpandido () {
                     </S.TituloSubContainer>
                 </S.TituloContainer>
                 <S.Listagem>
-                    <S.FranquiaContainer>
-                        <S.FranquiaSubcontainer border={ state.usuario.permissoes.clientes.financeiro }>
+                    { permissoes.clientes.financeiro && <S.FranquiaContainer>
+                        <S.FranquiaSubcontainer border={ permissoes.clientes.financeiro }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
                                 <S.FranquiaDado>
-                                    { state.usuario.permissoes.clientes.financeiro && <Select valor={ cadastro.franquia.tipo } options={ franquias } onChange={ handleFranquiaChange } /> }
-                                    { !state.usuario.permissoes.clientes.financeiro && getFranquia( cadastro.franquia.tipo ) }
+                                    { permissoes.clientes.financeiro && <Select valor={ cadastro.franquia.tipo } options={ franquias } onChange={ handleFranquiaChange } /> }
+                                    { !permissoes.clientes.financeiro && getFranquia( cadastro.franquia.tipo ) }
                                 </S.FranquiaDado>
                             </S.FranquiaItem>
                             <S.FranquiaItem show={ franquiaPagina }>
@@ -378,7 +379,7 @@ function CadastroExpandido () {
                                 <S.FranquiaDado> { cadastro.impresso } págs </S.FranquiaDado>
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
-                        { state.usuario.permissoes.clientes.financeiro && <S.FranquiaSubcontainer border={ false }>
+                        <S.FranquiaSubcontainer border={ false }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Valor por excedente </S.FranquiaTitulo>
                                 <S.FranquiaDado>
@@ -388,11 +389,41 @@ function CadastroExpandido () {
                             <S.FranquiaItem border={ false } bottom={ false }>
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
                                 <S.FranquiaDado>
-                                    { cadastro.excedentes } págs - { ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }
+                                    { cadastro.excedentes > 0 ? `${ cadastro.excedentes } págs - ${ ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }` : '-' }
                                 </S.FranquiaDado>
                             </S.FranquiaItem>
-                        </S.FranquiaSubcontainer> }
-                    </S.FranquiaContainer>
+                        </S.FranquiaSubcontainer>
+                    </S.FranquiaContainer> }
+
+                    { !permissoes.clientes.financeiro && <S.FranquiaContainer>
+                        <S.FranquiaSubcontainer border={ permissoes.clientes.financeiro }>
+                            <S.FranquiaItem>
+                                <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
+                                <S.FranquiaDado>
+                                    { permissoes.clientes.financeiro && <Select valor={ cadastro.franquia.tipo } options={ franquias } onChange={ handleFranquiaChange } /> }
+                                    { !permissoes.clientes.financeiro && getFranquia( cadastro.franquia.tipo ) }
+                                </S.FranquiaDado>
+                            </S.FranquiaItem>
+                            <S.FranquiaItem show={ franquiaPagina }>
+                                <S.FranquiaTitulo> Franquia </S.FranquiaTitulo>
+                                <S.FranquiaDado>
+                                    <TextField onChange={ handleDigitarFranquiaPagina } value={ valorFranquiaPagina } onFocus={ handleFocusFranquiaPagina } onBlur={ handleBlurFranquiaPagina } />
+                                </S.FranquiaDado>
+                            </S.FranquiaItem>
+                        </S.FranquiaSubcontainer>
+                        <S.FranquiaSubcontainer border={ false }>
+                            <S.FranquiaItem>
+                                <S.FranquiaTitulo> Total impresso </S.FranquiaTitulo>
+                                <S.FranquiaDado> { cadastro.impresso } págs </S.FranquiaDado>
+                            </S.FranquiaItem>
+                            <S.FranquiaItem border={ false } bottom={ false }>
+                                <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
+                                <S.FranquiaDado>
+                                    { cadastro.excedentes > 0 ? `${ cadastro.excedentes } págs` : '-' }
+                                </S.FranquiaDado>
+                            </S.FranquiaItem>
+                        </S.FranquiaSubcontainer>
+                    </S.FranquiaContainer> }
 
                     { !rollback && renderImpressoras() }
                 </S.Listagem>
