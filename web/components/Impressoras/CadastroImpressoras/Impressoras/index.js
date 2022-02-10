@@ -211,7 +211,7 @@ function Impressoras ( props ) {
                 <S.DadosSubcontainer show={ props.cadastro.franquia.tipo == 'maquina' }>
                     <S.DadosTitulo> Excedentes/mês </S.DadosTitulo>
                     { contadores ? contadores.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
-                        <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional } págs</span></S.Dados> :
+                        <S.Dados>{ contadores.excedentes }<span> + { contadores.excedenteadicional }</span> págs</S.Dados> :
                         contadores.excedentes > 0 ? <S.Dados>{ contadores.excedentes } págs</S.Dados> : <S.Dados>-</S.Dados> :
                         <S.Dados>-</S.Dados>
                     }

@@ -361,7 +361,7 @@ function CadastroExpandido () {
                 </S.TituloContainer>
                 <S.Listagem>
                     { permissoes.clientes.financeiro && <S.FranquiaContainer>
-                        <S.FranquiaSubcontainer border={ permissoes.clientes.financeiro }>
+                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'pagina' ? '60%' : '100%' } borderTop={ false }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
                                 <S.FranquiaDado>
@@ -380,7 +380,7 @@ function CadastroExpandido () {
                                 <S.FranquiaDado> { cadastro.impresso } págs </S.FranquiaDado>
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
-                        <S.FranquiaSubcontainer border={ false }>
+                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'pagina' ? '40%' : '100%' } borderTop={ true } borderRight={ false }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Valor por excedente </S.FranquiaTitulo>
                                 <S.FranquiaDado>
@@ -391,29 +391,29 @@ function CadastroExpandido () {
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
                                 { cadastro.excedentes > 0 ?
                                     cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
-                                        <S.FranquiaDado>{ cadastro.excedentes }<span>&nbsp;+ { cadastro.excedenteadicional } págs&nbsp;</span> - { ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } </S.FranquiaDado> :
+                                        <S.FranquiaDado>{ cadastro.excedentes }<span>&nbsp;+ { cadastro.excedenteadicional }&nbsp;</span>págs - { ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } </S.FranquiaDado> :
                                         <S.FranquiaDado>{ cadastro.excedentes } págs - { ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }</S.FranquiaDado> : '-' }
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
                     </S.FranquiaContainer> }
 
                     { !permissoes.clientes.financeiro && <S.FranquiaContainer>
-                        <S.FranquiaSubcontainer border={ permissoes.clientes.financeiro }>
-                            <S.FranquiaItem>
+                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'ilimitado' ? '33.33%' : '100%' } borderTop={ false } >
+                            <S.FranquiaItem border={ cadastro.franquia.tipo !== 'ilimitado' }>
                                 <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
                                 <S.FranquiaDado>
                                     { permissoes.clientes.financeiro && <Select valor={ cadastro.franquia.tipo } options={ franquias } onChange={ handleFranquiaChange } /> }
                                     { !permissoes.clientes.financeiro && getFranquia( cadastro.franquia.tipo ) }
                                 </S.FranquiaDado>
                             </S.FranquiaItem>
-                            <S.FranquiaItem show={ franquiaPagina }>
+                            <S.FranquiaItem border={ false } show={ franquiaPagina }>
                                 <S.FranquiaTitulo> Franquia </S.FranquiaTitulo>
                                 <S.FranquiaDado>
                                     <TextField onChange={ handleDigitarFranquiaPagina } value={ valorFranquiaPagina } onFocus={ handleFocusFranquiaPagina } onBlur={ handleBlurFranquiaPagina } />
                                 </S.FranquiaDado>
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
-                        <S.FranquiaSubcontainer border={ false }>
+                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'ilimitado' ? '66.66%' : '100%' } borderTop={ true } borderRight={ false }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Total impresso </S.FranquiaTitulo>
                                 <S.FranquiaDado> { cadastro.impresso } págs </S.FranquiaDado>
@@ -422,7 +422,7 @@ function CadastroExpandido () {
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
                                 { cadastro.excedentes > 0 ?
                                     cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
-                                        <S.FranquiaDado>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } págs </span> </S.FranquiaDado> :
+                                        <S.FranquiaDado>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } </span>págs </S.FranquiaDado> :
                                         <S.FranquiaDado>{ cadastro.excedentes } págs</S.FranquiaDado> : '-' }
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>

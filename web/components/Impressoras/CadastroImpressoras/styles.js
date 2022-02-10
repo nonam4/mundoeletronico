@@ -78,15 +78,16 @@ export const FranquiaContainer = styled.div`
     }
 `
 export const FranquiaSubcontainer = styled.div`
-    width: 100%;
+    width: ${ ( { width } ) => width };
     display: flex;
-    border-right: ${ ( { border, theme } ) => border != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
+    border-right: ${ ( { borderRight, theme } ) => borderRight != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     margin: 0.8rem 0;
     @media only screen and (max-width: 1320px) {
+        width: 100%;
         margin: 0;
         padding: 0.8rem 0;
         border-right: none;
-        border-top: ${ ( { border, theme } ) => border == false ? `solid 1px ${ theme.colors.borders }` : 'none' };
+        border-top: ${ ( { borderTop, theme } ) => borderTop != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     }
 `
 export const FranquiaItem = styled.div`
@@ -94,7 +95,8 @@ export const FranquiaItem = styled.div`
     opacity: ${ ( { show } ) => show != false ? '1' : '0' };
     z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
     padding: ${ ( { show } ) => show != false ? '0 0.8rem' : '0' };
-    border-right: ${ ( { border, theme, show } ) => border != false ? show != false ? `solid 1px ${ theme.colors.borders }` : 'none' : 'none' };
+    border-right: ${ ( { theme, show } ) => show != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
+    border-right: ${ ( { border, theme } ) => border != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -109,6 +111,9 @@ export const FranquiaItem = styled.div`
             left: 0;
             width: 100%;
         }
+    }
+    @media only screen and (max-width: 1320px) {
+        border-right: ${ ( { border, theme } ) => border != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     }
 `
 export const FranquiaTitulo = styled.div`
