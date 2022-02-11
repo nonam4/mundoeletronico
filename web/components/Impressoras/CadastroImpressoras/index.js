@@ -424,7 +424,7 @@ function CadastroExpandido () {
                                 { cadastro.excedentes > 0 ?
                                     cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                                         <S.FranquiaDado>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } </span>págs </S.FranquiaDado> :
-                                        <S.FranquiaDado>{ cadastro.excedentes } págs</S.FranquiaDado> : '-' }
+                                        <S.FranquiaDado>{ cadastro.excedentes } págs</S.FranquiaDado> : <S.FranquiaDado>-</S.FranquiaDado> }
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
                     </S.FranquiaContainer> }
