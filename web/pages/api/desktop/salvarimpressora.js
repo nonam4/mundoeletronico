@@ -15,7 +15,7 @@ export default async ( req, res ) => {
         let ano = Data.getFullYear()
         let mes = Data.getMonth() + 1
         let dia = Data.getDate()
-        let hora = Data.getHours()
+        let hora = Data.getHours() - 3 // subtrai 3 que é a diferença de fusu horário do servidor
         let minutos = Data.getMinutes()
         let time = Data.getTime()
 
@@ -186,7 +186,7 @@ export default async ( req, res ) => {
     impressora.vistoporultimo = dataSimples
 
     // histórico a ser gravado
-    const chave = `${ getData().ano }.${ getData().mes }.${ getData().dia } - ${ getData().time }`
+    const chave = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }`
     const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ contador } págs`
     // verifica se a impressora tem registro de histórico, se não cria
     if ( !impressora.historico ) impressora.historico = {}
