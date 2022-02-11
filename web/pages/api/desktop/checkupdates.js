@@ -1,7 +1,7 @@
 import database from '../_database.js'
 
 export default async ( req, res ) => {
-    const { os, versaoLocal } = req.query
+    const { os, versao, local, id } = req.query
     const sistema = await database.doc( '/sistema/desktop' ).get()
 
     function atualizar ( local, server ) {
@@ -22,6 +22,9 @@ export default async ( req, res ) => {
         return sistema.data().linupdateurl
     }
 
-    if ( atualizar( versaoLocal, sistema.data().versaoatual ) ) return res.status( 200 ).send( { updateUrl: getUpdateUrl() } )
-    res.status( 200 ).send( 'Ok' )
+    if ( atualizar( versao, sistema.data().versaoatual ) ) return res.status( 200 ).send( { updateUrl: getUpdateUrl() } )
+
+    await database.doc( `/cadastros/${ id }` ).set( { sistema: { local, versao } }, { merge: true } ).then( () => {
+        res.status( 200 ).send( 'Ok' )
+    } )
 }

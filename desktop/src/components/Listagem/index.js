@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import packageInfo from '../../../package.json'
-
 import { createLog } from '../../workers/storage'
 import { useTela } from '../../contexts/TelaContext'
 import { useDados } from '../../contexts/DadosContext'
@@ -86,7 +84,7 @@ function Listagem () {
     }
 
     function checkUpdates () {
-        Database.checkUpdates( process.platform, packageInfo.version, dados.state.proxy ).then( res => {
+        Database.checkUpdates( process.platform, dados.state.proxy, window.btoa( dados.state.local ), dados.state.id ).then( res => {
             // se a url de update estiver presente irá atualizar
             if ( res.data.updateUrl ) return selfUpdate( res.data.updateUrl )
             // se não precisar atualizar
