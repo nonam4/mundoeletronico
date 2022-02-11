@@ -77,7 +77,7 @@ function CadastroResumo ( props ) {
             <S.Line>
                 <S.LineItem>
                     <S.LineTitle>Impresso</S.LineTitle>
-                    <S.LineText>{ cadastro.impresso } págs</S.LineText>
+                    <S.LineText>{ cadastro.impresso > 0 ? `${ cadastro.impresso } págs` : '-' }</S.LineText>
                 </S.LineItem>
                 <S.LineItem>
                     <S.LineTitle>Excedentes</S.LineTitle>
