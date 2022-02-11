@@ -186,7 +186,7 @@ export default async ( req, res ) => {
     impressora.vistoporultimo = dataSimples
 
     // histórico a ser gravado
-    const chave = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }`
+    const chave = `${ getData().ano }.${ getData().mes }.${ getData().dia } - ${ getData().hora }:${ getData().minutos }`
     const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ contador } págs`
     // verifica se a impressora tem registro de histórico, se não cria
     if ( !impressora.historico ) impressora.historico = {}
