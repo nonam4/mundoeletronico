@@ -7,29 +7,12 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
-    let { chave, leitura } = req.body
-    //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
+    const { chave, leitura } = req.body
     let velho = req.body.cliente
 
-    if ( !velho.ativo ) return database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
+    if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
     let cliente = {}
     let franquia = {}
-
-    const Data = new Date()
-    function getData () {
-
-        let ano = Data.getFullYear()
-        let mes = Data.getMonth() + 1
-        let dia = Data.getDate()
-        let hora = Data.getHours()
-        let minutos = Data.getMinutes()
-        let time = Data.getTime()
-
-        return {
-            ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia,
-            hora: hora < 10 ? `0${ hora }` : hora, minutos: minutos < 10 ? `0${ minutos }` : minutos, time
-        }
-    }
 
     cliente.id = velho.id
     cliente.ativo = velho.ativo
@@ -88,13 +71,6 @@ export default async ( req, res ) => {
                 abastecido: velha.tinta.cheio
             }
 
-            if ( chave && leitura ) {
-                const valor = `${ getData().dia }/${ getData().mes }/${ getData().ano } - ${ getData().hora }:${ getData().minutos }: ${ leitura } págs`
-                impressora.historico = {
-                    [ chave ]: valor
-                }
-            }
-
             impressora.contador = 0
             impressora.contadores = {}
             if ( velha.leituras && Object.keys( velha.leituras ).length > 0 ) {
@@ -135,8 +111,8 @@ export default async ( req, res ) => {
         }
     }
     cliente.impressoras = impressoras
-    database.doc( `/cadastros/${ cliente.id }` ).set( cliente, { merge: true } )
-
-    res.status( 200 ).send( 'Sincronizado' )
+    await database.doc( `/cadastros/${ cliente.id }` ).set( cliente, { merge: true } ).then( () => {
+        res.status( 200 ).send( 'Sincronizado' )
+    } )
 }
 
