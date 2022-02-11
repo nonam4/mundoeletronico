@@ -71,7 +71,7 @@ export default async ( req, res ) => {
                     let franquia = {}
 
                     impressora.contabilizar = velha.ativa
-                    impressora.serial = serial
+                    impressora.serial = serial.replace( /\(|\)|\-|\s/g, '' )
                     impressora.ip = velha.ip
                     impressora.modelo = velha.modelo
                     impressora.setor = velha.setor
