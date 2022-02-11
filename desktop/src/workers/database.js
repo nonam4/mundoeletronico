@@ -1,7 +1,7 @@
 import axios from 'axios'
 import packageInfo from '../../package.json'
 
-const versaoLocal = packageInfo.version
+const versao = packageInfo.version
 
 function getRequestSettings ( method, endpoint, params, proxy ) {
     let requestSettings = { url: `http://mundoeletronico.vercel.app/api/desktop/${ endpoint }`, method }
@@ -25,12 +25,12 @@ export async function getDados ( id, data, proxy ) {
     return await axios.request( getRequestSettings( 'get', 'getdados', { id, data }, proxy ) )
 }
 
-export async function checkUpdates ( os, proxy, localInstalacao, id ) {
-    return await axios.request( getRequestSettings( 'get', 'checkupdates', { os, versaoLocal, localInstalacao, id }, proxy ) )
+export async function checkUpdates ( os, proxy, local, id ) {
+    return await axios.request( getRequestSettings( 'get', 'checkupdates', { os, versao, local, id }, proxy ) )
 }
 
 export async function salvarImpressora ( id, dados, proxy ) {
-    return await axios.request( getRequestSettings( 'post', 'salvarimpressora', { id, dados, versaoLocal }, proxy ) )
+    return await axios.request( getRequestSettings( 'post', 'salvarimpressora', { id, dados }, proxy ) )
 }
 
 export function getDatas () {
