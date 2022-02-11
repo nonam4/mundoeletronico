@@ -7,7 +7,6 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
-
     let { chave, leitura } = req.body
     //if ( serial && chave && leitura && modelo ) database.doc( `/historico/${ serial }` ).set( { contadores: { [ chave ]: leitura }, modelo, usuarioAtual: `${ id } - ${ velho.nomefantasia }` }, { merge: true } )
     let velho = req.body.cliente
@@ -16,14 +15,15 @@ export default async ( req, res ) => {
     let cliente = {}
     let franquia = {}
 
+    const Data = new Date()
     function getData () {
-        const Date = new Date()
-        let ano = Date.getFullYear()
-        let mes = Date.getMonth() + 1
-        let dia = Date.getDate()
-        let hora = Date.getHours()
-        let minutos = Date.getMinutes()
-        let time = Date.getTime()
+
+        let ano = Data.getFullYear()
+        let mes = Data.getMonth() + 1
+        let dia = Data.getDate()
+        let hora = Data.getHours()
+        let minutos = Data.getMinutes()
+        let time = Data.getTime()
 
         return {
             ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia,

@@ -3,7 +3,7 @@ import database from '../_database.js'
 export default async ( req, res ) => {
 
     const dataAtual = `${ getData().ano }-${ getData().mes }`
-    const Date = new Date()
+    const Data = new Date()
     const { id, dados } = req.body
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     const serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
@@ -12,12 +12,12 @@ export default async ( req, res ) => {
     let impressoras = cadastro.impressoras
 
     function getData () {
-        let ano = Date.getFullYear()
-        let mes = Date.getMonth() + 1
-        let dia = Date.getDate()
-        let hora = Date.getHours()
-        let minutos = Date.getMinutes()
-        let time = Date.getTime()
+        let ano = Data.getFullYear()
+        let mes = Data.getMonth() + 1
+        let dia = Data.getDate()
+        let hora = Data.getHours()
+        let minutos = Data.getMinutes()
+        let time = Data.getTime()
 
         return {
             ano, mes: mes < 10 ? `0${ mes }` : mes, dia: dia < 10 ? `0${ dia }` : dia,
