@@ -179,7 +179,7 @@ export const Dropdown = styled.div`
 `
 export const DropdownList = styled.div` 
     width: 350px;
-    right: -20px;
+    right: -10px;
     max-height: 200px;
     overflow: hidden;
     overflow-y: auto;
