@@ -114,11 +114,11 @@ export default async ( req, res ) => {
 
         if ( !impressora.contadores ) continue
         let contadores = impressora.contadores[ data ]
+        impressora.contadores = contadores //remove os contadores de outros meses e trabalha apenas com os da data escolhida
         if ( !contadores ) continue
         if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
 
         cadastro.impressorasAtivas += 1
-        impressora.contadores = contadores //remove os contadores de outros meses e trabalha apenas com os da data escolhida
         //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
         contadores.excedentes = 0
         contadores.adicionaltroca = 0
