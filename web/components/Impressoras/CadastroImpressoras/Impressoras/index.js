@@ -221,7 +221,7 @@ function Impressoras ( props ) {
             <S.DadosContainer>
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Rendimento </S.DadosTitulo>
-                    <S.Dados> <Select valor={ impressora.tintas.capacidade } options={ capacidades } onChange={ handleCapacidadeChange } /> </S.Dados>
+                    <S.Dados fit={ true }> <Select valor={ impressora.tintas.capacidade } options={ capacidades } onChange={ handleCapacidadeChange } /> </S.Dados>
                 </S.DadosSubcontainer>
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Nível/tinta </S.DadosTitulo>

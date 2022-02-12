@@ -139,6 +139,12 @@ export const FranquiaDado = styled.div`
         left: auto !important;
         width: auto !important;
     }
+    div {
+        span {
+            left: 0 !important;
+            width: 100% !important;
+        }
+    }
 `
 export const Listagem = styled.div`
     width: 100%;

@@ -87,11 +87,9 @@ export const DadosSubcontainer = styled.div`
         padding-top: 0;
         padding-bottom: 0.3rem;
     }
-    :hover {
-        span {
-            left: 0;
-            width: 100%;
-        }
+    span {
+        left: 0;
+        width: 100%;
     }
 `
 export const DadosTitulo = styled.div`
@@ -110,6 +108,11 @@ export const Dados = styled.div`
     padding: 0 0.5rem;
     cursor: default;
     white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    div {
+        width: ${ ( { fit } ) => fit ? 'fit-content' : '100%' };
+    }
     select {
         text-align-last: center;
         width: fit-content;

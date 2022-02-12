@@ -393,7 +393,7 @@ function CadastroExpandido () {
                                 { cadastro.excedentes > 0 ?
                                     cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                                         <S.FranquiaDado>{ cadastro.excedentes }<span>&nbsp;+ { cadastro.excedenteadicional }&nbsp;</span>págs - { ( cadastro.franquia.vpe * ( cadastro.excedentes + cadastro.excedenteadicional ) ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) } </S.FranquiaDado> :
-                                        <S.FranquiaDado>{ cadastro.excedentes } págs - { ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }</S.FranquiaDado> : '-' }
+                                        <S.FranquiaDado>{ cadastro.excedentes } págs - { ( cadastro.franquia.vpe * cadastro.excedentes ).toLocaleString( 'pt-br', { style: 'currency', currency: 'BRL' } ) }</S.FranquiaDado> : <S.FranquiaDado>-</S.FranquiaDado> }
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
                     </S.FranquiaContainer> }
