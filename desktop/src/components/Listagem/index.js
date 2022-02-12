@@ -8,7 +8,7 @@ import * as Notification from '../../workers/notification'
 import * as SNMP from '../../workers/snmp'
 import * as DHCP from '../../workers/dhcp'
 
-import CadastroImpressora from './CadastroImpressoras'
+import TelaListagem from './TelaListagem'
 
 function Listagem () {
     const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
@@ -146,7 +146,7 @@ function Listagem () {
         }
     }
 
-    return ( <CadastroImpressora { ...{ getDados } } /> )
+    return ( <TelaListagem { ...{ getDados } } /> )
 }
 
 export default Listagem

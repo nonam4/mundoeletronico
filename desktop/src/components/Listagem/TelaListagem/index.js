@@ -105,10 +105,9 @@ function CadastroExpandido ( { getDados } ) {
     return (
         <>{ cadastro && <S.Container>
             <S.Botoes>
-                <S.Botao onClick={ () => { } } hover={ colors.azul } title={ 'Atualizar' }> <MenuIcon name='downloads' margin='0.4' /> </S.Botao>
-                <S.Botao onClick={ () => { } } hover={ colors.azul } title={ 'Configurações' }> <MenuIcon name='settings' margin='0' /> </S.Botao>
-                <S.Botao onClick={ handleGetDados } hover={ colors.azul } title={ 'Sincronizar' }> <MenuIcon width={ 36 } name='sync' margin='0.4' /> </S.Botao>
                 <S.Botao onClick={ () => toggleTema() } hover={ colors.azul } title={ `Tema ${ tema === 'claro' ? 'escuro' : 'claro' }` }> <MenuIcon name='tema' margin='0' /> </S.Botao>
+                <S.Botao onClick={ handleGetDados } hover={ colors.azul } title={ 'Sincronizar' }> <MenuIcon width={ 36 } name='sync' margin='0.4' /> </S.Botao>
+                <S.Botao onClick={ () => { } } hover={ colors.azul } title={ 'Configurações' }> <MenuIcon name='settings' margin='0' /> </S.Botao>
             </S.Botoes>
             <S.TituloContainer>
                 <S.TituloSubContainer>

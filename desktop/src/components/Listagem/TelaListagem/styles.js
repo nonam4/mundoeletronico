@@ -80,15 +80,15 @@ export const FranquiaSubcontainer = styled.div`
     border-right: none;
     margin: 0;
     padding: 0.8rem 0;
-    border-top: ${ ( { borderTop, theme } ) => borderTop != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
+    border-top: ${ ( { borderTop, theme } ) => borderTop !== false ? `solid 1px ${ theme.colors.borders }` : 'none' };
 `
 export const FranquiaItem = styled.div`
-    width: ${ ( { show } ) => show != false ? '100%' : '0px' };
-    opacity: ${ ( { show } ) => show != false ? '1' : '0' };
-    z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
-    padding: ${ ( { show } ) => show != false ? '0 0.8rem' : '0' };
-    border-right: ${ ( { theme, show } ) => show != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
-    border-right: ${ ( { border, theme } ) => border != false ? `solid 1px ${ theme.colors.borders }` : 'none' };
+    width: ${ ( { show } ) => show !== false ? '100%' : '0px' };
+    opacity: ${ ( { show } ) => show !== false ? '1' : '0' };
+    z-index: ${ ( { show } ) => show !== false ? '0' : '-1' };
+    padding: ${ ( { show } ) => show !== false ? '0 0.8rem' : '0' };
+    border-right: ${ ( { theme, show } ) => show !== false ? `solid 1px ${ theme.colors.borders }` : 'none' };
+    border-right: ${ ( { border, theme } ) => border !== false ? `solid 1px ${ theme.colors.borders }` : 'none' };
     display: flex;
     flex-direction: column;
     justify-content: space-between;

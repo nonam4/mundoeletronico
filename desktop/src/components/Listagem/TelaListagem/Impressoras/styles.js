@@ -61,20 +61,20 @@ export const DadosContainer = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
-    opacity: ${ ( { show } ) => show != false ? '1' : '0' };
-    z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
-    max-height: ${ ( { show } ) => show != false ? '100px' : '0px' };
-    margin-bottom: ${ ( { show } ) => show != false ? '0.8rem' : 'none' };
+    opacity: ${ ( { show } ) => show !== false ? '1' : '0' };
+    z-index: ${ ( { show } ) => show !== false ? '0' : '-1' };
+    max-height: ${ ( { show } ) => show !== false ? '100px' : '0px' };
+    margin-bottom: ${ ( { show } ) => show !== false ? '0.8rem' : 'none' };
 `
 export const DadosSubcontainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
     white-space: nowrap;
-    opacity: ${ ( { show } ) => show != false ? '1' : '0' };
-    z-index: ${ ( { show } ) => show != false ? '0' : '-1' };
-    max-width: ${ ( { show } ) => show != false ? '100%' : '0px' };
-    max-height: ${ ( { show } ) => show != false ? 'fit-content' : '0px' };
+    opacity: ${ ( { show } ) => show !== false ? '1' : '0' };
+    z-index: ${ ( { show } ) => show !== false ? '0' : '-1' };
+    max-width: ${ ( { show } ) => show !== false ? '100%' : '0px' };
+    max-height: ${ ( { show } ) => show !== false ? 'fit-content' : '0px' };
 
     input {
         padding-top: 0;
