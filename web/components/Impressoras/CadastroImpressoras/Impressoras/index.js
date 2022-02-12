@@ -87,7 +87,6 @@ function Impressoras ( props ) {
     }
 
     function renderTrocas () {
-        const cadastro = props.cadastro
         let views = []
 
         for ( let serial of impressora.substituindo ) {
