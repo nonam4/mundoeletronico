@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react'
 import { createLog } from '../../workers/storage'
 import { useTela } from '../../contexts/TelaContext'
 import { useDados } from '../../contexts/DadosContext'
+
 import * as Database from '../../workers/database'
 import * as Notification from '../../workers/notification'
 import * as SNMP from '../../workers/snmp'
 import * as DHCP from '../../workers/dhcp'
 
+import CadastroImpressora from './CadastroImpressoras'
+
 function Listagem () {
     const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
     const tela = useTela()
     const dados = useDados()
-
-    const data = Database.getDatas()[ 0 ].value
 
     useEffect( () => {
         // inicia o loop principal do sistema
@@ -55,14 +56,13 @@ function Listagem () {
 
     // loop principal do sistema, a cada hora irá realizar a mesma ação novamente
     function loop () {
-
-        getDados()
+        getDados( Database.getDatas()[ 0 ].value )
         setTimeout( () => {
             loop()
         }, 3600000 )
     }
 
-    function getDados () {
+    function getDados ( data ) {
         // não precisa verificar qual o código de erro
         // se o cadastro não existir ou não estiver ativo irá retornar erro 40x
         // esse erro já vai direto para o catch
@@ -146,9 +146,7 @@ function Listagem () {
         }
     }
 
-    return (
-        <div>Listagem</div>
-    )
+    return ( <CadastroImpressora { ...{ getDados } } /> )
 }
 
 export default Listagem

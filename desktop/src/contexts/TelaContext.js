@@ -3,7 +3,7 @@ import { createContext, useContext, useReducer } from 'react'
 const initialData = {
     load: true,
     update: false,
-    cadastro: {},
+    cadastro: undefined,
     historico: {}
 }
 

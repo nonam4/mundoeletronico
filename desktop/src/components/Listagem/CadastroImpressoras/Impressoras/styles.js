@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-    width: calc(33.33% - 0.8rem);
-    min-width: 300px;
+    width: calc(50% - 0.8rem);
     display: flex;
     flex-direction: column;
     background: ${ ( { theme } ) => theme.colors.menus };
@@ -26,12 +25,6 @@ export const Container = styled.div`
     }
     :hover{
         border-color: ${ ( { hoverColor } ) => hoverColor };
-    }
-    @media only screen and (max-width: 1568px) {
-        min-width: calc(50% - 0.8rem);
-    }
-    @media only screen and (max-width: 1144px) {
-        min-width: calc(100% - 0.8rem);
     }
 `
 export const Titulo = styled.div`

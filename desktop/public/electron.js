@@ -6,10 +6,8 @@ require( '@electron/remote/main' ).initialize()
 
 function createWindow ( show ) {
 
-    // URLs que o CORS vai aceitar
-    const corsUrls = { urls: [ 'https://mundoeletronico.vercel.app/*' ] }
     const win = new BrowserWindow( {
-        width: 800,
+        width: 900,
         height: 600,
         maximizable: false,
         resizable: false,
