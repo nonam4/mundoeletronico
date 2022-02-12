@@ -75,7 +75,8 @@ function Impressoras ( props ) {
         setSetor( e.target.value )
     }
 
-    function handleBlurSetor () {
+    function handleBlurSetor ( e ) {
+        if ( e.target.value === '' ) return setSetor( impressora.setor )
         props.setObjectData( `impressoras.${ impressora.serial }.setor`, setor )
     }
 
