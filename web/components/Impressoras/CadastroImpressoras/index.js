@@ -334,7 +334,7 @@ function CadastroExpandido () {
                 }
             }
 
-            views.push( <Impressoras key={ serial } { ...{ data, impressora, cadastro, setObjectData, cadastro, rollback, setCadastro, recalcularDados } } /> )
+            views.push( <Impressoras key={ serial } { ...{ data, impressora, cadastro, setObjectData, rollback, setCadastro, recalcularDados } } /> )
         }
         return views
     }
