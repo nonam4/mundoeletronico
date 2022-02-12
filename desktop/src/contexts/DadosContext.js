@@ -1,19 +1,15 @@
 import { createContext, useContext, useReducer } from 'react'
 
 const initialData = {
-    id: undefined,
+    id: '',
     local: '',
-    proxy: {
-        active: false,
-        user: '',
-        pass: '',
-        host: '',
-        port: ''
-    },
-    dhcp: {
-        active: true,
-        ips: ''
-    },
+    proxy: false,
+    user: '',
+    pass: '',
+    host: '',
+    port: 8080,
+    dhcp: true,
+    ip: '',
     tema: undefined
 }
 
@@ -30,8 +26,18 @@ function dadosReducer ( state, action ) {
             return { ...state, local: payload }
         case 'setProxy':
             return { ...state, proxy: payload }
+        case 'setUser':
+            return { ...state, user: payload }
+        case 'setPass':
+            return { ...state, pass: payload }
+        case 'setHost':
+            return { ...state, host: payload }
+        case 'setPort':
+            return { ...state, port: payload }
         case 'setDhcp':
             return { ...state, dhcp: payload }
+        case 'setIp':
+            return { ...state, ip: payload }
         case 'setTema':
             return { ...state, tema: payload }
         case 'setAll':

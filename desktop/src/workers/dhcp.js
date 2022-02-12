@@ -1,6 +1,6 @@
 const os = window.require( 'os' )
 
-export function pegatIpDhcp () {
+export function pegarIpDhcp () {
     return new Promise( resolve => {
 
         function pegarIp () {
@@ -23,7 +23,7 @@ export function pegatIpDhcp () {
             }, 2000 )
 
             let ipSplit = ip.split( '.' )
-            resolve( `${ ipSplit[ 0 ] }.${ ipSplit[ 1 ] }.${ ipSplit[ 2 ] }` )
+            resolve( `${ ipSplit[ 0 ] }.${ ipSplit[ 1 ] }.${ ipSplit[ 2 ] }.` )
         }
 
         pegarIp()

@@ -14,7 +14,6 @@ import escuro from '../../styles/temas/escuro'
 import GlobalStyle from '../../styles/global'
 
 import Storage from '../../workers/storage'
-import * as Notification from '../../workers/notification'
 
 function MainPage () {
     const dados = useDados() // variaveis do contexto
@@ -39,7 +38,12 @@ function MainPage () {
                     id: storage.get( 'id' ),
                     local: storage.get( 'local' ),
                     proxy: storage.get( 'proxy' ),
+                    user: storage.get( 'user' ),
+                    pass: storage.get( 'pass' ),
+                    host: storage.get( 'host' ),
+                    port: Number( storage.get( 'port' ) ),
                     dhcp: storage.get( 'dhcp' ),
+                    ip: storage.get( 'ip' ),
                     tema: storage.get( 'tema' )
                 }
             } )
@@ -69,8 +73,8 @@ function MainPage () {
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
             { storageInciado && <>
-                { ( !dados.state.id || dados.state.id === '' ) && <Configuracoes /> }
-                { dados.state.id && dados.state.id !== '' && <Listagem /> }
+                { ( !dados.state.id || dados.state.id === '' ) || tela.state.configs && <Configuracoes /> }
+                { dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
             </> }
             <Load show={ tela.state.load } />
             <Update show={ tela.state.update } />

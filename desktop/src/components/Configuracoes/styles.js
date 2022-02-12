@@ -43,3 +43,6 @@ export const Info = styled.div`
     font-size: 12px;
     text-align: center;
 `
+export const Suporte = styled.div`
+    text-align: center;
+`

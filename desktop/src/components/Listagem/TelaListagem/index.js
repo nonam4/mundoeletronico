@@ -30,7 +30,6 @@ function CadastroExpandido ( { getDados } ) {
 
     useEffect( () => {
         setCadastro( state.cadastro )
-        setLoad( false )
     }, [ state.cadastro ] )
 
     useEffect( () => {
@@ -41,6 +40,7 @@ function CadastroExpandido ( { getDados } ) {
         if ( !cadastro ) return
         setFranquiaPagina( cadastro.franquia.tipo === 'pagina' ? true : false )
         setValorFranquiaPagina( `${ cadastro.franquia.limite } págs` )
+        setLoad( false )
     }, [ cadastro ] )
 
     function setLoad ( valor ) {
@@ -102,12 +102,19 @@ function CadastroExpandido ( { getDados } ) {
         getDados( data )
     }
 
+    function abrirConfiguracao () {
+        setLoad( true )
+        setTimeout( () => {
+            dispatch( { type: 'setConfigs', payload: true } )
+        }, 300 )
+    }
+
     return (
         <>{ cadastro && <S.Container>
             <S.Botoes>
                 <S.Botao onClick={ () => toggleTema() } hover={ colors.azul } title={ `Tema ${ tema === 'claro' ? 'escuro' : 'claro' }` }> <MenuIcon name='tema' margin='0' /> </S.Botao>
                 <S.Botao onClick={ handleGetDados } hover={ colors.azul } title={ 'Sincronizar' }> <MenuIcon width={ 36 } name='sync' margin='0.4' /> </S.Botao>
-                <S.Botao onClick={ () => { } } hover={ colors.azul } title={ 'Configurações' }> <MenuIcon name='settings' margin='0' /> </S.Botao>
+                <S.Botao onClick={ abrirConfiguracao } hover={ colors.azul } title={ 'Configurações' }> <MenuIcon name='settings' margin='0' /> </S.Botao>
             </S.Botoes>
             <S.TituloContainer>
                 <S.TituloSubContainer>
@@ -130,7 +137,7 @@ function CadastroExpandido ( { getDados } ) {
                                 <Select options={ Database.getDatas() } valor={ data } onChange={ handleDataChange } />
                             </S.FranquiaDado>
                         </S.FranquiaItem>
-                        <S.FranquiaItem border={ cadastro.franquia.tipo !== 'ilimitado' }>
+                        <S.FranquiaItem border={ franquiaPagina }>
                             <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
                             <S.FranquiaDado>{ getFranquia( cadastro.franquia.tipo ) }</S.FranquiaDado>
                         </S.FranquiaItem>

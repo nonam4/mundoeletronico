@@ -1,5 +1,5 @@
 import { ThemeContext } from 'styled-components'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, useMemo } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 import { useTela } from '../../contexts/TelaContext'
 
@@ -19,22 +19,23 @@ function Configuracoes () {
     const dados = useDados()
     const tela = useTela()
     const [ ipDhcp, setIpDhcp ] = useState( undefined )
-    const [ userId, setUserId ] = useState( '' )
-    const [ local, setLocal ] = useState( '' )
-    const [ proxyAtivo, setProxyAtivo ] = useState( false )
-    const [ proxyHost, setProxyHost ] = useState( '' )
-    const [ proxyPort, setProxyPort ] = useState( '8080' )
-    const [ proxyUser, setProxyUser ] = useState( '' )
-    const [ proxyPass, setProxyPass ] = useState( '' )
-    const [ dhcpAtivo, setDhcpAtivo ] = useState( false )
-    const [ faixasIp, setFaixasIp ] = useState( '' )
+    const [ userId, setUserId ] = useState( dados.state.id )
+    const [ local, setLocal ] = useState( dados.state.local )
+    const [ proxyAtivo, setProxyAtivo ] = useState( dados.state.proxy )
+    const [ proxyHost, setProxyHost ] = useState( dados.state.host )
+    const [ proxyPort, setProxyPort ] = useState( dados.state.port )
+    const [ proxyUser, setProxyUser ] = useState( dados.state.user )
+    const [ proxyPass, setProxyPass ] = useState( dados.state.pass )
+    const [ dhcpAtivo, setDhcpAtivo ] = useState( dados.state.dhcp )
+    const [ faixasIp, setFaixasIp ] = useState( dados.state.ip )
     const [ primeiraTelaPreenchida, setPrimeiraTelaPreenchida ] = useState( false ) // se a primeira tela de dados está preenchida
     const [ segundaTelaPreenchida, setSegundaTelaPreenchida ] = useState( false ) // se a segunda tela de dados está preenchida
 
     useEffect( () => {
         async function pegarIpDhcp () {
-            setIpDhcp( await DHCP.pegatIpDhcp() )
+            setIpDhcp( await DHCP.pegarIpDhcp() )
         }
+
         pegarIpDhcp()
         createWindow()
         handleWindowClose()
@@ -44,7 +45,7 @@ function Configuracoes () {
         if ( !ipDhcp ) return // se ainda não tiver pego o IP via DHCP então não faça nada
 
         // define o host do proxy
-        setProxyHost( `${ ipDhcp }.254` )
+        setProxyHost( `${ ipDhcp }254` )
         // define as faixas de IP com o ip do dhcp
         setFaixasIp( `${ ipDhcp };` )
 
@@ -62,10 +63,7 @@ function Configuracoes () {
 
     function handleWindowClose () {
         // cuida para que não feche a janela enquanto não preencher os dados
-        currentWindow.on( 'close', () => {
-            Notification.notificate( 'Atenção', 'Entre em contato com o Suporte \n47 99964-9667!', 'danger' )
-            return false
-        } )
+        currentWindow.on( 'close', () => { } )
     }
 
     function setLoad ( valor ) {
@@ -120,17 +118,13 @@ function Configuracoes () {
 
         let settings = {
             id: userId, local,
-            proxy: {
-                active: proxyAtivo,
-                user: proxyUser,
-                pass: proxyPass,
-                host: proxyHost,
-                port: proxyPort
-            },
-            dhcp: {
-                active: dhcpAtivo,
-                ips: faixasIp
-            },
+            proxy: proxyAtivo,
+            user: proxyUser,
+            pass: proxyPass,
+            host: proxyHost,
+            port: proxyPort,
+            dhcp: dhcpAtivo,
+            ip: faixasIp,
             tema: dados.state.tema
         }
 
@@ -142,6 +136,10 @@ function Configuracoes () {
                 type: 'setAll', payload: settings
             } )
         } )
+
+        setTimeout( () => {
+            tela.dispatch( { type: 'setConfigs', payload: false } )
+        }, 300 )
     }
 
     function handleIdChange ( value ) {
@@ -176,7 +174,7 @@ function Configuracoes () {
         let teclaApertada = e.nativeEvent.data
         let value = e.target.value
         let contadorDeNumeros = 0 // mínimo de 5 e máximo de 9 números
-        let contadorDePontos = 0 //todo IP tem no máximo 2 pontos
+        let contadorDePontos = 0 //todo IP tem 3 pontos
 
         for ( let val of value ) {
             if ( val === ';' ) {
@@ -189,7 +187,7 @@ function Configuracoes () {
 
         if ( teclasPermitidos.indexOf( teclaApertada ) < 0 ) return // se a tecla não for válida não faça nada
         if ( contadorDeNumeros > 9 && ( teclaApertada !== null || teclaApertada !== ';' ) ) return // se já tiver 9 números e não estiver apagando não faça nada
-        if ( contadorDePontos > 2 ) return // se já tiver 2 pontos não faça nada
+        if ( contadorDePontos > 3 ) return // se já tiver 3 pontos não faça nada
 
         setFaixasIp( value )
     }
@@ -215,10 +213,11 @@ function Configuracoes () {
         for ( let ip of ipsDivididos ) {
             let ipDividido = ip.split( '.' )
 
-            if ( ip === '' && ipsDivididos.indexOf( ip ) !== 0 ) continue // evita caso o usuário coloque um ponto e virgula no final e não digite outros ips depois
-            if ( ipDividido.length !== 3 ) invalido = true
+            if ( ip === '' && ipsDivididos.indexOf( ip ) === ipsDivididos.length - 1 ) continue // evita caso o usuário coloque um ponto e virgula no final e não digite outros ips depois
+            if ( ipDividido.length !== 4 ) invalido = true
 
             for ( let sessao of ipDividido ) {
+                if ( sessao === '' && ipDividido.indexOf( sessao ) === 3 ) continue // como os ips terminarão com ponto, evita comparar depois do ultimo ponto que é vazio
                 if ( sessao.length > 3 || sessao.length < 1 ) invalido = true
             }
         }
@@ -235,6 +234,8 @@ function Configuracoes () {
     return (
         <S.Container>
             <S.Logo src='/icon.ico' />
+            <S.Suporte>Em caso de dúvidas, fale com o suporte</S.Suporte>
+            <S.Suporte>WhatsApp: <b>(47) 99964-9667</b></S.Suporte>
             <S.SubCointaner>
                 { !primeiraTelaPreenchida && <S.Divisor>
                     <TextContainer width={ '310px' }>
@@ -265,16 +266,16 @@ function Configuracoes () {
                     </> }
                 </S.Divisor> }
                 { segundaTelaPreenchida && <S.Divisor>
-                    <Checkbox width={ '310px' } text={ 'Definir faixas de IPs manualmente?' } paddingLeft={ '9px' } checked={ dhcpAtivo } changeReturn={ () => setDhcpAtivo( !dhcpAtivo ) } />
+                    <Checkbox width={ '310px' } text={ 'Definir faixas de IPs manualmente?' } paddingLeft={ '9px' } checked={ !dhcpAtivo } changeReturn={ () => setDhcpAtivo( !dhcpAtivo ) } />
 
                     <TextContainer width={ '310px' } marginRight={ '0.4rem' }>
-                        <TextField disabled={ !dhcpAtivo } onChange={ e => handleFaixasIpChange( e ) } value={ faixasIp } placeholder={ 'Faixas IP' } icon={ 'coletor_dhcp' } maxLength={ 45 } />
+                        <TextField disabled={ dhcpAtivo } onChange={ e => handleFaixasIpChange( e ) } value={ faixasIp } placeholder={ 'Faixas IP' } icon={ 'coletor_dhcp' } maxLength={ 45 } />
                     </TextContainer>
-                    { dhcpAtivo && <>
+                    { !dhcpAtivo && <>
                         <S.Info>Não coloque o IP das impressoras mas sim as faixas de IP</S.Info>
-                        <S.Info>Não use ponto no fim de cada faixa</S.Info>
+                        <S.Info>Coloe um ponto ao fim de cada faixa</S.Info>
                         <S.Info>Separe cada faixa de IP com um ponto e vírgula ( ; )</S.Info>
-                        <S.Info>Ex: <b>192.168.2 ; 10.0.0 ; 192.168.100</b></S.Info>
+                        <S.Info>Ex: <b>192.168.2. ; 10.0.0. ; 192.168.100.</b></S.Info>
                     </> }
                 </S.Divisor> }
             </S.SubCointaner>

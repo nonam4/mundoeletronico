@@ -1,7 +1,0 @@
--ao encontrar impressoras que não são contabilizadas não irá gravar nenhuma leitura
-
--ao conseguir pegar leitura de um impressora que foi substituida irá verificar todas as impressoras 
-e remover seu serial da lista 'substituindo' e também irá mudar o status dela para 'substituida = false'
-
-- migrar settings.json para novo formato
-ex de json velho - {"id":"0000000000000","local":"cGMgZGEgbG9jYefjbw==","proxy":true,"user":"teste","pass":"123456","host":"192.168.2.254","port":"8080","dhcp":false,"ip":"192.168.2."}

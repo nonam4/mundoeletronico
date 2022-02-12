@@ -9,19 +9,15 @@ class Storage {
 
         // valores padrões
         this.dados = {
-            id: undefined,
+            id: '',
             local: '',
-            proxy: {
-                active: false,
-                user: '',
-                pass: '',
-                host: '',
-                port: ''
-            },
-            dhcp: {
-                active: true,
-                ips: ''
-            },
+            proxy: false,
+            user: '',
+            pass: '',
+            host: '',
+            port: 8080,
+            dhcp: true,
+            ip: '',
             tema: 'claro'
         }
     }

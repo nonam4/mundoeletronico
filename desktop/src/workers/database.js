@@ -3,34 +3,30 @@ import packageInfo from '../../package.json'
 
 const versao = packageInfo.version
 
-function getRequestSettings ( method, endpoint, params, proxy ) {
+function getRequestSettings ( method, endpoint, params, proxy, username, password, host, port ) {
     let requestSettings = { url: `http://mundoeletronico.vercel.app/api/desktop/${ endpoint }`, method }
-
     // se o proxy não estiver ativo já retorna
-    if ( proxy.active ) requestSettings.proxy = {
-        host: proxy.host,
-        port: proxy.port,
-        auth: {
-            username: proxy.user,
-            password: proxy.pass
-        }
+    if ( proxy ) requestSettings.proxy = {
+        host, port,
+        auth: { username, password }
     }
 
     if ( method === 'get' ) requestSettings.params = { ...params }
     if ( method === 'post' ) requestSettings.data = params
+
     return requestSettings
 }
 
-export async function getDados ( id, data, proxy ) {
-    return await axios.request( getRequestSettings( 'get', 'getdados', { id, data }, proxy ) )
+export async function getDados ( id, data, proxy, user, pass, host, port ) {
+    return await axios.request( getRequestSettings( 'get', 'getdados', { id, data }, proxy, user, pass, host, port ) )
 }
 
-export async function checkUpdates ( os, proxy, local, id ) {
-    return await axios.request( getRequestSettings( 'get', 'checkupdates', { os, versao, local, id }, proxy ) )
+export async function checkUpdates ( os, local, id, proxy, user, pass, host, port ) {
+    return await axios.request( getRequestSettings( 'get', 'checkupdates', { os, versao, local, id }, proxy, user, pass, host, port ) )
 }
 
-export async function salvarImpressora ( id, dados, proxy ) {
-    return await axios.request( getRequestSettings( 'post', 'salvarimpressora', { id, dados }, proxy ) )
+export async function salvarImpressora ( id, dados, proxy, user, pass, host, port ) {
+    return await axios.request( getRequestSettings( 'post', 'salvarimpressora', { id, dados }, proxy, user, pass, host, port ) )
 }
 
 export function getDatas () {
