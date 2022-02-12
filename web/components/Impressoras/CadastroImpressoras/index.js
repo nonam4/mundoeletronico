@@ -417,7 +417,7 @@ function CadastroExpandido () {
                         <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'ilimitado' ? '66.66%' : '100%' } borderTop={ true } borderRight={ false }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Total impresso </S.FranquiaTitulo>
-                                <S.FranquiaDado> { cadastro.impresso } págs </S.FranquiaDado>
+                                <S.FranquiaDado>{ cadastro.impresso > 0 ? `${ cadastro.impresso } págs` : '-' }</S.FranquiaDado>
                             </S.FranquiaItem>
                             <S.FranquiaItem border={ false } bottom={ false }>
                                 <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
