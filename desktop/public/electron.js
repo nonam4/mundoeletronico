@@ -1,7 +1,9 @@
 const { app, BrowserWindow, Menu, Tray } = require( 'electron' )
+const downloader = require( 'electron-download-manager' )
 const isDev = require( 'electron-is-dev' )
 const path = require( 'path' )
 
+downloader.register( { downloadFolder: `${ app.getAppPath() }/updates` } )
 require( '@electron/remote/main' ).initialize()
 
 function createWindow ( show ) {

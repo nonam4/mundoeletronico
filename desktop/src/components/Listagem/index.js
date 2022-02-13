@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { createLog } from '../../workers/storage'
 import { useTela } from '../../contexts/TelaContext'
 import { useDados } from '../../contexts/DadosContext'
@@ -10,6 +10,8 @@ import * as DHCP from '../../workers/dhcp'
 
 import TelaListagem from './TelaListagem'
 
+const { app, shell } = window.require( '@electron/remote' )
+
 function Listagem () {
     const currentWindow = window.require( '@electron/remote' ).getCurrentWindow()
     const tela = useTela()
@@ -17,9 +19,9 @@ function Listagem () {
 
     useEffect( () => {
         // inicia o loop principal do sistema
-        loop()
         handleWindowClose()
         criarTray()
+        loop()
     }, [] )
 
     function handleWindowClose () {
@@ -85,6 +87,7 @@ function Listagem () {
     }
 
     function checkUpdates () {
+        console.log( 'checando updates' )
         Database.checkUpdates( process.platform, window.btoa( dados.state.local ), dados.state.id, dados.state.proxy,
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                 // se a url de update estiver presente irá atualizar
@@ -101,9 +104,18 @@ function Listagem () {
     }
 
     function selfUpdate ( url ) {
+        console.log( 'update encontrada, baixando...' )
         setUpdate( true )
 
-        console.log( 'atualizando ', url )
+        window.require( '@electron/remote' ).require( 'electron-download-manager' ).download( { url }, err => {
+            console.log( 'finalizado download de update, verifique se tiveram erros' )
+            if ( err ) {
+                createLog( `Erro ao fazer o download de atualizações - Erro: ${ err }` )
+                app.relaunch()
+            }
+            if ( !err ) shell.openExternal( `file://${ app.getAppPath() }/updater.bat` )
+            return app.exit()
+        } )
     }
 
     async function buscarImpressoras () {
