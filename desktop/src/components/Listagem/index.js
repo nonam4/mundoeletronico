@@ -87,7 +87,6 @@ function Listagem () {
     }
 
     function checkUpdates () {
-        console.log( 'checando updates' )
         Database.checkUpdates( process.platform, window.btoa( dados.state.local ), dados.state.id, dados.state.proxy,
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                 // se a url de update estiver presente irá atualizar
@@ -104,11 +103,9 @@ function Listagem () {
     }
 
     function selfUpdate ( url ) {
-        console.log( 'update encontrada, baixando...' )
         setUpdate( true )
 
         window.require( '@electron/remote' ).require( 'electron-download-manager' ).download( { url }, err => {
-            console.log( 'finalizado download de update, verifique se tiveram erros' )
             if ( err ) {
                 createLog( `Erro ao fazer o download de atualizações - Erro: ${ err }` )
                 app.relaunch()
