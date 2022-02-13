@@ -144,14 +144,14 @@ function Impressoras ( props ) {
                     <S.TituloSerial>{ impressora.serial }</S.TituloSerial>
                 </S.TituloContainer>
                 <S.TituloSubcontainer>
-                    { props.cadastro.impressorasAtivas > 1 && renderSeriaisTrocas() && <S.Dropdown>
-                        <Botao title={ 'Substituir' } hover={ colors.azul }><MenuIcon name={ 'impressora_trocar' } margin='0' /></Botao>
-                        <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
-                    </S.Dropdown> }
-
                     { renderHistoricoContadores() && <S.Dropdown>
                         <Botao title={ 'Histórico' } hover={ colors.azul }><MenuIcon name={ 'historico' } margin='0' /></Botao>
                         <S.DropdownList> { renderHistoricoContadores() } </S.DropdownList>
+                    </S.Dropdown> }
+
+                    { props.cadastro.impressorasAtivas > 1 && renderSeriaisTrocas() && <S.Dropdown>
+                        <Botao title={ 'Substituir' } hover={ colors.azul }><MenuIcon name={ 'impressora_trocar' } margin='0' /></Botao>
+                        <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
                     </S.Dropdown> }
 
                     <Botao title={ impressora.contabilizar ? 'Excluir' : 'Restaurar' } onClick={ () => deletarImpressora() } hover={ impressora.contabilizar ? colors.vermelho : colors.azul }>
