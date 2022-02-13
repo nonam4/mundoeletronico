@@ -24,19 +24,6 @@ function MainPage () {
     const [ onLine, setOnLine ] = useState( navigator.onLine )
     const storage = new Storage()
 
-    function selectTheme ( title ) {
-        switch ( title ) {
-            case 'escuro':
-                return escuro
-            default:
-                return claro
-        }
-    }
-
-    function atualizarOnline () {
-        setOnLine( navigator.onLine )
-    }
-
     //adiciona os eventos para detectar se estamos online ou não
     window.addEventListener( 'online', atualizarOnline )
     window.addEventListener( 'offline', atualizarOnline )
@@ -80,21 +67,36 @@ function MainPage () {
     }, [ dados.state ] )
 
     useEffect( () => {
-        console.log( 'estamos online? ', onLine )
+        if ( !onLine ) setLoad( true )
     }, [ onLine ] )
+
+    function setLoad ( valor ) {
+        tela.dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function selectTheme ( title ) {
+        switch ( title ) {
+            case 'escuro':
+                return escuro
+            default:
+                return claro
+        }
+    }
+
+    function atualizarOnline () {
+        setOnLine( navigator.onLine )
+    }
 
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
-            { onLine && <>
-                { storageInciado && <>
-                    { ( ( !dados.state.id || dados.state.id === '' ) || tela.state.configs ) && <Configuracoes /> }
-                    { dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
-                </> }
-                <Load show={ tela.state.load && !tela.state.atualizando } />
-                <Atualizando show={ tela.state.atualizando } />
+            { onLine && storageInciado && <>
+                { ( ( !dados.state.id || dados.state.id === '' ) || tela.state.configs ) && <Configuracoes /> }
+                { onLine && dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
             </> }
-            { !onLine && <SemInternet show={ !onLine } /> }
+            <Load show={ tela.state.load } />
+            <Atualizando show={ tela.state.atualizando } />
+            <SemInternet show={ !onLine } />
         </ThemeProvider>
     )
 }

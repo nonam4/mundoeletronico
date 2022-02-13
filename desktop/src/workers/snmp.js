@@ -11,7 +11,7 @@ export function verificarIp ( ip ) {
             if ( err ) {
                 // se der erro por timout não cria log 
                 //pois significa que  o ip está vazio
-                if ( err.name === 'RequestTimedOutError' ) return reject( snmp.close() )
+                if ( err.name === 'RequestTimedOutError' || String( err ) === 'Error: Socket forcibly closed' ) return reject( snmp.close() )
                 createLog( `Erro ao verificar fabricante - IP: ${ ip } - Erro: ${ err }` )
                 return reject( snmp.close() )
             }

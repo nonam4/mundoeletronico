@@ -40,7 +40,6 @@ function CadastroExpandido ( { getDados } ) {
         if ( !cadastro ) return
         setFranquiaPagina( cadastro.franquia.tipo === 'pagina' ? true : false )
         setValorFranquiaPagina( `${ cadastro.franquia.limite } págs` )
-        setLoad( false )
     }, [ cadastro ] )
 
     function setLoad ( valor ) {
@@ -98,7 +97,6 @@ function CadastroExpandido ( { getDados } ) {
     }
 
     function handleGetDados () {
-        setLoad( true )
         getDados( data )
     }
 

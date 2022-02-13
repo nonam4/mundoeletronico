@@ -65,6 +65,7 @@ function Listagem () {
     }
 
     function getDados ( data ) {
+        setLoad( true )
         // não precisa verificar qual o código de erro
         // se o cadastro não existir ou não estiver ativo irá retornar erro 40x
         // esse erro já vai direto para o catch
@@ -126,6 +127,8 @@ function Listagem () {
     }
 
     async function buscarImpressoras () {
+        console.log( 'pode ficar offline agora' )
+        setLoad( false )
         let faixas = []
         if ( dados.state.dhcp ) faixas = await DHCP.pegarIpDhcp()
         if ( !dados.state.dhcp ) faixas = dados.state.ip
