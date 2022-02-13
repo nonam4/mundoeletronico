@@ -32,9 +32,7 @@ function MainPage () {
     }
 
     useEffect( () => {
-        console.log( 'iniciando' )
         storage.init( () => {
-            console.log( 'callback' )
             dados.dispatch( {
                 type: 'setAll', payload: {
                     id: storage.get( 'id' ),
