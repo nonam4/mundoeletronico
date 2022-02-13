@@ -120,6 +120,7 @@ export const Dados = styled.div`
         padding: 0 0.5rem 0.3rem;
     }
     span {
+        width: ${ ( { width } ) => width ? width : '100%' };
         display: inline;
         color: ${ ( { theme } ) => theme.colors.verde };
     }

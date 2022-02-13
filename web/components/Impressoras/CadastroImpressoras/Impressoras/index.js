@@ -170,7 +170,7 @@ function Impressoras ( props ) {
                 <S.DadosSubcontainer>
                     <S.DadosTitulo> Impresso/mês </S.DadosTitulo>
                     { contadores ? contadores.adicionaltroca > 0 ?
-                        <S.Dados>{ contadores.impresso }<span> + { contadores.adicionaltroca } págs</span></S.Dados> :
+                        <S.Dados width={ 'fit-content' }>{ contadores.impresso }&nbsp;<span> + { contadores.adicionaltroca } págs</span></S.Dados> :
                         <S.Dados>{ contadores.impresso } págs</S.Dados> :
                         <S.Dados>-</S.Dados>
                     }
