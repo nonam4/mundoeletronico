@@ -37,7 +37,7 @@ function createWindow ( show ) {
 
 // pega o ícone da janela
 function getIcon () {
-    if ( process.platform !== 'win32' ) return '/etc/MundoEletronico/resources/icon.png'
+    if ( process.platform !== 'win32' ) return `file://${ path.join( __dirname, '../build/icon.png' ) }` //'/etc/MundoEletronico/resources/icon.png' 
     return isDev ? 'public/icon.ico' : `file://${ path.join( __dirname, '../build/icon.ico' ) }`
 }
 

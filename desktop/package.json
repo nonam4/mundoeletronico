@@ -1,5 +1,6 @@
 {
     "name": "mundoeletronico",
+    "description": "Aplicativo para comunicação com impressoras",
     "version": "0.1.0",
     "private": true,
     "repository": {
@@ -19,7 +20,8 @@
         "react:eject": "react-scripts eject",
         "electron:start": "wait-on tcp:3000 && electron .",
         "start": "concurrently -k \"cross-env BROWSER=none npm run react:start\" \"npm run electron:start\"",
-        "build": "npm run react:build && electron-builder -c.extraMetadata.main=build/electron.js"
+        "windows": "npm run react:build && electron-builder --ia32 --dir -c.extraMetadata.main=build/electron.js",
+        "linux": "electron-builder --x64 --dir"
     },
     "dependencies": {
         "@electron/remote": "^1.0.2",
@@ -46,15 +48,22 @@
     },
     "build": {
         "extends": null,
-        "appId": "com.mundoeletronico",
+        "appId": "mundoeletronico",
         "files": [
             "dist/**/*",
             "build/**/*",
             "node_modules/**/*",
             "package.json"
         ],
-        "directories": {
-            "buildResources": "assets"
+        "linux": {
+            "icon": "build/icon.png",
+            "target": [
+                "deb"
+            ]
+        },
+        "win": {
+            "target": "NSIS",
+            "icon": "build/icon.ico"
         }
     },
     "eslintConfig": {
