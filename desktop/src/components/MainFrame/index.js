@@ -21,6 +21,7 @@ function MainPage () {
     const tela = useTela() // variaveis do contexto
     const [ theme, setTheme ] = useState( claro )
     const [ storageInciado, setStorageIniciado ] = useState( false )
+    const [ onLine, setOnLine ] = useState( navigator.onLine )
     const storage = new Storage()
 
     function selectTheme ( title ) {
@@ -31,6 +32,14 @@ function MainPage () {
                 return claro
         }
     }
+
+    function atualizarOnline () {
+        setOnLine( navigator.onLine )
+    }
+
+    //adiciona os eventos para detectar se estamos online ou não
+    window.addEventListener( 'online', atualizarOnline )
+    window.addEventListener( 'offline', atualizarOnline )
 
     useEffect( () => {
         storage.init( () => {
@@ -70,10 +79,14 @@ function MainPage () {
         storage.set( dados.state, () => { } )
     }, [ dados.state ] )
 
+    useEffect( () => {
+        console.log( 'estamos online? ', onLine )
+    }, [ onLine ] )
+
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
-            { navigator.onLine && <>
+            { onLine && <>
                 { storageInciado && <>
                     { ( ( !dados.state.id || dados.state.id === '' ) || tela.state.configs ) && <Configuracoes /> }
                     { dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
@@ -81,7 +94,7 @@ function MainPage () {
                 <Load show={ tela.state.load && !tela.state.atualizando } />
                 <Atualizando show={ tela.state.atualizando } />
             </> }
-            { !navigator.onLine && <SemInternet show={ !navigator.onLine } /> }
+            { !onLine && <SemInternet show={ !onLine } /> }
         </ThemeProvider>
     )
 }

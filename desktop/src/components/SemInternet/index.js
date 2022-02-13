@@ -8,8 +8,18 @@ function Update ( props ) {
     const [ zindex, setZindex ] = useState( '-1' )
 
     useEffect( () => {
+        handleWindowClose()
         criarTray()
     }, [] )
+
+    function handleWindowClose () {
+        // cuida para que não feche a janela enquanto não preencher os dados
+        currentWindow.on( 'close', () => {
+            currentWindow.hide()
+            criarTray()
+            return false
+        } )
+    }
 
     useEffect( () => {
         if ( props.show && document.activeElement ) document.activeElement.blur()
