@@ -43,9 +43,9 @@ function Listagem () {
         tela.dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function setUpdate ( valor ) {
+    function setAtualizando ( valor ) {
         setLoad( false )
-        tela.dispatch( { type: 'setUpdate', payload: valor } )
+        tela.dispatch( { type: 'setAtualizando', payload: valor } )
     }
 
     function setCadastro ( dados ) {
@@ -75,13 +75,23 @@ function Listagem () {
                 // se o cadastro for válido busque por atualizações do sistema
                 checkUpdates()
             } ).catch( err => {
-                // em caso de erro ao buscar atualizações
-                Notification.notificate( 'Erro', 'Cadastro inativo ou inexistente', 'danger' )
-                createLog( `Cadastro inativo ou inexistente -> ${ err }` )
-                console.error( err )
                 // se o erro for 404 é porque o cadastro não foi encontrado ou foi excluido
                 // nesse caso iremos remover a ID dos arquivos locais
-                if ( err.response.status === 404 ) return dados.dispatch( { type: 'setId', payload: '' } )
+                if ( err.response.status === 404 ) {
+                    Notification.notificate( 'Erro', 'Cadastro inativo!', 'danger' )
+                    createLog( `Cadastro inexistente -> ${ err }` )
+                    dados.dispatch( { type: 'setId', payload: '' } )
+                }
+                // se o erro for 401 é por que o cadastro está inativo
+                if ( err.response.status === 401 ) {
+                    Notification.notificate( 'Erro', 'Cadastro inativo!', 'danger' )
+                    createLog( `Cadastro inativo -> ${ err }` )
+                }
+                // se não for nenhum dos erros acima então é algum problema de conexão
+                if ( err.response.status !== 404 && err.response.status !== 401 ) {
+                    Notification.notificate( 'Erro', 'A conexão ao banco de dados falhou!', 'danger' )
+                    createLog( `Erro de conexão ao banco de dados -> ${ err }` )
+                }
                 setLoad( false )
             } )
     }
@@ -103,7 +113,7 @@ function Listagem () {
     }
 
     function selfUpdate ( url ) {
-        setUpdate( true )
+        setAtualizando( true )
 
         window.require( '@electron/remote' ).require( 'electron-download-manager' ).download( { url }, err => {
             if ( err ) {

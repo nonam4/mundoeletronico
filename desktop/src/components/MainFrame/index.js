@@ -4,7 +4,8 @@ import { useDados } from '../../contexts/DadosContext'
 import { useTela } from '../../contexts/TelaContext'
 
 import Load from '../Load'
-import Update from '../Update'
+import Atualizando from '../Atualizando'
+import SemInternet from '../SemInternet'
 import Configuracoes from '../Configuracoes'
 import Listagem from '../Listagem'
 
@@ -72,12 +73,15 @@ function MainPage () {
     return (
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
-            { storageInciado && <>
-                { ( ( !dados.state.id || dados.state.id === '' ) || tela.state.configs ) && <Configuracoes /> }
-                { dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
+            { navigator.onLine && <>
+                { storageInciado && <>
+                    { ( ( !dados.state.id || dados.state.id === '' ) || tela.state.configs ) && <Configuracoes /> }
+                    { dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
+                </> }
+                <Load show={ tela.state.load && !tela.state.atualizando } />
+                <Atualizando show={ tela.state.atualizando } />
             </> }
-            <Load show={ tela.state.load } />
-            <Update show={ tela.state.update } />
+            { !navigator.onLine && <SemInternet show={ !navigator.onLine } /> }
         </ThemeProvider>
     )
 }

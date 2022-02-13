@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer } from 'react'
 
 const initialData = {
     load: true,
-    update: false,
+    atualizando: false,
     cadastro: undefined,
     historico: {},
     configs: false
@@ -17,8 +17,8 @@ function telaReducer ( state, action ) {
     switch ( action.type ) {
         case 'setLoad':
             return { ...state, load: payload }
-        case 'setUpdate':
-            return { ...state, update: payload }
+        case 'setAtualizando':
+            return { ...state, atualizando: payload }
         case 'setCadastro':
             return { ...state, cadastro: payload }
         case 'setHistorico':
