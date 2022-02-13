@@ -10,7 +10,6 @@
 
 # production
 /build
-/logs
 
 # misc
 .DS_Store
@@ -26,3 +25,5 @@ yarn-error.log*
 
 # custom
 settings.json
+/logs
+/updates
