@@ -1,5 +1,5 @@
 import { ThemeContext } from 'styled-components'
-import { useContext, useEffect, useState, useMemo } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDados } from '../../contexts/DadosContext'
 import { useTela } from '../../contexts/TelaContext'
 
