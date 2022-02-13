@@ -127,7 +127,6 @@ function Listagem () {
     }
 
     async function buscarImpressoras () {
-        console.log( 'pode ficar offline agora' )
         setLoad( false )
         let faixas = []
         if ( dados.state.dhcp ) faixas = await DHCP.pegarIpDhcp()

@@ -3,7 +3,7 @@ const downloader = require( 'electron-download-manager' )
 const isDev = require( 'electron-is-dev' )
 const path = require( 'path' )
 
-downloader.register( { downloadFolder: `${ app.getAppPath() }/updates` } )
+downloader.register( { downloadFolder: getRootPath( 'updates' ) } )
 require( '@electron/remote/main' ).initialize()
 
 function createWindow ( show ) {
@@ -22,8 +22,7 @@ function createWindow ( show ) {
     } )
     // remove o menu da janela
     win.removeMenu()
-    //if ( isDev && show ) win.webContents.openDevTools()
-    win.webContents.openDevTools()
+    if ( isDev ) win.webContents.openDevTools()
     // carrega a página principal
     win.loadURL(
         isDev ? 'http://localhost:3000' : `file://${ path.join( __dirname, '../build/index.html' ) }`
@@ -37,8 +36,13 @@ function createWindow ( show ) {
 
 // pega o ícone da janela
 function getIcon () {
-    if ( process.platform !== 'win32' ) return `file://${ path.join( __dirname, '../build/icon.png' ) }` //'/etc/MundoEletronico/resources/icon.png' 
-    return isDev ? 'public/icon.ico' : `file://${ path.join( __dirname, '../build/icon.ico' ) }`
+    if ( process.platform !== 'win32' ) return `${ path.join( __dirname, '../build/icon.ico' ) }` //'/etc/MundoEletronico/resources/icon.png' 
+    return isDev ? 'public/icon.ico' : `${ path.join( __dirname, '../build/icon.ico' ) }`
+}
+
+function getRootPath ( item ) {
+    // pega o caminho raiz da pasta ou arquivo desejado
+    return isDev ? `${ app.getAppPath() }/${ item }` : `${ path.join( __dirname, `../../../${ item }` ) }`
 }
 
 app.on( 'ready', () => {

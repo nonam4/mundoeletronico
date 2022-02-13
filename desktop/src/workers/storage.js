@@ -1,25 +1,13 @@
 const fs = window.require( 'fs' )
 const { app } = window.require( '@electron/remote' )
+const path = window.require( 'path' )
+const isDev = window.require( '@electron/remote' ).require( 'electron-is-dev' )
 
 class Storage {
     constructor() {
-        this.paths = {
-            json: `${ app.getAppPath() }/settings.json`
-        }
-
+        this.paths = { json: getRootPath( 'settings.json' ) }
         // valores padrões
-        this.dados = {
-            id: '',
-            local: '',
-            proxy: false,
-            user: '',
-            pass: '',
-            host: '',
-            port: 8080,
-            dhcp: true,
-            ip: '',
-            tema: 'claro'
-        }
+        this.dados = { id: '', local: '', proxy: false, user: '', pass: '', host: '', port: 8080, dhcp: true, ip: '', tema: 'claro' }
     }
 
     init ( callback ) {
@@ -45,8 +33,12 @@ class Storage {
 export default Storage
 
 export function createLog ( log ) {
-    fs.writeFile( `${ app.getAppPath() }/logs/${ new Date().getTime() }.txt`, String( log ), err => {
+    fs.writeFile( `${ getRootPath( 'logs' ) }/${ new Date().getTime() }.txt`, String( log ), err => {
         if ( err ) console.log( err )
     } )
+}
+
+export function getRootPath ( item ) {
+    return isDev ? `${ app.getAppPath() }/${ item }` : `${ path.join( app.getAppPath(), `../../${ item }` ) }`
 }
 

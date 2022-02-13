@@ -233,7 +233,7 @@ function Configuracoes () {
 
     return (
         <S.Container>
-            <S.Logo src='/icon.ico' />
+            <S.Logo src='./icon.png' />
             <S.Suporte>Em caso de dúvidas, fale com o suporte</S.Suporte>
             <S.Suporte>WhatsApp: <b>(47) 99964-9667</b></S.Suporte>
             <S.SubCointaner>
