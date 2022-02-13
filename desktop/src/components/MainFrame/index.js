@@ -32,7 +32,9 @@ function MainPage () {
     }
 
     useEffect( () => {
+        console.log( 'iniciando' )
         storage.init( () => {
+            console.log( 'callback' )
             dados.dispatch( {
                 type: 'setAll', payload: {
                     id: storage.get( 'id' ),
@@ -73,7 +75,7 @@ function MainPage () {
         <ThemeProvider { ...{ theme } }>
             <GlobalStyle />
             { storageInciado && <>
-                { ( !dados.state.id || dados.state.id === '' ) || tela.state.configs && <Configuracoes /> }
+                { ( ( !dados.state.id || dados.state.id === '' ) || tela.state.configs ) && <Configuracoes /> }
                 { dados.state.id && dados.state.id !== '' && !tela.state.configs && <Listagem /> }
             </> }
             <Load show={ tela.state.load } />
