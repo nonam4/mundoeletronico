@@ -45,8 +45,9 @@ app.on( 'ready', () => {
     createWindow( false )
 } )
 
+let tray
 exports.criarTray = function criarTray () {
-    let tray = new Tray( getIcon() )
+    if ( !tray || tray.isDestroyed() ) tray = new Tray( getIcon() )
     tray.setToolTip( 'Mundo Eletrônico' )
 
     tray.setContextMenu( Menu.buildFromTemplate( [ {
