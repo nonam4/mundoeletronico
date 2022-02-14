@@ -88,7 +88,7 @@ export default async ( req, res ) => {
 
     // tudo foi copiado da api getdados com pequenas alterações
     // para ver as alterações procure por 'alteração'
-    function recalcularDados ( dados ) {
+    function recalcularDados ( dados, data ) {
         function getDatas () {
             let datas = []
             let data = new Date()
@@ -361,7 +361,7 @@ export default async ( req, res ) => {
     // somente para ter certeza que alterou os dados na variavel cadastro antes de gravar
     cadastro.impressoras[ serial ] = impressora
     // recalcula os dados para atualizar localmente no cliente
-    cadastro = recalcularDados( cadastro )
+    cadastro = recalcularDados( cadastro, dataAtual )
 
     return database.doc( `/cadastros/${ id }` ).set( cadastro, { merge: true } ).then( () => {
         res.status( 200 ).send( { cadastro } )
