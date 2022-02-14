@@ -198,8 +198,6 @@ export default async ( req, res ) => {
     cadastro.impressoras[ serial ] = impressora
 
     return database.doc( `/cadastros/${ id }` ).set( cadastro, { merge: true } ).then( () => {
-        // recalcula os dados para atualizar localmente no cliente
-        cadastro = await axios.get( '/api/desktop/getdados', { params: { id: cadastro.id, data: dataAtual } } )
-        res.status( 200 ).send( { cadastro } )
+        res.status( 200 ).send( 'Salvo' )
     } )
 }
