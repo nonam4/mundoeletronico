@@ -109,13 +109,20 @@ export default async ( req, res ) => {
         let impressora = impressoras[ serial ]
         impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
         let impresso = 0
-        if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
         if ( ( impressora.contador - impressora.tintas.abastecido ) >= impressora.tintas.capacidade ) cadastro.abastecimento = true
 
         if ( !impressora.contadores ) continue
         let contadores = impressora.contadores[ data ]
         //remove os contadores de outros meses e trabalha apenas com os da data escolhida
         impressora.contadores = contadores
+        /*
+        * ATENÇÃO
+        * Se a impressora tiver contador na data atual
+        * somente pule para a proxima impressora após definir 
+        * impressora.contadores = contadores
+        * isso evita erro no coletor/desktop
+        */
+        if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima 
         if ( !contadores ) continue
         if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
 
