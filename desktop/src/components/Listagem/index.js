@@ -52,10 +52,6 @@ function Listagem () {
         tela.dispatch( { type: 'setCadastro', payload: dados } )
     }
 
-    function setHistorico ( dados ) {
-        tela.dispatch( { type: 'setHistorico', payload: dados } )
-    }
-
     // loop principal do sistema, a cada hora irá realizar a mesma ação novamente
     function loop () {
         getDados( Database.getDatas()[ 0 ].value )
@@ -71,7 +67,6 @@ function Listagem () {
         // esse erro já vai direto para o catch
         Database.getDados( dados.state.id, data, dados.state.proxy,
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
-                setHistorico( res.data.historico )
                 setCadastro( res.data.cadastro )
                 // se o cadastro for válido busque por atualizações do sistema
                 checkUpdates()
@@ -146,18 +141,17 @@ function Listagem () {
                     // se os dados da impressora forem inválidos não gravará
                     if ( !modelo || !serial || !contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
 
+                    setLoad( true )
                     Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy,
                         dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                             // primeiro de tudo finaliza a conexão snmp
                             impressora.snmp.close()
                             // atualiza o cadastro local
                             setCadastro( res.data.cadastro )
-                            // adiciona o contador atual da impressora ao histórico
-                            setHistorico( { ...tela.state.historico, [ serial ]: { ...tela.state.historico[ serial ], [ res.data.historico.chave ]: res.data.historico.valor } } )
-
-                            console.log( 'impressora gravada, recebido - ', res.data )
+                            setLoad( false )
 
                         } ).catch( err => {
+                            console.log( 'erro -> ', err, ' - response -> ', err.response )
                             // se o erro for 401 é por que a impressora não contabiliza
                             if ( err.response.status === 401 ) Notification.notificate( 'Alerta', 'Impressora não contabiliza e foi ignorada', 'warning' )
                             if ( err.response.status === 401 ) return createLog( `Impressora não contabiliza e foi ignorada - IP: ${ impressora.ip }` )

@@ -13,7 +13,7 @@ function Impressoras ( props ) {
     const data = props.data.split( '-' )
     const cadastro = props.cadastro
     const impressora = props.impressora
-    const contadores = impressora.contadores
+    const contadores = impressora.contadores[ props.data ]
 
     const [ franquia, setFranquia ] = useState( `${ impressora.franquia.limite } págs` )
     const [ setor, setSetor ] = useState( impressora.setor )
