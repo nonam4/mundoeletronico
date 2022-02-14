@@ -146,11 +146,11 @@ function CadastroExpandido ( { getDados } ) {
                     </S.FranquiaSubcontainer>
                     <S.FranquiaSubcontainer >
                         <S.FranquiaItem>
-                            <S.FranquiaTitulo> Total impresso </S.FranquiaTitulo>
+                            <S.FranquiaTitulo> Impresso/mês </S.FranquiaTitulo>
                             <S.FranquiaDado> { cadastro.impresso > 0 ? `${ cadastro.impresso } págs` : '-' }</S.FranquiaDado>
                         </S.FranquiaItem>
                         <S.FranquiaItem border={ false } bottom={ false }>
-                            <S.FranquiaTitulo> Excedentes </S.FranquiaTitulo>
+                            <S.FranquiaTitulo> { cadastro.franquia.tipo !== 'ilimitado' ? 'Excedentes/mês' : 'Contabilizado/mês' } </S.FranquiaTitulo>
                             { cadastro.excedentes > 0 ?
                                 cadastro.excedenteadicional > 0 && cadastro.franquia.tipo !== 'ilimitado' ?
                                     <S.FranquiaDado>{ cadastro.excedentes } <span> + { cadastro.excedenteadicional } </span>págs </S.FranquiaDado> :
