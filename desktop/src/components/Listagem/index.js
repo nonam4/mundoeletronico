@@ -54,10 +54,26 @@ function Listagem () {
 
     // loop principal do sistema, a cada hora irá realizar a mesma ação novamente
     function loop () {
-        getDados( Database.getDatas()[ 0 ].value )
+        checkUpdates()
         setTimeout( () => {
             loop()
         }, 3600000 )
+    }
+
+    function checkUpdates () {
+        Database.checkUpdates( process.platform, dados.state.local, dados.state.id, dados.state.proxy,
+            dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
+                // se a url de update estiver presente irá atualizar
+                if ( res.data.updateUrl ) return selfUpdate( res.data.updateUrl )
+                // se não precisar atualizar
+                getDados( Database.getDatas()[ 0 ].value )
+            } ).catch( err => {
+                // em caso de erro ao buscar atualizações
+                Notification.notificate( 'Erro', 'Impossível verificar por atualizações', 'danger' )
+                setLoad( false )
+                createLog( `Impossível verificar por atualizações -> ${ err }` )
+                console.error( err )
+            } )
     }
 
     function getDados ( data ) {
@@ -68,8 +84,9 @@ function Listagem () {
         Database.getDados( dados.state.id, data, dados.state.proxy,
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                 setCadastro( res.data.cadastro )
-                // se o cadastro for válido busque por atualizações do sistema
-                checkUpdates()
+                console.log( res.data.cadastro )
+                // se o cadastro for válido busque por impressoras
+                buscarImpressoras()
             } ).catch( err => {
                 // se o erro for 404 é porque o cadastro não foi encontrado ou foi excluido
                 // nesse caso iremos remover a ID dos arquivos locais
@@ -89,22 +106,6 @@ function Listagem () {
                     createLog( `Erro de conexão ao banco de dados -> ${ err }` )
                 }
                 setLoad( false )
-            } )
-    }
-
-    function checkUpdates () {
-        Database.checkUpdates( process.platform, dados.state.local, dados.state.id, dados.state.proxy,
-            dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
-                // se a url de update estiver presente irá atualizar
-                if ( res.data.updateUrl ) return selfUpdate( res.data.updateUrl )
-                // se não precisar atualizar
-                buscarImpressoras()
-            } ).catch( err => {
-                // em caso de erro ao buscar atualizações
-                Notification.notificate( 'Erro', 'Impossível verificar por atualizações', 'danger' )
-                setLoad( false )
-                createLog( `Impossível verificar por atualizações -> ${ err }` )
-                console.error( err )
             } )
     }
 
@@ -141,7 +142,7 @@ function Listagem () {
                     if ( !modelo || !serial || !contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
 
                     setLoad( true )
-                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador }, dados.state.proxy,
+                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador, data: Database.getDatas()[ 0 ].value }, dados.state.proxy,
                         dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                             // primeiro de tudo finaliza a conexão snmp
                             impressora.snmp.close()
