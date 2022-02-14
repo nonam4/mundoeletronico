@@ -45,7 +45,6 @@ export default async ( req, res ) => {
                     horarios: { 0: a[ 0 ], 1: a[ 1 ], 2: b[ 0 ], 3: b[ 1 ] }
                 }
             }
-            console.log( cliente.horarios )
 
             franquia.limite = velho.franquia.valor || 0
             franquia.tipo = velho.franquia.tipo || 'ilimitado'
