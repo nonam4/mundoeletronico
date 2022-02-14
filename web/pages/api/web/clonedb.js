@@ -132,8 +132,8 @@ export default async ( req, res ) => {
                 }
             }
             cliente.impressoras = impressoras
-            batch.set( database.doc( `/cadastros/${ cliente.id }` ), cliente, { merge: true } )
-            //batch.set(database.doc(`/cadastros/${cliente.id}`), cliente)
+            //batch.set( database.doc( `/cadastros/${ cliente.id }` ), cliente, { merge: true } )
+            batch.set( database.doc( `/cadastros/${ cliente.id }` ), cliente )
         }
         await batch.commit()
     } ).catch( err => {
