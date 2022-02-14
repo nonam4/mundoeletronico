@@ -115,7 +115,7 @@ export default async ( req, res ) => {
         if ( !impressora.contadores ) continue
         let contadores = impressora.contadores[ data ]
         //remove os contadores de outros meses e trabalha apenas com os da data escolhida
-        impressora.contadores = { [ data ]: { ...contadores } }
+        impressora.contadores = { [ data ]: { ...impressora.contadores[ data ] } }
         if ( !contadores ) continue
         if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
 
