@@ -34,7 +34,6 @@ export default async ( req, res ) => {
             if ( i.substituindo.length <= 0 ) continue // se a impressora verificada não substituir nenhuma ignora
             if ( i.substituindo.indexOf( serial ) < 0 ) continue // se a lista de substituições não constar a impressora atual ignora
 
-            console.log( 'lista -> ', i.substituindo, ' - index -> ', i.indexOf( serial ) )
             // remove o serial da lista de substituindo
             let index = i.substituindo.indexOf( serial )
             i.substituindo.splice( index, 1 )
