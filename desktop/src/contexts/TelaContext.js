@@ -4,7 +4,8 @@ const initialData = {
     load: true,
     atualizando: false,
     cadastro: undefined,
-    configs: false
+    configs: false,
+    data: undefined
 }
 
 // Context
@@ -22,6 +23,8 @@ function telaReducer ( state, action ) {
             return { ...state, cadastro: payload }
         case 'setConfigs':
             return { ...state, configs: payload }
+        case 'setData':
+            return { ...state, data: payload }
         default:
             return state
     }

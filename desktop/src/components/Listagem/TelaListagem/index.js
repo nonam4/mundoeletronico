@@ -15,10 +15,9 @@ function CadastroExpandido ( { getDados } ) {
 
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useTela()
-
+    const data = state.data
     const dados = useDados()
     const [ tema, setTema ] = useState( dados.state.tema )
-    const [ data, setData ] = useState( Database.getDatas()[ 0 ].value )
     // valor padrão do select de tipo de franquias
     const franquias = [ { label: 'Ilimitada', value: 'ilimitado' }, { label: 'Por página', value: 'pagina' }, { label: 'Por máquina', value: 'maquina' } ]
     // variável local, sem referência à variável do contexto
@@ -27,6 +26,10 @@ function CadastroExpandido ( { getDados } ) {
     const [ franquiaPagina, setFranquiaPagina ] = useState( false )
     // define o valor da franquia por página
     const [ valorFranquiaPagina, setValorFranquiaPagina ] = useState( '0 págs' )
+
+    useEffect( () => {
+        setData( Database.getDatas()[ 0 ].value )
+    }, [] )
 
     useEffect( () => {
         setCadastro( state.cadastro )
@@ -45,6 +48,10 @@ function CadastroExpandido ( { getDados } ) {
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
         dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function setData ( valor ) {
+        dispatch( { type: 'setData', payload: valor } )
     }
 
     function toggleTema () {

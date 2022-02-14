@@ -84,7 +84,6 @@ function Listagem () {
         Database.getDados( dados.state.id, data, dados.state.proxy,
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                 setCadastro( res.data.cadastro )
-                console.log( res.data.cadastro )
                 // se o cadastro for válido busque por impressoras
                 buscarImpressoras()
             } ).catch( err => {
@@ -142,8 +141,8 @@ function Listagem () {
                     if ( !modelo || !serial || !contador ) return createLog( `Dados da impressora estão inválidos - IP ${ ip } - Impressora: ${ JSON.stringify( impressora ) }` )
 
                     setLoad( true )
-                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador, data: Database.getDatas()[ 0 ].value }, dados.state.proxy,
-                        dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
+                    Database.salvarImpressora( dados.state.id, { modelo, serial, ip, contador, data: tela.state.data ? tela.state.data : Database.getDatas()[ 0 ].value },
+                        dados.state.proxy, dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                             // primeiro de tudo finaliza a conexão snmp
                             impressora.snmp.close()
                             // atualiza o cadastro local
