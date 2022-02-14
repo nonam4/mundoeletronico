@@ -36,5 +36,5 @@ if exist %vbs% del /f /q %vbs%
 >>%vbs% echo Set fso = Nothing
 >>%vbs% echo Set objShell = Nothing
 cscript //nologo %vbs%
-rem Coloca as aspas duplas antes do mundoeletronico.exe para não abrir um console do cmd com o app
-if exist %vbs% del /f /q %vbs% & cd %dir% & start "" mundoeletronico.exe
+rem Coloca as aspas duplas antes do Printers.exe para não abrir um console do cmd com o app
+if exist %vbs% del /f /q %vbs% & cd %dir% & start "" Printers.exe

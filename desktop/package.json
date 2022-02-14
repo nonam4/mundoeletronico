@@ -1,16 +1,12 @@
 {
     "name": "mundoeletronico",
-    "description": "Aplicativo para comunicação com impressoras",
+    "productName": "Printers",
+    "description": "Aplicativo de coleta de dados (modelo, serial, IP, contadores) de impressoras locadas",
     "version": "0.1.0",
     "private": true,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/nonam4/mundoeletronico"
-    },
-    "author": "Luiz Carlos Ferreira",
-    "bugs": {
-        "url": "https://github.com/nonam4/mundoeletronico/issues"
-    },
+    "repository": "https://github.com/nonam4/mundoeletronico",
+    "bugs": "https://github.com/nonam4/mundoeletronico/issues",
+    "author": "Mundo Eletrônico",
     "main": "public/electron.js",
     "homepage": "./",
     "scripts": {
@@ -48,7 +44,7 @@
     },
     "build": {
         "extends": null,
-        "appId": "mundoeletronico",
+        "appId": "com.mundoeletronico",
         "files": [
             "dist/**/*",
             "build/**/*",

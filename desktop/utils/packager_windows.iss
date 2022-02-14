@@ -1,7 +1,7 @@
-#define MyAppName "Mundo Eletrônico"
-#define MyAppPublisher "Mundo Eletrônico"
+#define MyAppName "Mundo Eletronico"
+#define MyAppPublisher "Mundo Eletronico"
 #define MyAppURL "https://mundoeletronico.net/"
-#define MyAppExeName "mundoeletronico.exe"
+#define MyAppExeName "Printers.exe"
 
 [Setup]
 AppId={{5B856DA2-3BF1-42C2-9E61-DEC57827B418}
