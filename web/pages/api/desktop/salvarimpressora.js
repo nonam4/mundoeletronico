@@ -7,6 +7,7 @@ export default async ( req, res ) => {
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     const serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
     const contador = Number( dados.contador )
+    const data = dados.data
     let cadastro = dadosCadastro.data()
     let impressoras = cadastro.impressoras
 
@@ -88,7 +89,7 @@ export default async ( req, res ) => {
 
     // cópia de toda a api getdados com algumas alterações
     // para ver as alterações procure por 'alterações'
-    function recalcularDadosLocais ( dados, data ) {
+    function recalcularDadosLocais ( dados ) {
         function getDatas () {
             let datas = []
             let data = new Date()
