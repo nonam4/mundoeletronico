@@ -130,10 +130,22 @@ export const DadosTrocas = styled.div`
     font-weight: bold;
     text-align: center;
     padding: 0 0.5rem;
-    cursor: pointer;
-    position: relative;
-    padding-bottom: 0.3rem;
-    margin-bottom: -0.3rem;
+    cursor: default;
+    white-space: nowrap;
+    div {
+        width: ${ ( { fit } ) => fit ? 'fit-content' : '100%' };
+    }
+    select {
+        text-align-last: center;
+        width: fit-content;
+        font-weight: bold;
+        padding: 0 0.5rem 0.3rem;
+    }
+    span {
+        width: ${ ( { width } ) => width ? width : '100%' };
+        display: inline;
+        color: ${ ( { theme } ) => theme.colors.verde };
+    }
 `
 export const TrocaContainer = styled.div`
     width: 100%;

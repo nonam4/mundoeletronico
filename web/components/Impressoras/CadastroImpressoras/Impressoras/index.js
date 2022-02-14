@@ -100,10 +100,10 @@ function Impressoras ( props ) {
                 <S.Troca key={ serial }>
                     <S.DadosSubcontainer>
                         <S.DadosTitulo> Modelo / Serial / Impresso / Período / Contadores </S.DadosTitulo>
-                        <S.Dados>
-                            { troca.modelo } - { serial } - { contador.impresso } págs { <br /> }
+                        <S.DadosTrocas>
+                            { troca.modelo } - { serial } - <span>{ contador.impresso } págs </span>{ <br /> }
                             { contador.primeiro.dia } a { contador.ultimo.dia } de { meses[ data[ 1 ] ] } - { contador.primeiro.contador } a { contador.ultimo.contador } págs
-                        </S.Dados>
+                        </S.DadosTrocas>
                     </S.DadosSubcontainer>
                 </S.Troca>
             )
