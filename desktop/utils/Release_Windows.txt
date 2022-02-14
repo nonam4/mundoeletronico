@@ -5,7 +5,7 @@
 4. Execute o arquivo 'utils/packager_windows.iss' para criar o arquivo executável que será criado
 	detro da pasta 'releases' na raiz do projeto
 5. Vá na pasta 'dist/win-ia32-unpacked' e compacte todos os arquivos como wupdate.zip
-	exceto o arquivo 'updater.bat' e a pasta 'logs'
+	exceto o arquivo 'updater.bat' a pasta 'logs' e a pasta 'updates'
 6. Mova o 'wupdate.zip' para a pasta 'releases' na raiz do projeto, faça o upload dos 
 	dois arquivos 'wupdate.zip' e 'setup_windows.exe' para o servidor e atualize os links 
 	de download: o 'setup_windows.exe' será baixado na página '/downloads' do site e o
