@@ -1,5 +1,4 @@
 import database from '../_database.js'
-import axios from 'axios'
 
 export default async ( req, res ) => {
 
@@ -195,8 +194,6 @@ export default async ( req, res ) => {
 
             if ( !impressora.contadores ) continue
             let contadores = impressora.contadores[ data ]
-            //remove os contadores de outros meses e trabalha apenas com os da data escolhida
-            impressora.contadores = { [ data ]: { ...impressora.contadores[ data ] } }
             if ( !contadores ) continue
             if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
 
@@ -236,6 +233,9 @@ export default async ( req, res ) => {
                     cadastro.excedentes = cadastro.impresso
                     break
             }
+
+            //remove os contadores de outros meses e trabalha apenas com os da data escolhida
+            impressora.contadores = { [ data ]: { ...contadores } }
 
             // pegará o histórico local dentro da impressora
             // ele já é gravado corretamente e legível
