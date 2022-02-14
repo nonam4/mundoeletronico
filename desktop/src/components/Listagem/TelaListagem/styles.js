@@ -7,7 +7,7 @@ export const Container = styled.div`
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: 0.8rem 0 0 0.8rem;
+    padding: 0.8rem 0 0.8rem 0.8rem;
     background-color: ${ ( { theme } ) => theme.colors.background };
     :hover {
         z-index: 2;
