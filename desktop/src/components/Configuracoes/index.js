@@ -117,7 +117,8 @@ function Configuracoes () {
     function verificarDados () {
 
         let settings = {
-            id: userId, local,
+            id: userId,
+            local: window.btoa( local ),
             proxy: proxyAtivo,
             user: proxyUser,
             pass: proxyPass,
