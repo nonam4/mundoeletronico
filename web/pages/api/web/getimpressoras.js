@@ -108,7 +108,7 @@ export default async ( req, res ) => {
 
             let impressora = impressoras[ serial ]
             impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
-            impressora.contadores = { [ data ]: itemCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
+            //impressora.contadores = { [ data ]: itemCadastro.data().impressoras[ serial ].contadores[ data ] } //define assim para não passar excesso de dados pro cadastro
             let contadores = impressora.contadores[ data ]
             let impresso = 0
             if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
@@ -153,6 +153,9 @@ export default async ( req, res ) => {
                     cadastro.excedentes = cadastro.impresso
                     break
             }
+
+            //remove os contadores de outros meses e trabalha apenas com os da data escolhida
+            impressora.contadores = { [ data ]: { ...contadores } }
 
             // pegará o histórico local dentro da impressora
             // ele já é gravado corretamente e legível
