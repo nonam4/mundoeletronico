@@ -37,7 +37,7 @@ export default async ( req, res ) => {
             console.log( 'lista -> ', i.substituindo, ' - index -> ', i.indexOf( serial ) )
             // remove o serial da lista de substituindo
             let index = i.substituindo.indexOf( serial )
-            i.splice( index, 1 )
+            i.substituindo.splice( index, 1 )
             // tenha certeza que atualizou no cadastro também
             cadastro.impressoras[ s ] = i
         }
