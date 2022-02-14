@@ -93,7 +93,7 @@ function Listagem () {
     }
 
     function checkUpdates () {
-        Database.checkUpdates( process.platform, window.btoa( dados.state.local ), dados.state.id, dados.state.proxy,
+        Database.checkUpdates( process.platform, dados.state.local, dados.state.id, dados.state.proxy,
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                 // se a url de update estiver presente irá atualizar
                 if ( res.data.updateUrl ) return selfUpdate( res.data.updateUrl )
@@ -129,7 +129,6 @@ function Listagem () {
 
         for ( let faixa of faixas.split( ';' ) ) {
             for ( let x = 0; x < 255; x++ ) {
-
                 // se o ip for em branco, ou menor que 0.0.0 (5 caractéres)
                 if ( faixa.length < 5 ) continue
 
@@ -149,7 +148,6 @@ function Listagem () {
                             // atualiza o cadastro local
                             setCadastro( res.data.cadastro )
                             setLoad( false )
-
                         } ).catch( err => {
                             console.log( 'erro -> ', err, ' - response -> ', err.response )
                             // se o erro for 401 é por que a impressora não contabiliza
