@@ -172,6 +172,8 @@ export default async ( req, res ) => {
         if ( excedenteadicional > 0 ) impressora.contadores[ dataAtual ].excedenteadicional = excedenteadicional
     }
 
+    // remove os contadores de outros meses e trabalha apenas com os da data escolhida
+    impressora.contadores = impressora.contadores[ dataAtual ]
     // define o contador atual da impressora
     impressora.contador = contador
     // remove o serial dela da lista de substituindo de outras impressoras
