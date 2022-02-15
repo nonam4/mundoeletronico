@@ -100,7 +100,7 @@ function CadastroExpandido ( { getDados } ) {
     function handleDataChange ( e ) {
         setLoad( true )
         setData( e.target.value )
-        getDados( e.target.value )
+        getDados( e.target.value, false )
     }
 
     function handleGetDados () {

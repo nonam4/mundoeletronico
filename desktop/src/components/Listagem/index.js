@@ -76,7 +76,7 @@ function Listagem () {
             } )
     }
 
-    function getDados ( data ) {
+    function getDados ( data, apenasDados ) {
         setLoad( true )
         // não precisa verificar qual o código de erro
         // se o cadastro não existir ou não estiver ativo irá retornar erro 40x
@@ -85,7 +85,8 @@ function Listagem () {
             dados.state.user, dados.state.pass, dados.state.host, dados.state.port ).then( res => {
                 setCadastro( res.data.cadastro )
                 // se o cadastro for válido busque por impressoras
-                buscarImpressoras()
+                if ( apenasDados !== false ) buscarImpressoras()
+                setLoad( false )
             } ).catch( err => {
                 // se o erro for 404 é porque o cadastro não foi encontrado ou foi excluido
                 // nesse caso iremos remover a ID dos arquivos locais
@@ -122,7 +123,6 @@ function Listagem () {
     }
 
     async function buscarImpressoras () {
-        setLoad( false )
         let faixas = []
         if ( dados.state.dhcp ) faixas = await DHCP.pegarIpDhcp()
         if ( !dados.state.dhcp ) faixas = dados.state.ip
