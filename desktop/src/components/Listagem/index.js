@@ -115,10 +115,11 @@ function Listagem () {
         window.require( '@electron/remote' ).require( 'electron-download-manager' ).download( { url }, err => {
             if ( err ) {
                 createLog( `Erro ao fazer o download de atualizações - Erro: ${ err }` )
-                app.relaunch()
+                // se der erro ao baixar a atualização irá ignorar e buscar impressoras
+                return buscarImpressoras()
             }
             if ( !err ) shell.openExternal( `file://${ app.getAppPath() }/updater.bat` )
-            return app.exit()
+            app.exit()
         } )
     }
 
