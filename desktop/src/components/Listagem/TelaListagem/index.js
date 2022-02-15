@@ -11,7 +11,7 @@ import Impressoras from './Impressoras'
 
 import * as S from './styles'
 
-function CadastroExpandido ( { getDados } ) {
+function CadastroExpandido ( { getDados, checkUpdates } ) {
 
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useTela()
@@ -104,7 +104,7 @@ function CadastroExpandido ( { getDados } ) {
     }
 
     function handleGetDados () {
-        getDados( data )
+        checkUpdates()
     }
 
     function abrirConfiguracao () {

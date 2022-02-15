@@ -7,6 +7,7 @@ import * as Database from '../../workers/database'
 import * as Notification from '../../workers/notification'
 import * as SNMP from '../../workers/snmp'
 import * as DHCP from '../../workers/dhcp'
+import { getRootPath } from '../../workers/storage'
 
 import TelaListagem from './TelaListagem'
 
@@ -118,7 +119,7 @@ function Listagem () {
                 // se der erro ao baixar a atualização irá ignorar e buscar impressoras
                 return buscarImpressoras()
             }
-            if ( !err ) shell.openExternal( `file://${ app.getAppPath() }/updater.bat` )
+            if ( !err ) shell.openExternal( `${ getRootPath( 'updater.bat' ) }` )
             app.exit()
         } )
     }
@@ -163,7 +164,7 @@ function Listagem () {
         }
     }
 
-    return ( <TelaListagem { ...{ getDados } } /> )
+    return ( <TelaListagem { ...{ getDados, checkUpdates } } /> )
 }
 
 export default Listagem
