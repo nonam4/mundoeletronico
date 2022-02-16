@@ -7,7 +7,6 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
-    const { chave, leitura } = req.body
     let velho = req.body.cliente
 
     if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
