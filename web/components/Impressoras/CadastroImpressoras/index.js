@@ -43,10 +43,6 @@ function CadastroExpandido () {
     const [ vpe, setVpe ] = useState( 'R$ 0,00' )
 
     useEffect( () => {
-        console.log( expandido )
-    }, [] )
-
-    useEffect( () => {
         setLoad( false )
     }, [ router.query ] )
 
