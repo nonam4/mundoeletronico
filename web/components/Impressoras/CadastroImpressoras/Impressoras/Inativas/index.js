@@ -15,9 +15,8 @@ function Impressoras ( props ) {
         setImpressora( props.impressora )
     }, [ props.cadastro ] )
 
-    function deletarImpressora () {
-        if ( !impressora.contabilizar ) return props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, false )
-        props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, false )
+    function ativarImpressora () {
+        props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, !impressora.contabilizar )
     }
 
     return (
@@ -28,7 +27,7 @@ function Impressoras ( props ) {
                     <S.TituloSerial>{ impressora.serial }</S.TituloSerial>
                 </S.TituloContainer>
                 <S.TituloSubcontainer>
-                    <Botao title={ 'Contabilizar' } onClick={ () => deletarImpressora() } hover={ colors.azul }>
+                    <Botao title={ 'Contabilizar' } onClick={ () => ativarImpressora() } hover={ colors.azul }>
                         <MenuIcon name={ 'status_ok' } margin='0' />
                     </Botao>
                 </S.TituloSubcontainer>
