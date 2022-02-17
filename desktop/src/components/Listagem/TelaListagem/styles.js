@@ -56,6 +56,7 @@ export const Titulo = styled.div`
 export const Subtitulo = styled.div`
     width: 100%;
     font-size: 14px;
+    color: ${ ( { theme } ) => theme.colors.floating };
 `
 export const DadosColetor = styled.div`
     width: 100%;
