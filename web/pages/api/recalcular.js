@@ -113,12 +113,13 @@ export function recalcularDados ( data, dados ) {
         if ( !impressora.contabilizar || impressora.substituida ) continue //se a impressora estiver substituida ou não contabilizar pulará para a proxima  
         if ( ( impressora.contador - impressora.tintas.abastecido ) >= impressora.tintas.capacidade ) cadastro.abastecimento = true
 
+        cadastro.impressorasAtivas += 1
+
         if ( !impressora.contadores ) continue
         let contadores = impressora.contadores[ data ]
         if ( !contadores ) continue
         if ( !getMesPassado( impressora, data ) ) impressorasAtrasadas += 1
 
-        cadastro.impressorasAtivas += 1
         //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
         contadores.excedentes = 0
         contadores.adicionaltroca = 0
