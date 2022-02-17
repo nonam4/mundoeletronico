@@ -48,7 +48,8 @@ export default async ( req, res ) => {
             let impressora = {}
 
             impressora.contabilizar = velha.ativa
-            impressora.serial = serial.replace( /\(|\)|\-|\s/g, '' )
+            if ( serial.replace( /\(|\)|\-|\s/g, '' ) !== '' ) impressora.serial = serial.replace( /\(|\)|\-|\s/g, '' )
+            if ( serial.replace( /\(|\)|\-|\s/g, '' ) === '' ) impressora.serial = serial
             impressora.ip = velha.ip
             impressora.modelo = velha.modelo
             impressora.setor = velha.setor
