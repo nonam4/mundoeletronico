@@ -12,6 +12,10 @@ export async function getImpressoras ( filtros ) {
     return await axios.get( '/api/web/getimpressoras', { params: { filtros: filtros || defaults } } )
 }
 
+export async function recalcularDados ( data, dados ) {
+    return await axios.post( '/api/recalcular', { data, dados } )
+}
+
 export async function salvarCadastro ( usuario, alterado ) {
     return await axios.post( '/api/web/salvarcadastro', { usuario, cliente: alterado } )
 }
