@@ -183,11 +183,8 @@ function CadastroExpandido () {
     }
 
     function setObjectData ( keys, value ) {
-        setLoad( true )
         Database.recalcularDados( filtros.data, set( keys, value, cadastro ) ).then( res => {
-            console.log( res.data.cadastro )
             setCadastro( res.data.cadastro )
-            setLoad( false )
         } )
     }
 
@@ -310,8 +307,8 @@ function CadastroExpandido () {
                     </S.FranquiaContainer> }
 
                     { !permissoes.clientes.financeiro && <S.FranquiaContainer>
-                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'ilimitado' ? '33.33%' : '100%' } borderTop={ false } >
-                            <S.FranquiaItem border={ cadastro.franquia.tipo !== 'ilimitado' }>
+                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo !== 'pagina' ? '33.33%' : '100%' } borderTop={ false } >
+                            <S.FranquiaItem border={ cadastro.franquia.tipo == 'pagina' }>
                                 <S.FranquiaTitulo> Tipo de franquia </S.FranquiaTitulo>
                                 <S.FranquiaDado>
                                     { getFranquia( cadastro.franquia.tipo ) }
@@ -322,7 +319,7 @@ function CadastroExpandido () {
                                 <S.FranquiaDado>{ valorFranquiaPagina }</S.FranquiaDado>
                             </S.FranquiaItem>
                         </S.FranquiaSubcontainer>
-                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo === 'ilimitado' ? '66.66%' : '100%' } borderTop={ true } borderRight={ false }>
+                        <S.FranquiaSubcontainer width={ cadastro.franquia.tipo !== 'pagina' ? '66.66%' : '100%' } borderTop={ true } borderRight={ false }>
                             <S.FranquiaItem>
                                 <S.FranquiaTitulo> Impresso/mês </S.FranquiaTitulo>
                                 <S.FranquiaDado>{ cadastro.impresso > 0 ? `${ cadastro.impresso } págs` : '-' }</S.FranquiaDado>
