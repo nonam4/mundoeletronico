@@ -53,10 +53,12 @@ export const TituloSubContainer = styled.div`
 export const Titulo = styled.div`
     width: 100%;
     font-size: 21px;
+    text-transform: uppercase;
 `
 export const Subtitulo = styled.div`
     width: 100%;
     font-size: 14px;
+    color: ${ ( { theme } ) => theme.colors.floating };
 `
 export const DadosColetor = styled.div`
     width: 100%;
@@ -164,5 +166,43 @@ export const Listagem = styled.div`
         background: ${ ( { theme } ) => theme.colors.highlight };
         border: 0.3rem solid ${ ( { theme } ) => theme.colors.background };
         background-clip: padding-box;
+    }
+`
+export const Inativas = styled.div`
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+    overflow-y: auto;
+
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-gap: 0.5rem;
+    margin: 0 0.8rem 0.8rem 0;
+
+    ::-webkit-scrollbar {
+        width: 1.1rem;
+        background: ${ ( { theme } ) => theme.colors.background };
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        background: ${ ( { theme } ) => theme.colors.highlight };
+        border: 0.3rem solid ${ ( { theme } ) => theme.colors.background };
+        background-clip: padding-box;
+    }
+
+    @media only screen and (max-width: 1568px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media only screen and (max-width: 1235px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media only screen and (max-width: 925px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    @media only screen and (max-width: 833px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media only screen and (max-width: 680px) {
+        grid-template-columns: repeat(1, 1fr);
     }
 `

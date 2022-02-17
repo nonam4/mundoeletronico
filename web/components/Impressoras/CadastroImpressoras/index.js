@@ -10,6 +10,7 @@ import MenuIcon from '../../Icons/MenuIcon'
 import Select from '../../Inputs/Select'
 import TextField from '../../Inputs/SimpleTextField'
 import Impressoras from './Impressoras'
+import ImpressorasInativas from './Impressoras/Inativas'
 
 import * as S from './styles'
 import * as Database from '../../../workers/database'
@@ -20,7 +21,7 @@ function CadastroExpandido () {
     const { colors } = useContext( ThemeContext )
     const { state, dispatch } = useDados()
     const router = useRouter()
-    const [ permissoes, setPermissoes ] = useState( state.usuario.permissoes )
+    const permissoes = state.usuario.permissoes
 
     // pega os filtros passados pela URL
     const [ filtros, setFiltros ] = useState( undefined )
@@ -40,6 +41,10 @@ function CadastroExpandido () {
     const [ valorFranquiaPagina, setValorFranquiaPagina ] = useState( '0 págs' )
     // define o Valor Por Excedente
     const [ vpe, setVpe ] = useState( 'R$ 0,00' )
+
+    useEffect( () => {
+        console.log( expandido )
+    }, [] )
 
     useEffect( () => {
         setLoad( false )
@@ -67,8 +72,12 @@ function CadastroExpandido () {
 
     useEffect( () => {
         if ( !rollback ) return
-        setCadastro( JSON.parse( JSON.stringify( expandido ) ) )
-        setRollback( false )
+        setLoad( true )
+        setTimeout( () => {
+            setCadastro( JSON.parse( JSON.stringify( expandido ) ) )
+            setRollback( false )
+            setLoad( false )
+        }, 200 )
     }, [ rollback ] )
 
     function setLoad ( valor ) {
@@ -174,128 +183,16 @@ function CadastroExpandido () {
     }
 
     function setObjectData ( keys, value ) {
-        setCadastro( recalcularDados( set( keys, value, cadastro ) ) )
+        setLoad( true )
+        Database.recalcularDados( filtros.data, set( keys, value, cadastro ) ).then( res => {
+            console.log( res.data.cadastro )
+            setCadastro( res.data.cadastro )
+            setLoad( false )
+        } )
     }
 
-    function recalcularDados ( cadastro ) {
-        const data = filtros.data
-
-        function getDatas () {
-            let datas = []
-            let data = new Date()
-            let ano = data.getFullYear()
-            let mes = data.getMonth() + 1
-
-            for ( var x = 0; x < 4; x++ ) {
-                datas.push( { value: ano + '-' + ( mes < 10 ? `0${ mes }` : mes ), label: ( mes < 10 ? `0${ mes }` : mes ) + '/' + ano } )
-
-                if ( mes <= 1 ) {
-                    mes = 12
-                    ano = ano - 1
-                } else {
-                    mes--
-                }
-            }
-            return datas
-        }
-
-        function getDiasPassados ( mes, dia ) {
-            let agora = new Date()
-            let leitura = new Date( `${ mes }-${ dia }` )
-
-            //se a diferença de dias entre a data da ultima leitura for maior que 5 dias retorna falso
-            if ( Math.ceil( Math.abs( agora - leitura ) / ( 1000 * 3600 * 24 ) ) > 5 ) return false
-            return true
-        }
-
-        //verifica leitura do mes atual e do mes anterior se precisar
-        function getMesPassado ( impressora ) {
-            let contadores = impressora.contadores[ data ]
-            //se o contador do mês for válido e os dias dentro do prazo então está tudo ok
-            if ( contadores && getDiasPassados( data, contadores.ultimo.dia ) ) return true
-
-            let split = data.split( '-' )
-            let ano = Number( split[ 0 ] )
-            let mes = Number( split[ 1 ] ) - 1
-
-            if ( mes < 1 ) ano = ano - 1
-            if ( mes < 1 ) mes = 12
-            if ( mes < 10 ) mes = `0${ mes }`
-
-            let mesPassado = `${ ano }-${ mes }`
-            contadores = impressora.contadores[ mesPassado ]
-            //se o contador do mês passado for válido e os dias dentro do prazo então está tudo ok
-            if ( contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ) ) return true
-
-            //se os filtros forem diferentes do mês atual
-            if ( getDatas()[ 0 ].value != data ) return true
-
-            return false
-        }
-
-        cadastro.impresso = 0
-        cadastro.excedentes = 0
-        cadastro.excedenteadicional = 0
-        cadastro.impressorasAtivas = 0
-        cadastro.atraso = false
-        cadastro.abastecimento = false
-
-        let impressorasAtrasadas = 0 //variável de controle de impressoras com atrasos em leituras
-        let impressoras = cadastro.impressoras
-        for ( let serial in impressoras ) {
-
-            let impressora = impressoras[ serial ]
-            let contadores = impressora.contadores[ data ]
-            let impresso = 0
-            if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue //se a impressora estiver substituida, invalida ou não contabilizar pulará para a proxima            
-            if ( ( impressora.contador - impressora.tintas.abastecido ) >= impressora.tintas.capacidade ) cadastro.abastecimento = true
-            if ( !getMesPassado( impressora ) ) impressorasAtrasadas += 1
-
-            cadastro.impressorasAtivas += 1
-
-            if ( !contadores ) continue
-            //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
-            contadores.excedentes = 0
-            contadores.adicionaltroca = 0
-
-            if ( impressora.substituindo.length > 0 ) { //essa impressora está substituindo alguma outra?
-                for ( let index in impressora.substituindo ) {
-                    let serialSubstituido = impressora.substituindo[ index ]
-                    let impressoraSubstituida = cadastro.impressoras[ serialSubstituido ]
-
-                    if ( !impressoraSubstituida || !impressoraSubstituida.contadores[ data ] ) continue //se a impressora substituida não existir ou não tiver leitura ela será ignorada
-
-                    impresso += impressoraSubstituida.contadores[ data ].impresso //incrementa com o total impresso das maquinas que sairam
-                    contadores.adicionaltroca += impressoraSubstituida.contadores[ data ].impresso
-                }
-            }
-
-            //após definir o valor impresso pelas maquinas que sairam, incrementamos os valores da impressora atual também
-            impresso += contadores.impresso
-            //definimos se tem excedentes com base na franquia da maquina comparado ao total impresso das trocas + impresso atual
-            if ( impresso > impressora.franquia.limite ) contadores.excedentes = impresso - impressora.franquia.limite
-            //incrementa o total impresso no controle geral do cadastro
-            cadastro.impresso += impresso
-            // adiciona o excedente adicional aos excedentes do cadastro
-            if ( contadores.excedenteadicional ) cadastro.excedenteadicional += contadores.excedenteadicional
-            switch ( cadastro.franquia.tipo ) {
-                case 'maquina':
-                    cadastro.excedentes += contadores.excedentes
-                    break
-                case 'pagina':
-                    if ( cadastro.impresso > cadastro.franquia.limite ) cadastro.excedentes = cadastro.impresso - cadastro.franquia.limite
-                    break
-                case 'ilimitado':
-                    cadastro.excedentes = cadastro.impresso
-                    break
-            }
-        }
-        //se apenas uma impressora apenas estiver com atraso não irá dizer que o sistema não está coletando para esse cadastro
-        //e não o marcará como um cadastro com atraso, mas se o numero de impressoras ativas for igual que o numero de impressoras
-        //atrasadas daí sim irá indicar que não está coletandos
-        if ( impressorasAtrasadas >= cadastro.impressorasAtivas ) cadastro.atraso = true
-
-        return cadastro
+    function setLocalObjectData ( keys, value ) {
+        setCadastro( set( keys, value, cadastro ) )
     }
 
     function compareParentData () {
@@ -310,7 +207,7 @@ function CadastroExpandido () {
         }
     }
 
-    function renderImpressoras () {
+    function renderImpressorasAtivas () {
         const data = filtros.data
         let views = []
         let impressoras = cadastro.impressoras
@@ -321,7 +218,7 @@ function CadastroExpandido () {
 
             let substituindo = []
             let impressora = impressoras[ serial ]
-            if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue
+            if ( !impressora || !impressora.contabilizar || impressora.substituida ) continue
 
             if ( impressora.substituindo.length > 0 ) { //essa impressora está substituindo alguma outra?
 
@@ -334,7 +231,22 @@ function CadastroExpandido () {
                 }
             }
 
-            views.push( <Impressoras key={ serial } { ...{ data, impressora, cadastro, setObjectData, rollback, setCadastro, recalcularDados } } /> )
+            views.push( <Impressoras key={ serial } { ...{ data, impressora, cadastro, setObjectData, setLocalObjectData, rollback, setCadastro } } /> )
+        }
+        return views
+    }
+
+    function renderImpressorasInativas () {
+        let views = []
+        let impressoras = cadastro.impressoras
+
+        if ( Object.keys( impressoras ).length <= 0 ) return views
+
+        for ( let serial in impressoras ) {
+
+            let impressora = impressoras[ serial ]
+            if ( !impressora ) continue
+            if ( !impressora.contabilizar ) views.push( <ImpressorasInativas key={ serial } { ...{ impressora, cadastro, setObjectData } } /> )
         }
         return views
     }
@@ -425,7 +337,13 @@ function CadastroExpandido () {
                         </S.FranquiaSubcontainer>
                     </S.FranquiaContainer> }
 
-                    { !rollback && renderImpressoras() }
+                    { !rollback && renderImpressorasAtivas() }
+                    { cadastro.impressorasInativas > 0 && <>
+                        <S.TituloContainer>
+                            <S.TituloSubContainer><S.Titulo>Não contabilizadas</S.Titulo></S.TituloSubContainer>
+                        </S.TituloContainer>
+                        <S.Listagem><S.Inativas>{ !rollback && renderImpressorasInativas() }</S.Inativas></S.Listagem>
+                    </> }
                 </S.Listagem>
             </> }
         </S.Container >

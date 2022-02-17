@@ -30,8 +30,7 @@ function Impressoras ( props ) {
     }, [ props.cadastro ] )
 
     function deletarImpressora () {
-        if ( !impressora.contabilizar ) return props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, false )
-        props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, false )
+        props.setObjectData( `impressoras.${ impressora.serial }.contabilizar`, !impressora.contabilizar )
     }
 
     function trocarImpressora ( serial ) {
@@ -77,7 +76,7 @@ function Impressoras ( props ) {
 
     function handleBlurSetor ( e ) {
         if ( e.target.value === '' ) return setSetor( impressora.setor )
-        props.setObjectData( `impressoras.${ impressora.serial }.setor`, setor )
+        props.setLocalObjectData( `impressoras.${ impressora.serial }.setor`, setor )
     }
 
     function getPorcentagemTinta () {
@@ -154,8 +153,8 @@ function Impressoras ( props ) {
                         <S.DropdownList> { renderSeriaisTrocas() } </S.DropdownList>
                     </S.Dropdown> }
 
-                    <Botao title={ impressora.contabilizar ? 'Excluir' : 'Restaurar' } onClick={ () => deletarImpressora() } hover={ impressora.contabilizar ? colors.vermelho : colors.azul }>
-                        <MenuIcon name={ impressora.contabilizar ? 'impressora_deletar' : 'status_ok' } margin='0' />
+                    <Botao title={ 'Não contabilizar' } onClick={ () => deletarImpressora() } hover={ colors.vermelho }>
+                        <MenuIcon name={ 'impressora_deletar' } margin='0' />
                     </Botao>
                 </S.TituloSubcontainer>
             </S.Titulo>
