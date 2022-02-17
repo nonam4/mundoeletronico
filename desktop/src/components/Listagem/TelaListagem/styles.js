@@ -52,6 +52,7 @@ export const TituloSubContainer = styled.div`
 export const Titulo = styled.div`
     width: 100%;
     font-size: 21px;
+    text-transform: uppercase;
 `
 export const Subtitulo = styled.div`
     width: 100%;
