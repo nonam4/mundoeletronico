@@ -127,7 +127,7 @@ export default async ( req, res ) => {
                             impressora.contadores[ key ] = contadores
                         }
                     }
-                    impressoras[ serial ] = impressora
+                    impressoras[ impressora.serial ] = impressora
                 }
             }
             cliente.impressoras = impressoras
