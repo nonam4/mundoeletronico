@@ -8,7 +8,6 @@ export default async ( req, res ) => {
     const dadosCadastro = await database.doc( `/cadastros/${ id }` ).get()
     const serial = dados.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
     const contador = Number( dados.contador )
-    const data = dados.data
     let cadastro = dadosCadastro.data()
     let impressoras = cadastro.impressoras
 
@@ -47,8 +46,18 @@ export default async ( req, res ) => {
 
         function mesesPassados () {
 
-            const split = impressora.vistoporultimo.split( '/' )
-            const ultimoMes = new Date( `${ split[ 2 ] }-${ split[ 1 ] }` )
+            function getUltimoMes ( impressora ) {
+                const mesAtual = new Date( dataAtual )
+                // se não tiver nem contador o visto por últimos erá o mes atual
+                if ( !impressora.vistoporultimo && !impressora.contadores ) return mesAtual
+                // se não tiver apenas o visto por último então pegue a última chave dos contadores
+                if ( !impressora.vistoporultimo ) return Object.keys( impressora.contadores )[ Object.keys( impressora.contadores ).length - 1 ]
+                // se tiver o visto por último use ele
+                const split = impressora.vistoporultimo.split( '/' )
+                return new Date( `${ split[ 2 ] }-${ split[ 1 ] }` )
+            }
+
+            const ultimoMes = getUltimoMes( impressora )
             const mesAtual = new Date( dataAtual )
 
             // mesAtual.getMonth() - ultimoMes.getMonth()
