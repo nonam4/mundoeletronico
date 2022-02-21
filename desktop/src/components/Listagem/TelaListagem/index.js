@@ -8,6 +8,7 @@ import * as Database from '../../../workers/database'
 import Select from '../../Inputs/Select'
 import MenuIcon from '../../Icons/MenuIcon'
 import Impressoras from './Impressoras'
+import ImpressorasInativas from './Impressoras/Inativas'
 
 import * as S from './styles'
 
@@ -68,7 +69,7 @@ function CadastroExpandido ( { getDados, checkUpdates } ) {
         }
     }
 
-    function renderImpressoras () {
+    function renderImpressorasAtivas () {
         let views = []
         let impressoras = cadastro.impressoras
 
@@ -79,7 +80,7 @@ function CadastroExpandido ( { getDados, checkUpdates } ) {
             let substituindo = []
             let impressora = impressoras[ serial ]
 
-            if ( !impressora.contabilizar || impressora.substituida || !impressora ) continue
+            if ( !impressora || !impressora.contabilizar || impressora.substituida ) continue
 
             if ( impressora.substituindo.length > 0 ) { //essa impressora está substituindo alguma outra?
 
@@ -93,6 +94,21 @@ function CadastroExpandido ( { getDados, checkUpdates } ) {
             }
 
             views.push( <Impressoras key={ serial } { ...{ data, impressora, cadastro } } /> )
+        }
+        return views
+    }
+
+    function renderImpressorasInativas () {
+        let views = []
+        let impressoras = cadastro.impressoras
+
+        if ( Object.keys( impressoras ).length <= 0 ) return views
+
+        for ( let serial in impressoras ) {
+
+            let impressora = impressoras[ serial ]
+            if ( !impressora ) continue
+            if ( !impressora.contabilizar ) views.push( <ImpressorasInativas key={ serial } { ...{ impressora } } /> )
         }
         return views
     }
@@ -166,7 +182,13 @@ function CadastroExpandido ( { getDados, checkUpdates } ) {
                     </S.FranquiaSubcontainer>
                 </S.FranquiaContainer>
 
-                { renderImpressoras() }
+                { renderImpressorasAtivas() }
+                { cadastro.impressorasInativas > 0 && <>
+                    <S.TituloContainer>
+                        <S.TituloSubContainer><S.Titulo>Não contabilizadas</S.Titulo></S.TituloSubContainer>
+                    </S.TituloContainer>
+                    <S.Listagem><S.Inativas>{ renderImpressorasInativas() }</S.Inativas></S.Listagem>
+                </> }
             </S.Listagem>
         </S.Container > }</>
     )

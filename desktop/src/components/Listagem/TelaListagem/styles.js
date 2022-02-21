@@ -149,3 +149,25 @@ export const Listagem = styled.div`
         background-clip: padding-box;
     }
 `
+export const Inativas = styled.div`
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+    overflow-y: auto;
+
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 0.5rem;
+    margin: 0 0.8rem 0.8rem 0;
+
+    ::-webkit-scrollbar {
+        width: 1.1rem;
+        background: ${ ( { theme } ) => theme.colors.background };
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        background: ${ ( { theme } ) => theme.colors.highlight };
+        border: 0.3rem solid ${ ( { theme } ) => theme.colors.background };
+        background-clip: padding-box;
+    }
+`
