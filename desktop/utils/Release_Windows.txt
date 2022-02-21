@@ -1,12 +1,13 @@
 1. Para evitar bugs, delete as pastas 'build', 'dist' e 'releases' na raiz do projeto
-2. Abrir um terminal CMD e digite 'npm run windows'
-3. Dentro de 'utils/windows/' copie o arquivo 'updater.bat' e as pastas 'logs' e 
+2. Atualize a versão dentro do 'package.json' do web e do desktop
+3. Abrir um terminal CMD e digite 'npm run windows'
+4. Dentro de 'utils/windows/' copie o arquivo 'updater.bat' e as pastas 'logs' e 
 	'updates' para a pasta dentro de 'dist/win-ia32-unpacked'
-4. Execute o arquivo 'utils/packager_windows.iss' para criar o instalador dentro da 
+5. Execute o arquivo 'utils/packager_windows.iss' para criar o instalador dentro da 
 	pasta 'releases' na raiz do projeto
-5. Vá na pasta 'dist/win-ia32-unpacked' e compacte todos os arquivos como 'wupdate.zip'
+6. Vá na pasta 'dist/win-ia32-unpacked' e compacte todos os arquivos como 'wupdate.zip'
 	exceto o arquivo 'updater.bat' a pasta 'logs' e a pasta 'updates'
-6. Mova o 'wupdate.zip' para a pasta 'releases' na raiz do projeto, faça o upload dos 
+7. Mova o 'wupdate.zip' para a pasta 'releases' na raiz do projeto, faça o upload dos 
 	dois arquivos 'wupdate.zip' e 'setup_windows.exe' para o servidor e atualize os links 
 	de download: o 'setup_windows.exe' será baixado na página '/downloads' do site e o
 	arquivo 'wupdate.zip' será baixado somente mediante nova versão definida no database
