@@ -52,15 +52,12 @@ function Expandido () {
 
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
-        let queryId = router.query.id
-        if ( queryId && state.cadastros[ 'locacao' ][ queryId ] ) {
-
-            setCadastro( state.cadastros[ 'locacao' ][ queryId ] )
-            setEditado( state.cadastros[ 'locacao' ][ queryId ] )
-        }
+        if ( !router.query.id || !state.cadastros[ 'locacao' ] ) return
+        setCadastro( state.cadastros[ 'locacao' ][ router.query.id ] )
+        setEditado( state.cadastros[ 'locacao' ][ router.query.id ] )
 
         setLoad( false )
-    }, [ router.query ] )
+    }, [ router.query, state.cadastros ] )
 
     // se o valor padrão do cadastro mudar, propaga para o cadastro editado
     useEffect( () => {

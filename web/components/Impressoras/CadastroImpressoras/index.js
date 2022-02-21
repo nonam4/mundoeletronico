@@ -47,10 +47,10 @@ function CadastroExpandido () {
     }, [ router.query ] )
 
     useEffect( () => {
-        if ( !router.query.id ) return
+        if ( !router.query.id || !state.cadastros[ 'locacao' ] ) return
         setFiltros( { data: router.query.data } )
         setExpandido( state.cadastros[ 'locacao' ][ router.query.id ] )
-    }, [ router.query.data, router.query.id, state.cadastros ] )
+    }, [ router.query, state.cadastros ] )
 
     useEffect( () => {
         // toda vez que o valor do expandido for alterado irá definir o cadastro local

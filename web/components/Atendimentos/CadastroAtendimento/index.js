@@ -53,19 +53,16 @@ function AtendimentoExpandido () {
     // quando iniciar o sistema
     useEffect( () => {
 
+        if ( !router.query.chave || !state.atendimentos ) return
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
-        let chaveAtendimento = router.query.chave
-        if ( chaveAtendimento ) {
-            let localizado = localizarAtendimento( chaveAtendimento )
-
-            if ( !localizado ) return
-            setCadastro( JSON.parse( JSON.stringify( localizado ) ) )
-            setEditado( JSON.parse( JSON.stringify( localizado ) ) )
-        }
+        let localizado = localizarAtendimento( router.query.chave )
+        if ( !localizado ) return
+        setCadastro( JSON.parse( JSON.stringify( localizado ) ) )
+        setEditado( JSON.parse( JSON.stringify( localizado ) ) )
 
         setLoad( false )
-    }, [ router.query ] )
+    }, [ router.query, state.atendimentos ] )
 
     useEffect( () => {
         if ( buscaCliente === '' ) return
@@ -130,8 +127,8 @@ function AtendimentoExpandido () {
     function localizarAtendimento ( id ) {
         let localizado = undefined
 
-        if ( atendimentos[ 'Em aberto' ][ id ] ) return atendimentos[ 'Em aberto' ][ id ]
-        if ( atendimentos[ 'Feitos' ][ id ] ) return atendimentos[ 'Feitos' ][ id ]
+        if ( atendimentos[ 'Em aberto' ] && atendimentos[ 'Em aberto' ][ id ] ) return atendimentos[ 'Em aberto' ][ id ]
+        if ( atendimentos[ 'Feitos' ] && atendimentos[ 'Feitos' ][ id ] ) return atendimentos[ 'Feitos' ][ id ]
 
         //depois filtra os dos tecnicos
         for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
