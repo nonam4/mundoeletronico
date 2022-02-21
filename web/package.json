@@ -1,13 +1,13 @@
 {
     "name": "mundoeletronico",
     "version": "0.1.0",
-    "description": "Projeto pessoal feito em NextJS",
+    "description": "Sistema de gestão de atendimentos, clientes e impressoras",
     "private": true,
     "repository": {
         "type": "git",
         "url": "https://github.com/nonam4/mundoeletronico"
     },
-    "author": "Luiz Carlos Ferreira",
+    "author": "Mundo Eletrônico",
     "bugs": {
         "url": "https://github.com/nonam4/mundoeletronico/issues"
     },
