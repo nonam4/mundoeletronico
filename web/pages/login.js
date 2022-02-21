@@ -35,7 +35,7 @@ function Login () {
         if ( usuario && !state.autenticado ) return reautenticar()
 
         // se o usuário estiver salvo e autenticado volte para de onde parou ou para adm
-        if ( usuario && state.autenticado ) return router.replace( `/${ router.query.fallback || 'impressoras' }` )
+        if ( usuario && state.autenticado ) return router.replace( `/${ router.query.fallback.replace( /_/g, '&' ) || 'impressoras' }` )
     }, [ usuario ] )
 
     function setLoad ( valor ) {

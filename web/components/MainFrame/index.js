@@ -33,7 +33,7 @@ export default function Index ( { children } ) {
         if ( !usuario ) return router.replace( '/login' )
 
         // se não estiver autenticado mas tem usuário salvo tente login automático
-        if ( usuario && !state.autenticado ) return router.replace( `/login?fallback=${ router.pathname.replace( '/', '' ) }` )
+        if ( usuario && !state.autenticado ) return router.replace( `/login?fallback=${ router.asPath.replace( '/', '' ).replace( /&/g, '_' ) }` )
 
         // se estiver autenticado e salvo, prepare o app
         if ( usuario && state.autenticado ) return prepararApp()
@@ -46,6 +46,7 @@ export default function Index ( { children } ) {
         // se o state for definido como null limpa os dados locais e o useEffect do usuário se encarrega de redirecionar para o login
         if ( !state.usuario && !state.autenticado ) return setUsuario( null )
     }, [ state.autenticado ] )
+
 
     function prepararApp () {
         // primeiro tenta atualizar o usuário nas variáveis de ambiente
