@@ -352,7 +352,7 @@ function AtendimentoExpandido () {
                 </S.Botoes>
 
                 <S.TituloContainer>
-                    <S.Titulo> { router.query.id ? 'Editar' : 'Novo' } Atendimento </S.Titulo>
+                    <S.Titulo> { router.query.chave ? 'Editar' : 'Novo' } Atendimento </S.Titulo>
                     <div>
                         <S.DadosCadastro>ID do atendimento: <b> { editado.id } </b></S.DadosCadastro>
                         <S.DadosCadastro>Data do cadastro: <b> { Database.convertTimestamp( editado.dados.inicio ) } </b></S.DadosCadastro>
@@ -371,37 +371,26 @@ function AtendimentoExpandido () {
                                 { renderListaNomes() }
                             </S.ListaNomes> }
                         </S.ListaNomesContainer>
+
                         { cliente && buscaCliente === cliente.nomefantasia && <S.DadosCliente>
-
                             <S.ContainerDadoCliente>
-                                <S.TituloDadoCliente> Endereço </S.TituloDadoCliente>
-                                <S.TextoDadoCliente>{ `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }</S.TextoDadoCliente>
+                                <S.TextoDadoCliente><span>Endereço: </span>{ `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }</S.TextoDadoCliente>
+
+                                <S.SubContainerDadoCliente>
+                                    { cliente.contato.telefone && <S.TextoDadoCliente><span>Telefone: </span>{ cliente.contato.telefone }</S.TextoDadoCliente> }
+
+                                    { cliente.contato.celular && <><S.Separador border={ cliente.contato.telefone ? true : false } />
+                                        <S.TextoDadoCliente >
+                                            <span>Celular: </span>{ cliente.contato.celular }</S.TextoDadoCliente></> }
+                                </S.SubContainerDadoCliente>
+                                <S.SubContainerDadoCliente>
+                                    <S.TextoDadoCliente><span>Chave do cliente: </span>{ cliente.id }</S.TextoDadoCliente>
+                                    <S.Separador border={ true } />
+                                    <S.TextoDadoCliente><span>Versão do coletor: </span>{ cliente.sistema.versao }</S.TextoDadoCliente>
+                                    <S.Separador border={ true } />
+                                    <S.TextoDadoCliente><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente>
+                                </S.SubContainerDadoCliente>
                             </S.ContainerDadoCliente>
-
-                            <S.ContainerDadoCliente>
-                                <S.TituloDadoCliente> { `${ cliente.contato.telefone ? 'Telefone' : '' }${ cliente.contato.telefone && cliente.contato.celular ? ' | ' : '' }${ cliente.contato.celular ? 'Celular' : '' }` }</S.TituloDadoCliente>
-                                <S.TextoDadoCliente>{ `${ cliente.contato.telefone ? cliente.contato.telefone : '' }${ cliente.contato.telefone && cliente.contato.celular ? ' | ' : '' }${ cliente.contato.celular ? cliente.contato.celular : '' }` }</S.TextoDadoCliente>
-                            </S.ContainerDadoCliente>
-
-                            <S.SubcontainerDadoCliente>
-
-                                <S.ContainerDadoCliente>
-                                    <S.TituloDadoCliente> Chave do cliente </S.TituloDadoCliente>
-                                    <S.TextoDadoCliente>{ cliente.id }</S.TextoDadoCliente>
-                                </S.ContainerDadoCliente>
-
-                                <S.ContainerDadoCliente>
-                                    <S.TituloDadoCliente> Versão do coletor </S.TituloDadoCliente>
-                                    <S.TextoDadoCliente>{ cliente.sistema.versao }</S.TextoDadoCliente>
-                                </S.ContainerDadoCliente>
-
-                                <S.ContainerDadoCliente>
-                                    <S.TituloDadoCliente> PC com coletor </S.TituloDadoCliente>
-                                    <S.TextoDadoCliente>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente>
-                                </S.ContainerDadoCliente>
-
-                            </S.SubcontainerDadoCliente>
-
                         </S.DadosCliente> }
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
@@ -446,7 +435,7 @@ function AtendimentoExpandido () {
                     </S.LinhaSubContainer> }
                 </S.LinhaContainer>
             </S.View>
-        </S.Container>
+        </S.Container >
     )
 }
 

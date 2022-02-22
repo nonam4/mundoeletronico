@@ -247,26 +247,33 @@ export const ItemListaNomes = styled.div`
 `
 export const DadosCliente = styled.div`
     width: 100%;
+    margin: 0.4rem 0 0 8px;
 `
 export const ContainerDadoCliente = styled.div`
-    width: fit-content;
-    padding: 0.3rem 0.5rem;
+    width: 100%;
 `
-export const SubcontainerDadoCliente = styled.div`
+export const SubContainerDadoCliente = styled.div`
     width: 100%;
     display: flex;
-`
-export const TituloDadoCliente = styled.div`
-    width: 100%;
-    font-size: 11px;
-    color: ${ ( { theme } ) => theme.colors.azul };
-    cursor: inherit;
+    align-items: flex-end;
 `
 export const TextoDadoCliente = styled.div`
-    width: 100%;
+    width: fit-content;
     color: ${ ( { theme } ) => theme.colors.texts };
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: inherit;
+
+    span {
+        font-size: 11px;
+        color: ${ ( { theme } ) => theme.colors.azul };
+        cursor: inherit;
+        margin-right: 0.2rem;
+    }
+`
+export const Separador = styled.div`
+    border-left: ${ ( { border, theme } ) => border ? `solid 1px ${ theme.colors.borders }` : 'none' };
+    margin: 0 0.8rem 3px 0.8rem;
+    height: 10px;
 `
