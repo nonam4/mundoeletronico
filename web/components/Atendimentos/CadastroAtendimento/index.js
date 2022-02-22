@@ -29,7 +29,7 @@ function AtendimentoExpandido () {
     const data = new Date()
     const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
     // atendimento com todos os dados limpos
-    const limpo = { id: data.getTime(), cliente: undefined, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
+    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
     // valor padrão do cadastro, usado apenas para comparar para desfazer alterações
@@ -216,12 +216,17 @@ function AtendimentoExpandido () {
     }
 
     function handleBuscarCliente ( e ) {
+        if ( editado.cliente ) setEditado( set( 'cliente', undefined, editado ) )
+        if ( cliente ) setCliente( undefined )
+        if ( !mostrarListaNomes ) setMostrarListaNomes( true )
         setBuscaCliente( e.target.value.toLowerCase() )
     }
 
     function handleFocusBusca ( mostrar ) {
-        // não irá esconder a lista se a busca for diferente de vazio
-        if ( !mostrar && buscaCliente !== '' ) return
+        // não irá mostrar a lista se o atendimento já tiver um cliente definido...
+        // ...caso alguém clique no campo de texto sem digitar nada
+        // ou não irá esconder a lista se a busca for diferente de vazio
+        if ( cliente || ( !mostrar && buscaCliente ) !== '' ) return
         setMostrarListaNomes( mostrar )
     }
 
@@ -254,6 +259,7 @@ function AtendimentoExpandido () {
             }
         }
 
+        if ( views.length <= 0 ) return setMostrarListaNomes( false )
         return views
     }
 
@@ -379,16 +385,17 @@ function AtendimentoExpandido () {
                                 <S.SubContainerDadoCliente>
                                     { cliente.contato.telefone && <S.TextoDadoCliente><span>Telefone: </span>{ cliente.contato.telefone }</S.TextoDadoCliente> }
 
-                                    { cliente.contato.celular && <><S.Separador border={ cliente.contato.telefone ? true : false } />
-                                        <S.TextoDadoCliente >
-                                            <span>Celular: </span>{ cliente.contato.celular }</S.TextoDadoCliente></> }
+                                    { cliente.contato.telefone && cliente.contato.celular && <S.Separador border={ cliente.contato.telefone ? true : false } /> }
+                                    { cliente.contato.celular && <S.TextoDadoCliente >
+                                        <span>Celular: </span>{ cliente.contato.celular }</S.TextoDadoCliente> }
                                 </S.SubContainerDadoCliente>
                                 <S.SubContainerDadoCliente>
-                                    <S.TextoDadoCliente><span>Chave do cliente: </span>{ cliente.id }</S.TextoDadoCliente>
-                                    <S.Separador border={ true } />
-                                    <S.TextoDadoCliente><span>Versão do coletor: </span>{ cliente.sistema.versao }</S.TextoDadoCliente>
-                                    <S.Separador border={ true } />
-                                    <S.TextoDadoCliente><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente>
+                                    <S.TextoDadoCliente><span>Chave do cadastro: </span>{ cliente.id }</S.TextoDadoCliente>
+                                    { cliente.tipo == 'locacao' && <>
+                                        <S.Separador border={ true } />
+                                        <S.TextoDadoCliente><span>Versão do coletor: </span>{ cliente.sistema.versao }</S.TextoDadoCliente>
+                                        <S.Separador border={ true } />
+                                        <S.TextoDadoCliente><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente> </> }
                                 </S.SubContainerDadoCliente>
                             </S.ContainerDadoCliente>
                         </S.DadosCliente> }

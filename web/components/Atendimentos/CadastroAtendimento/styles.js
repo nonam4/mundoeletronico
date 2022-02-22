@@ -216,17 +216,26 @@ export const ListaNomesContainer = styled.div`
     display: block;
     justify-content: space-between;
     align-items: flex-end;
+    position: relative;
 `
 export const ListaNomes = styled.div`
+    position: absolute;
+    z-index: 99;
     width: 100%;
     display: block;
     overflow: hidden;
     overflow-y: auto;
     max-height: 300px;
     background: ${ ( { theme } ) => theme.colors.menus };
+    padding: 0.8rem 0 0.8rem 0.8rem;
+    border: solid 1px ${ ( { theme } ) => theme.colors.floating };
+    border-top: none;
+    box-shadow: 0px 0px 10px -2px rgba(0,0,0,0.8);
+    border-radius: 0 0 5px 5px;
     ::-webkit-scrollbar {
         width: 1.1rem;
         background: ${ ( { theme } ) => theme.colors.menus };
+        border-radius: 5px;
     }
     ::-webkit-scrollbar-thumb {
         border-radius: 8px;
