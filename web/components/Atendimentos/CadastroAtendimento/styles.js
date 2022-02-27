@@ -126,6 +126,11 @@ export const Linha = styled.div`
         }
     }
 
+    input {
+        text-align: left;
+        padding-left: 0.5rem;
+    }
+
     span {
         left: ${ ( { forceHover } ) => forceHover && '0' };
         width: ${ ( { forceHover } ) => forceHover && '100%' };
@@ -185,6 +190,11 @@ export const Spacer = styled.div`
     min-width: 0.8rem;
     max-width: 0.8rem;
     height: 1px;
+`
+export const VerticalSpacer = styled.div`
+    min-height: 0.8rem;
+    max-height: 0.8rem;
+    width: 1px;    
 `
 export const DadosCadastro = styled.div`
     width: 100%;

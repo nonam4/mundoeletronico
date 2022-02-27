@@ -13,6 +13,7 @@ export const Content = styled.input`
     color: ${ ( { theme } ) => theme.colors.texts };
     transition: all linear 0.05s;
     font-weight: bold;
+    border-bottom: solid 1px ${ ( { theme } ) => theme.colors.borders };
 
     :hover, :focus, :not(:placeholder-shown){
         + span {

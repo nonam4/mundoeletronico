@@ -11,7 +11,7 @@ export const Container = styled.div`
     padding: 0 0.8rem 0 0.8rem;
     margin: 0 0.8rem 0.8rem 0;
     box-shadow: 0px 0px 10px -8px black;
-    height: 340px;
+    height: 341px;
     overflow: hidden;
     overflow-y: auto;
     ::-webkit-scrollbar {

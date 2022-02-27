@@ -29,7 +29,7 @@ function AtendimentoExpandido () {
     const data = new Date()
     const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
     // atendimento com todos os dados limpos
-    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, motivo: [], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
+    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, motivo: [ '' ], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
     // valor padrão do cadastro, usado apenas para comparar para desfazer alterações
@@ -44,7 +44,8 @@ function AtendimentoExpandido () {
     // controla se deve mostrar a lista de nomes ao buscar cadastros
     const [ mostrarListaNomes, setMostrarListaNomes ] = useState( false )
     // opções de status de atendimento
-    const statusAtendimento = [ { label: 'Não concluído', value: false }, { label: 'Finalizado', value: true } ]
+    const statusAtendimento = [ { label: 'Em aberto', value: false }, { label: 'Finalizado', value: true } ]
+
     // controla se terá entrega de suprimentos
     const [ entregaSuprimentos, setEntregaSuprimentos ] = useState( false )
     // lista de suprimentos a ser adicionada nos motivos do atendimento
@@ -272,6 +273,44 @@ function AtendimentoExpandido () {
         setEditado( set( 'feito', true, editado ) )
     }
 
+    function renderMotivos () {
+        let views = []
+
+        for ( let index in editado.motivo ) {
+            views.push(
+                <S.SobLinha key={ index }>
+                    <S.Linha minWidth={ '140px' } maxWidth={ '100%' }>
+                        <SimpleTextField onChange={ ( e ) => handleMotivoChange( e, index ) } value={ editado.motivo[ index ] } maxLength={ 50 } />
+                    </S.Linha>
+
+                    { editado.motivo.length != 1 && <>
+                        <S.Spacer />
+                        <S.Botao onClick={ () => removerMotivo( index ) } hover={ colors.azul } title='Remover motivo'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
+                    </> }
+                </S.SobLinha>
+            )
+        }
+        return views
+    }
+
+    function handleMotivoChange ( e, index ) {
+        let motivos = [ ...editado.motivo ]
+        motivos[ index ] = e.target.value
+        setEditado( set( 'motivo', motivos, editado ) )
+    }
+
+    function removerMotivo ( index ) {
+        let motivos = [ ...editado.motivo ]
+        motivos.splice( index, 1 )
+        setEditado( set( 'motivo', motivos, editado ) )
+    }
+
+    function adicionarMotivo () {
+        let motivos = [ ...editado.motivo ]
+        motivos.push( '' )
+        setEditado( set( 'motivo', motivos, editado ) )
+    }
+
     function renderListaToners () {
         let views = []
 
@@ -400,13 +439,9 @@ function AtendimentoExpandido () {
                             </S.ContainerDadoCliente>
                         </S.DadosCliente> }
                     </S.LinhaSubContainer>
-                </S.LinhaContainer>
 
-                <S.TituloContainer>
-                    <S.Titulo> Dados do atendimento </S.Titulo>
-                </S.TituloContainer>
+                    <S.VerticalSpacer />
 
-                <S.LinhaContainer>
                     <S.LinhaSubContainer>
                         <S.SobLinha>
 
@@ -427,6 +462,29 @@ function AtendimentoExpandido () {
                 </S.LinhaContainer>
 
                 <S.TituloContainer>
+                    <S.Titulo> Motivos </S.Titulo>
+                </S.TituloContainer>
+
+                <S.LinhaContainer>
+
+                    <S.LinhaSubContainer>
+                        <S.LinhaSubContainer>
+                            { renderMotivos() }
+                            <S.VerticalSpacer />
+                            { editado.motivo[ editado.motivo.length - 1 ] != '' && <S.Botao onClick={ () => adicionarMotivo() } hover={ colors.azul } title='Adicionar motivo'> <MenuIcon name='add' margin='0' /> </S.Botao> }
+                        </S.LinhaSubContainer>
+                    </S.LinhaSubContainer>
+                </S.LinhaContainer>
+            </S.View>
+        </S.Container >
+    )
+}
+
+export default AtendimentoExpandido
+
+/*
+
+<S.TituloContainer>
                     <S.Titulo> Toners e suprimentos </S.Titulo>
                 </S.TituloContainer>
 
@@ -437,13 +495,9 @@ function AtendimentoExpandido () {
                     { entregaSuprimentos && <S.LinhaSubContainer>
                         { renderListaToners() }
                         <S.Linha>
-                            <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
+                            <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='add' margin='0' /> </S.Botao>
                         </S.Linha>
                     </S.LinhaSubContainer> }
                 </S.LinhaContainer>
-            </S.View>
-        </S.Container >
-    )
-}
 
-export default AtendimentoExpandido
+                */
