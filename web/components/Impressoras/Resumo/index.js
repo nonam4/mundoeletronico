@@ -26,7 +26,7 @@ function CadastroResumo ( props ) {
             setHoverColor( colors.laranja )
             setIconName( 'status_atraso' )
             setIconTitle( 'Atraso em leituras' )
-        } else if ( cadastro.sistema.versao != props.version ) {
+        } else if ( cadastro.sistema.versao != props.versao ) {
             setHoverColor( colors.amarelo )
             setIconName( 'status_desatualizado' )
             setIconTitle( 'Coletor desatualizado' )

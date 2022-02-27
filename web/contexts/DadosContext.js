@@ -17,7 +17,8 @@ const initialData = {
     menu: {
         expandido: false,
         sempreVisivel: false
-    }
+    },
+    versao: undefined
 }
 
 // Context
@@ -45,6 +46,8 @@ function dadosReducer ( state, action ) {
             return { ...state, autenticado: payload }
         case 'setMenu':
             return { ...state, menu: payload }
+        case 'setVersao':
+            return { ...state, versao: payload }
         default:
             return state
     }

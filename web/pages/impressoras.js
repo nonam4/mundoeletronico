@@ -104,12 +104,17 @@ function Impressoras () {
         dispatch( { type: 'setCadastros', payload: dados } )
     }
 
+    function setVersao ( dados ) {
+        dispatch( { type: 'setVersao', payload: dados } )
+    }
+
     function solicitarDados () {
         // sempre que for buscar algo no database mostre o load
         setLoad( true )
         // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
             setCadastros( res.data.cadastros )
+            setVersao( res.data.versao )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
@@ -182,7 +187,7 @@ function Impressoras () {
             for ( let x = 0; x < terminaEm; x++ ) {
                 let id = Object.keys( cadastrosFiltrados )[ x ]
                 if ( !id ) break
-                views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], filtros, version: packageInfo.version } } /> )
+                views.push( <Resumo key={ id } { ...{ cadastro: cadastrosFiltrados[ id ], filtros, versao: state.versao } } /> )
             }
         }
         return views

@@ -5,8 +5,10 @@ export default async ( req, res ) => {
 
     const { data, listando } = JSON.parse( req.query.filtros )
     const listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).where( 'tipo', '==', 'locacao' ).orderBy( 'nomefantasia' ).get()
+    const dadosDesktop = await database.doc( '/sistema/desktop/' ).get()
 
     let cadastros = { locacao: {} }
+    let versao = dadosDesktop.data().versaoatual
 
     listaCadastros.forEach( itemCadastro => {
 
@@ -27,5 +29,5 @@ export default async ( req, res ) => {
         }
     } )
 
-    res.status( 200 ).send( { cadastros } )
+    res.status( 200 ).send( { cadastros, versao } )
 }
