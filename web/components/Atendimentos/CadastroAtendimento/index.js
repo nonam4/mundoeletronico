@@ -45,11 +45,11 @@ function AtendimentoExpandido () {
     const [ mostrarListaNomes, setMostrarListaNomes ] = useState( false )
     // opções de status de atendimento
     const statusAtendimento = [ { label: 'Em aberto', value: false }, { label: 'Finalizado', value: true } ]
-
     // controla se terá entrega de suprimentos
     const [ entregaSuprimentos, setEntregaSuprimentos ] = useState( false )
     // lista de suprimentos a ser adicionada nos motivos do atendimento
-    const [ listaSuprimentos, setListaSuprimentos ] = useState( [] )
+    const [ listaSuprimentos, setListaSuprimentos ] = useState( {} )
+    const [ suprimentosDisponiveis, setSuprimentosDisponiveis ] = useState( JSON.parse( JSON.stringify( suprimentos ) ) )
 
     // quando iniciar o sistema
     useEffect( () => {
@@ -78,7 +78,7 @@ function AtendimentoExpandido () {
         setBuscaCliente( '' )
         setCliente( undefined )
         setEndereco( undefined )
-        setListaSuprimentos( [] )
+        setListaSuprimentos( {} )
         setEntregaSuprimentos( false )
 
         setRollback( false )
@@ -102,19 +102,24 @@ function AtendimentoExpandido () {
     useEffect( () => {
 
         if ( listaSuprimentos.length > 0 ) return
-        if ( !entregaSuprimentos ) return setListaSuprimentos( [] )
+        if ( !entregaSuprimentos ) return setListaSuprimentos( {} )
 
         // pega o primeiro suprimento disponível na lista e define ele como o suprimento padrão
-        let primeiroSuprimentoDisponivel = suprimentos[ Object.keys( suprimentos )[ 0 ] ]
+        let primeiroSuprimentoDisponivel = suprimentosDisponiveis[ Object.keys( suprimentosDisponiveis )[ 0 ] ]
 
         let suprimento = {
             value: primeiroSuprimentoDisponivel.value,
             label: primeiroSuprimentoDisponivel.label,
-            quantidade: 1
+            quantidade: 1,
+            id: Object.keys( suprimentos )[ 0 ]
         }
         // como é o primeiro suprimento adicionado na lista pode simplesmente definir ela
-        setListaSuprimentos( [ suprimento ] )
+        setListaSuprimentos( { [ suprimento.id ]: suprimento } )
     }, [ entregaSuprimentos ] )
+
+    useEffect( () => {
+        atualiarSuprimentosDisponiveis()
+    }, [ listaSuprimentos ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -311,7 +316,7 @@ function AtendimentoExpandido () {
         setEditado( set( 'motivo', motivos, editado ) )
     }
 
-    function renderListaToners () {
+    function renderListaSuprimentos () {
         let views = []
 
         function converterArray ( lista ) {
@@ -328,10 +333,10 @@ function AtendimentoExpandido () {
             let suprimento = listaSuprimentos[ index ]
 
             views.push(
-                <S.SobLinha key={ suprimento.value }>
+                <S.SobLinha key={ index }>
                     <S.Linha minWidth={ '140px' } maxWidth={ '100%' } forceHover={ true }>
                         <S.SubTitulo> Modelo </S.SubTitulo>
-                        <Select valor={ suprimento.value } options={ converterArray( suprimentos ) } onChange={ ( e ) => selecionarToner( e.target.value, index ) } />
+                        <Select valor={ suprimento.value } options={ converterArray( suprimentos ) } onChange={ ( e ) => selecionarSuprimento( e.target.value, index ) } />
                     </S.Linha>
 
                     <S.Spacer />
@@ -339,6 +344,11 @@ function AtendimentoExpandido () {
                     <S.Linha minWidth={ '84px' } maxWidth={ '84px' } forceHover={ true }>
                         <TextField placeholder={ 'Quantidade' } onBlur={ ( e ) => handleQuantidadeBlur( e.target.value, index ) } onChange={ ( e ) => handleQuantidadeChange( e.target.value, index ) } value={ suprimento.quantidade } icon={ false } maxLength={ 2 } />
                     </S.Linha>
+
+                    { Object.keys( listaSuprimentos ).length != 1 && <>
+                        <S.Spacer />
+                        <S.Botao onClick={ () => removerSuprimento( index ) } hover={ colors.azul } title='Remover suprimento'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
+                    </> }
                 </S.SobLinha >
 
             )
@@ -346,20 +356,22 @@ function AtendimentoExpandido () {
         return views
     }
 
-    function selecionarToner ( value, index ) {
+    function selecionarSuprimento ( id, idVelha ) {
 
-        let lista = [ ...listaSuprimentos ]
-        let suprimento = lista[ index ]
-        suprimento.value = suprimentos[ value ].value
-        suprimento.label = suprimentos[ value ].label
-        suprimento.quantidade = 1
-        lista[ index ] = suprimento
-        setListaSuprimentos( [ ...lista ] )
+        let lista = { ...listaSuprimentos }
+        delete lista[ idVelha ]
+        lista[ id ] = {
+            value: suprimentos[ id ].value,
+            label: suprimentos[ id ].label,
+            quantidade: 1, id
+        }
+        setListaSuprimentos( { ...lista } )
+        atualiarSuprimentosDisponiveis()
     }
 
     function handleQuantidadeChange ( value, index ) {
         if ( isNaN( value ) ) return
-        let lista = [ ...listaSuprimentos ]
+        let lista = { ...listaSuprimentos }
         let suprimento = lista[ index ]
 
         suprimento.quantidade = value
@@ -367,23 +379,48 @@ function AtendimentoExpandido () {
         if ( value > suprimentos[ suprimento.value ].estoque ) suprimento.quantidade = suprimentos[ suprimento.value ].estoque
 
         lista[ index ] = suprimento
-        setListaSuprimentos( [ ...lista ] )
+        setListaSuprimentos( { ...lista } )
     }
 
     function handleQuantidadeBlur ( value, index ) {
         if ( isNaN( value ) ) return
-        let lista = [ ...listaSuprimentos ]
+        let lista = { ...listaSuprimentos }
         let suprimento = lista[ index ]
 
         suprimento.quantidade = value
         if ( value <= 0 || value === '' ) suprimento.quantidade = 1
 
         lista[ index ] = suprimento
-        setListaSuprimentos( [ ...lista ] )
+        setListaSuprimentos( { ...lista } )
+    }
+
+    function removerSuprimento ( id ) {
+        let lista = { ...listaSuprimentos }
+        delete lista[ id ]
+        setListaSuprimentos( lista )
     }
 
     function adicionarSuprimento () {
 
+        // pega o primeiro suprimento disponível na lista e define ele como o suprimento padrão
+        let primeiroSuprimentoDisponivel = suprimentosDisponiveis[ Object.keys( suprimentosDisponiveis )[ 0 ] ]
+
+        let suprimento = {
+            value: primeiroSuprimentoDisponivel.value,
+            label: primeiroSuprimentoDisponivel.label,
+            quantidade: 1,
+            id: Object.keys( suprimentosDisponiveis )[ 0 ]
+        }
+        // atualiza a lista
+        setListaSuprimentos( { ...listaSuprimentos, [ suprimento.id ]: suprimento } )
+    }
+
+    function atualiarSuprimentosDisponiveis () {
+        let disponiveis = JSON.parse( JSON.stringify( suprimentos ) )
+        for ( let index in listaSuprimentos ) {
+            delete disponiveis[ index ]
+        }
+        setSuprimentosDisponiveis( disponiveis )
     }
 
     return (
@@ -475,29 +512,26 @@ function AtendimentoExpandido () {
                         </S.LinhaSubContainer>
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
+
+                <S.TituloContainer>
+                    <S.Titulo> Suprimentos </S.Titulo>
+                </S.TituloContainer>
+
+                <S.LinhaContainer>
+                    <S.Linha>
+                        <Checkbox text={ 'Entregar toners?' } changeReturn={ ( checked ) => setEntregaSuprimentos( checked ) } checked={ entregaSuprimentos } paddingLeft={ '0' } />
+                    </S.Linha>
+                    { entregaSuprimentos && <S.LinhaSubContainer>
+                        { renderListaSuprimentos() }
+
+                        { Object.keys( suprimentosDisponiveis ).length > 0 && <S.Linha>
+                            <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='add' margin='0' /> </S.Botao>
+                        </S.Linha> }
+                    </S.LinhaSubContainer> }
+                </S.LinhaContainer>
             </S.View>
         </S.Container >
     )
 }
 
 export default AtendimentoExpandido
-
-/*
-
-<S.TituloContainer>
-                    <S.Titulo> Toners e suprimentos </S.Titulo>
-                </S.TituloContainer>
-
-                <S.LinhaContainer>
-                    <S.Linha>
-                        <Checkbox text={ 'Entrega de toners?' } changeReturn={ ( checked ) => setEntregaSuprimentos( checked ) } checked={ entregaSuprimentos } paddingLeft={ '0' } />
-                    </S.Linha>
-                    { entregaSuprimentos && <S.LinhaSubContainer>
-                        { renderListaToners() }
-                        <S.Linha>
-                            <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='add' margin='0' /> </S.Botao>
-                        </S.Linha>
-                    </S.LinhaSubContainer> }
-                </S.LinhaContainer>
-
-                */
