@@ -29,7 +29,7 @@ function AtendimentoExpandido () {
     const data = new Date()
     const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
     // atendimento com todos os dados limpos
-    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, motivo: [ '' ], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
+    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, suprimentos: false, lista: {}, motivos: [ '' ], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
     // valor padrão do cadastro, usado apenas para comparar para desfazer alterações
@@ -45,44 +45,35 @@ function AtendimentoExpandido () {
     const [ mostrarListaNomes, setMostrarListaNomes ] = useState( false )
     // opções de status de atendimento
     const statusAtendimento = [ { label: 'Em aberto', value: false }, { label: 'Finalizado', value: true } ]
-    // controla se terá entrega de suprimentos
-    const [ entregaSuprimentos, setEntregaSuprimentos ] = useState( false )
-    // lista de suprimentos a ser adicionada nos motivos do atendimento
-    const [ listaSuprimentos, setListaSuprimentos ] = useState( {} )
     const [ suprimentosDisponiveis, setSuprimentosDisponiveis ] = useState( JSON.parse( JSON.stringify( suprimentos ) ) )
 
     // quando iniciar o sistema
     useEffect( () => {
-
         if ( !router.query.chave || !state.atendimentos ) return
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
         let localizado = localizarAtendimento( router.query.chave )
         if ( !localizado ) return
         setCadastro( JSON.parse( JSON.stringify( localizado ) ) )
-        setEditado( JSON.parse( JSON.stringify( localizado ) ) )
 
         setLoad( false )
     }, [ router.query, state.atendimentos ] )
-
-    useEffect( () => {
-        if ( buscaCliente === '' ) return
-
-    }, [ buscaCliente ] )
 
     // volta o valor do cadastro editado para o padrão
     useEffect( () => {
         if ( !rollback ) return
 
-        setEditado( JSON.parse( JSON.stringify( cadastro ) ) )
         setBuscaCliente( '' )
         setCliente( undefined )
         setEndereco( undefined )
-        setListaSuprimentos( {} )
-        setEntregaSuprimentos( false )
+        setEditado( JSON.parse( JSON.stringify( cadastro ) ) )
 
         setRollback( false )
     }, [ rollback ] )
+
+    useEffect( () => {
+        setEditado( JSON.parse( JSON.stringify( cadastro ) ) )
+    }, [ cadastro ] )
 
     useEffect( () => {
         if ( !editado.cliente ) return
@@ -90,19 +81,16 @@ function AtendimentoExpandido () {
         // se o cliente não existir mais (por ser excluido por exemplo)
         if ( !dados ) {
             Notification.notificate( 'Erro', 'O cliente do atendimento não existe!', 'danger' )
-            fechar()
-            return
+            return fechar()
         }
-
         setCliente( dados )
         setBuscaCliente( dados.nomefantasia )
         setEndereco( dados.endereco )
     }, [ editado ] )
 
     useEffect( () => {
-
-        if ( listaSuprimentos.length > 0 ) return
-        if ( !entregaSuprimentos ) return setListaSuprimentos( {} )
+        if ( Object.keys( editado.lista ).length > 0 ) return
+        if ( !editado.suprimentos ) return setListaSuprimentos( {} )
 
         // pega o primeiro suprimento disponível na lista e define ele como o suprimento padrão
         let primeiroSuprimentoDisponivel = suprimentosDisponiveis[ Object.keys( suprimentosDisponiveis )[ 0 ] ]
@@ -115,19 +103,24 @@ function AtendimentoExpandido () {
         }
         // como é o primeiro suprimento adicionado na lista pode simplesmente definir ela
         setListaSuprimentos( { [ suprimento.id ]: suprimento } )
-    }, [ entregaSuprimentos ] )
+    }, [ editado.suprimentos ] )
 
     useEffect( () => {
         atualiarSuprimentosDisponiveis()
-    }, [ listaSuprimentos ] )
+    }, [ editado.lista ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
         dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function setInAtendimentos ( cadastro ) {
-        dispatch( { type: 'setCadastros', payload: { ...state.cadastros, [ cadastro.id ]: cadastro } } )
+    function setInAtendimentos () {
+        let payload = state.atendimentos
+        if ( editado.feito ) payload[ 'Feitos' ][ editado.id ] = editado
+        if ( editado.responsavel === '' ) payload[ 'Em aberto' ][ editado.id ] = editado
+        if ( !editado.feito && editado.responsavel !== '' ) payload[ 'Tecnicos' ][ editado.responsavel ][ editado.id ] = editado
+
+        return dispatch( { type: 'setAtendimentos', payload } )
     }
 
     function localizarAtendimento ( id ) {
@@ -146,14 +139,18 @@ function AtendimentoExpandido () {
 
     async function salvarCadastro () {
 
+        // primeiro verifica se o cliente escolhido é valido
+        if ( !editado.cliente ) return Notification.notificate( 'Erro', 'Selecione o cliente a ser atendido!', 'danger' )
+        // verifique se tem algum motivo ou se será entregue toner
+        if ( editado.motivos.length <= 0 && !editado.suprimentos ) return Notification.notificate( 'Erro', 'Informe o motivo do atendimento!', 'danger' )
+        // caso esteja tudo ok
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
         Database.salvarAtendimento( state.usuario, editado ).then( () => {
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
-            setCadastro( editado )
-            setInAtendimentos( editado )
+            setInAtendimentos()
 
             // se tiver algum id na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
             // ou seja, não precisa reenviar os dados da url pois eles já estão lá
@@ -164,7 +161,7 @@ function AtendimentoExpandido () {
                 pathname: paginaAtual,
                 query: {
                     stack: 'cadastroatendimento',
-                    id: editado.id
+                    chave: editado.id
                 }
             } )
 
@@ -216,7 +213,6 @@ function AtendimentoExpandido () {
     }
 
     function compareParentData () {
-        if ( entregaSuprimentos ) return true
         if ( !cadastro ) return false
         return JSON.stringify( editado ) != JSON.stringify( cadastro )
     }
@@ -281,14 +277,14 @@ function AtendimentoExpandido () {
     function renderMotivos () {
         let views = []
 
-        for ( let index in editado.motivo ) {
+        for ( let index in editado.motivos ) {
             views.push(
                 <S.SobLinha key={ index }>
                     <S.Linha minWidth={ '140px' } maxWidth={ '100%' }>
-                        <SimpleTextField onChange={ ( e ) => handleMotivoChange( e, index ) } value={ editado.motivo[ index ] } maxLength={ 50 } />
+                        <SimpleTextField onChange={ ( e ) => handleMotivoChange( e, index ) } value={ editado.motivos[ index ] } maxLength={ 50 } />
                     </S.Linha>
 
-                    { editado.motivo.length != 1 && <>
+                    { editado.motivos.length != 1 && <>
                         <S.Spacer />
                         <S.Botao onClick={ () => removerMotivo( index ) } hover={ colors.azul } title='Remover motivo'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
                     </> }
@@ -299,21 +295,25 @@ function AtendimentoExpandido () {
     }
 
     function handleMotivoChange ( e, index ) {
-        let motivos = [ ...editado.motivo ]
+        let motivos = [ ...editado.motivos ]
         motivos[ index ] = e.target.value
-        setEditado( set( 'motivo', motivos, editado ) )
+        // se tiver algum motivo em branco, remove
+        for ( let index in motivos ) {
+            if ( motivos[ index ] == '' ) motivos.splice( index, 1 )
+        }
+        setEditado( set( 'motivos', motivos, editado ) )
     }
 
     function removerMotivo ( index ) {
-        let motivos = [ ...editado.motivo ]
+        let motivos = [ ...editado.motivos ]
         motivos.splice( index, 1 )
-        setEditado( set( 'motivo', motivos, editado ) )
+        setEditado( set( 'motivos', motivos, editado ) )
     }
 
     function adicionarMotivo () {
-        let motivos = [ ...editado.motivo ]
+        let motivos = [ ...editado.motivos ]
         motivos.push( '' )
-        setEditado( set( 'motivo', motivos, editado ) )
+        setEditado( set( 'motivos', motivos, editado ) )
     }
 
     function renderListaSuprimentos () {
@@ -329,8 +329,8 @@ function AtendimentoExpandido () {
             return array
         }
 
-        for ( let index in listaSuprimentos ) {
-            let suprimento = listaSuprimentos[ index ]
+        for ( let index in editado.lista ) {
+            let suprimento = editado.lista[ index ]
 
             views.push(
                 <S.SobLinha key={ index }>
@@ -345,7 +345,7 @@ function AtendimentoExpandido () {
                         <TextField placeholder={ 'Quantidade' } onBlur={ ( e ) => handleQuantidadeBlur( e.target.value, index ) } onChange={ ( e ) => handleQuantidadeChange( e.target.value, index ) } value={ suprimento.quantidade } icon={ false } maxLength={ 2 } />
                     </S.Linha>
 
-                    { Object.keys( listaSuprimentos ).length != 1 && <>
+                    { Object.keys( editado.lista ).length != 1 && <>
                         <S.Spacer />
                         <S.Botao onClick={ () => removerSuprimento( index ) } hover={ colors.azul } title='Remover suprimento'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
                     </> }
@@ -357,8 +357,7 @@ function AtendimentoExpandido () {
     }
 
     function selecionarSuprimento ( id, idVelha ) {
-
-        let lista = { ...listaSuprimentos }
+        let lista = { ...editado.lista }
         delete lista[ idVelha ]
         lista[ id ] = {
             value: suprimentos[ id ].value,
@@ -366,12 +365,11 @@ function AtendimentoExpandido () {
             quantidade: 1, id
         }
         setListaSuprimentos( { ...lista } )
-        atualiarSuprimentosDisponiveis()
     }
 
     function handleQuantidadeChange ( value, index ) {
         if ( isNaN( value ) ) return
-        let lista = { ...listaSuprimentos }
+        let lista = { ...editado.lista }
         let suprimento = lista[ index ]
 
         suprimento.quantidade = value
@@ -384,7 +382,7 @@ function AtendimentoExpandido () {
 
     function handleQuantidadeBlur ( value, index ) {
         if ( isNaN( value ) ) return
-        let lista = { ...listaSuprimentos }
+        let lista = { ...editado.lista }
         let suprimento = lista[ index ]
 
         suprimento.quantidade = value
@@ -395,7 +393,7 @@ function AtendimentoExpandido () {
     }
 
     function removerSuprimento ( id ) {
-        let lista = { ...listaSuprimentos }
+        let lista = { ...editado.lista }
         delete lista[ id ]
         setListaSuprimentos( lista )
     }
@@ -412,15 +410,23 @@ function AtendimentoExpandido () {
             id: Object.keys( suprimentosDisponiveis )[ 0 ]
         }
         // atualiza a lista
-        setListaSuprimentos( { ...listaSuprimentos, [ suprimento.id ]: suprimento } )
+        setListaSuprimentos( { ...editado.lista, [ suprimento.id ]: suprimento } )
     }
 
     function atualiarSuprimentosDisponiveis () {
         let disponiveis = JSON.parse( JSON.stringify( suprimentos ) )
-        for ( let index in listaSuprimentos ) {
+        for ( let index in editado.lista ) {
             delete disponiveis[ index ]
         }
         setSuprimentosDisponiveis( disponiveis )
+    }
+
+    function setEntregaSuprimentos ( value ) {
+        setEditado( set( 'suprimentos', value, editado ) )
+    }
+
+    function setListaSuprimentos ( value ) {
+        setEditado( set( 'lista', value, editado ) )
     }
 
     return (
@@ -508,7 +514,7 @@ function AtendimentoExpandido () {
                         <S.LinhaSubContainer>
                             { renderMotivos() }
                             <S.VerticalSpacer />
-                            { editado.motivo[ editado.motivo.length - 1 ] != '' && <S.Botao onClick={ () => adicionarMotivo() } hover={ colors.azul } title='Adicionar motivo'> <MenuIcon name='add' margin='0' /> </S.Botao> }
+                            { editado.motivos[ editado.motivos.length - 1 ] != '' && <S.Botao onClick={ () => adicionarMotivo() } hover={ colors.azul } title='Adicionar motivo'> <MenuIcon name='add' margin='0' /> </S.Botao> }
                         </S.LinhaSubContainer>
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
@@ -519,9 +525,9 @@ function AtendimentoExpandido () {
 
                 <S.LinhaContainer>
                     <S.Linha>
-                        <Checkbox text={ 'Entregar toners?' } changeReturn={ ( checked ) => setEntregaSuprimentos( checked ) } checked={ entregaSuprimentos } paddingLeft={ '0' } />
+                        <Checkbox text={ 'Entregar toners?' } changeReturn={ ( checked ) => setEntregaSuprimentos( checked ) } checked={ editado.suprimentos } paddingLeft={ '0' } />
                     </S.Linha>
-                    { entregaSuprimentos && <S.LinhaSubContainer>
+                    { editado.suprimentos && <S.LinhaSubContainer>
                         { renderListaSuprimentos() }
 
                         { Object.keys( suprimentosDisponiveis ).length > 0 && <S.Linha>

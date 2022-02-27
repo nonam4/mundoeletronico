@@ -57,6 +57,15 @@ function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, fin
     let atendimento = atendimentos[ id ]
     let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.id ]
 
+    function getListaSuprimentos () {
+        let motivo = ''
+        for ( let id in atendimento.lista ) {
+            let suprimento = atendimento.lista[ id ]
+            motivo = `${ motivo } -${ suprimento.label }: ${ suprimento.quantidade }un`
+        }
+        return motivo
+    }
+
     return ( <>
         <S.AtendimentoContent>
             <S.AtendimentoField>
@@ -73,7 +82,7 @@ function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, fin
             </S.AtendimentoField>
             <S.AtendimentoField>
                 <S.AtendimentoIndicador>Motivos</S.AtendimentoIndicador>
-                <S.AtendimentoDado>{ atendimento.motivo.map( motivo => `-${ motivo } ` ) }</S.AtendimentoDado>
+                <S.AtendimentoDado>{ atendimento.motivos.map( motivo => `-${ motivo } ` ) } { getListaSuprimentos() }</S.AtendimentoDado>
             </S.AtendimentoField>
         </S.AtendimentoContent>
         <S.Settings>
