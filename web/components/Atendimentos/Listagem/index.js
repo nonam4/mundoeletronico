@@ -38,8 +38,8 @@ function Atendimento ( props ) {
         }, 200 )
     }
 
-    function finalizarReabrirCadastro ( id ) {
-        console.log( `atendimento ${ id } finalizado` )
+    function finalizarReabrirCadastro ( chave ) {
+        console.log( `atendimento ${ chave } finalizado` )
     }
 
     function handleOnDragEnd ( result ) {

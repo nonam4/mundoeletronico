@@ -121,22 +121,22 @@ function Atendimentos () {
             }
 
             //primeiro filtrar os atendimentos em aberto
-            for ( let id in atendimentos[ 'Em aberto' ] ) {
-                let atendimento = atendimentos[ 'Em aberto' ][ id ]
-                if ( comparar( atendimento ) ) filtrados[ 'Em aberto' ] = { ...filtrados[ 'Em aberto' ], [ id ]: atendimento }
+            for ( let chave in atendimentos[ 'Em aberto' ] ) {
+                let atendimento = atendimentos[ 'Em aberto' ][ chave ]
+                if ( comparar( atendimento ) ) filtrados[ 'Em aberto' ] = { ...filtrados[ 'Em aberto' ], [ chave ]: atendimento }
             }
 
             //depois filtrar os atendimentos feitos
-            for ( let id in atendimentos[ 'Feitos' ] ) {
-                let atendimento = atendimentos[ 'Feitos' ][ id ]
-                if ( comparar( atendimento ) ) filtrados[ 'Feitos' ] = { ...filtrados[ 'Feitos' ], [ id ]: atendimento }
+            for ( let chave in atendimentos[ 'Feitos' ] ) {
+                let atendimento = atendimentos[ 'Feitos' ][ chave ]
+                if ( comparar( atendimento ) ) filtrados[ 'Feitos' ] = { ...filtrados[ 'Feitos' ], [ chave ]: atendimento }
             }
 
             //depois filtra os dos tecnicos
             for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
-                for ( let id in atendimentos[ 'Tecnicos' ][ tecnico ] ) {
-                    let atendimento = atendimentos[ 'Tecnicos' ][ tecnico ][ id ]
-                    if ( comparar( atendimento ) ) filtrados[ 'Tecnicos' ][ tecnico ] = { ...filtrados[ 'Tecnicos' ][ tecnico ], [ id ]: atendimento }
+                for ( let chave in atendimentos[ 'Tecnicos' ][ tecnico ] ) {
+                    let atendimento = atendimentos[ 'Tecnicos' ][ tecnico ][ chave ]
+                    if ( comparar( atendimento ) ) filtrados[ 'Tecnicos' ][ tecnico ] = { ...filtrados[ 'Tecnicos' ][ tecnico ], [ chave ]: atendimento }
                 }
             }
             return filtrados

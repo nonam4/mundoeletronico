@@ -16,11 +16,11 @@ export function DragNDrop ( props ) {
             <Droppable droppableId={ props.tecnico }>
                 { provided => (
                     <S.Content { ...provided.droppableProps } ref={ provided.innerRef } expandido={ props.expandido }>
-                        { Object.keys( atendimentos ).map( ( id, index ) =>
-                            <Draggable key={ id } draggableId={ id } index={ index }>
+                        { Object.keys( atendimentos ).map( ( chave, index ) =>
+                            <Draggable key={ chave } draggableId={ chave } index={ index }>
                                 { provided =>
                                     <S.Atendimentos draggable={ true } ref={ provided.innerRef } { ...provided.draggableProps } { ...provided.dragHandleProps }>
-                                        <Atendimento { ...{ ...props, atendimentos, id, colors } } />
+                                        <Atendimento { ...{ ...props, atendimentos, chave, colors } } />
                                     </S.Atendimentos>
                                 }
                             </Draggable>
@@ -39,28 +39,28 @@ export function Simple ( props ) {
 
     return (
         <S.Content expandido={ props.expandido }>
-            { Object.keys( atendimentos ).map( ( id ) =>
+            { Object.keys( atendimentos ).map( ( chave ) =>
 
-                <S.Atendimentos draggable={ false } key={ id }>
-                    <Atendimento { ...{ ...props, atendimentos, id, colors } } />
+                <S.Atendimentos draggable={ false } key={ chave }>
+                    <Atendimento { ...{ ...props, atendimentos, chave, colors } } />
                 </S.Atendimentos>
             ) }
         </S.Content>
     )
 }
 
-function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
+function Atendimento ( { atendimentos, chave, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
     // variaveis do contexto, disponível em todo o sistema
     const { state } = useDados()
     // variaveis disponíveis no contexto
     const { cadastros } = state
-    let atendimento = atendimentos[ id ]
-    let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.id ]
+    let atendimento = atendimentos[ chave ]
+    let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.chave ]
 
     function getListaSuprimentos () {
         let motivo = ''
-        for ( let id in atendimento.lista ) {
-            let suprimento = atendimento.lista[ id ]
+        for ( let chave in atendimento.lista ) {
+            let suprimento = atendimento.lista[ chave ]
             motivo = `${ motivo } -${ suprimento.label }: ${ suprimento.quantidade }un`
         }
         return motivo
@@ -86,8 +86,8 @@ function Atendimento ( { atendimentos, id, feitos, colors, expandirCadastro, fin
             </S.AtendimentoField>
         </S.AtendimentoContent>
         <S.Settings>
-            <S.Button onClick={ () => expandirCadastro( id ) } hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
-            <S.Button onClick={ () => { finalizarReabrirCadastro( id ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
+            <S.Button onClick={ () => expandirCadastro( chave ) } hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
+            <S.Button onClick={ () => { finalizarReabrirCadastro( chave ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
                 <MenuIcon name={ feitos ? 'atendimento_reabrir' : 'atendimento_finalizar' } margin='0' />
             </S.Button>
         </S.Settings>
