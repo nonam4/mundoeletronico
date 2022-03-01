@@ -37,6 +37,12 @@ export const AtendimentoContent = styled.div`
     @media only screen and (max-width: 1060px) {
         flex-wrap: wrap;
     }
+    @media only screen and (max-width: 833px) {
+        flex-wrap: nowrap;
+    }
+    @media only screen and (max-width: 800px) {
+        flex-wrap: wrap;
+    }
 `
 export const AtendimentoField = styled.div`
     padding: 0 0.6rem;
@@ -45,36 +51,62 @@ export const AtendimentoField = styled.div`
     cursor: inherit;
     border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
     :nth-of-type(1) {
-        min-width: fit-content;
-        @media only screen and (max-width: 1060px) {
-            border: none;
-        }
+        min-width: 145px;
+        max-width: 145px;
     }
     :nth-of-type(2) {
-        min-width: 200px;
-        @media only screen and (max-width: 817px) {
-            min-width: 100%;
+        width: 200px;
+        @media only screen and (max-width: 1060px) {
+            width: calc(100% - (145px * 2));
+        }
+        @media only screen and (max-width: 842px) {
+            width: calc(100% - 145px);
             border: none;
         }
-        @media only screen and (max-width: 760px) {
-            min-width: 200px;
+        @media only screen and (max-width: 833px) {
+            width: 200px;
             border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
         }
-        @media only screen and (max-width: 567px) {
-            min-width: 100%;
+        @media only screen and (max-width: 800px) {
+            width: calc(100% - (145px * 2));
+        }
+        @media only screen and (max-width: 568px) {
+            width: calc(100% - 145px);
             border: none;
         }
     }
     :nth-of-type(3) {
-        min-width: 115px;
-        @media only screen and (max-width: 367px) {
-            min-width: 100%;
+        min-width: 145px;
+        max-width: 145px;
+        @media only screen and (max-width: 1060px) {
             border: none;
+        }
+        @media only screen and (max-width: 842px) {
+            border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
+        }
+        @media only screen and (max-width: 833px) {
+
+            border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
+        }
+        @media only screen and (max-width: 800px) {
+            border: none;
+        }
+        @media only screen and (max-width: 568px) {
+            border-right: solid 1px ${ ( { theme } ) => theme.colors.borders };
         }
     }
     :nth-of-type(4) {
         width: 100%;
         border: none;
+        @media only screen and (max-width: 842px) {
+            width: calc(100% - 145px);
+        }
+        @media only screen and (max-width: 834px) {
+            width: 100%;
+        }
+        @media only screen and (max-width: 568px) {
+            width: calc(100% - 145px);
+        }
     }
 `
 export const AtendimentoIndicador = styled.span`
@@ -96,7 +128,13 @@ export const Settings = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-width: 86.93px;
+    min-width: 87px;
+    @media only screen and (max-width: 450px) {
+        flex-direction: column;
+        justify-content: space-between;
+        min-width: 55px;
+        min-height: 90px;
+    }
 `
 export const Button = styled.button`
     width: fit-content;
