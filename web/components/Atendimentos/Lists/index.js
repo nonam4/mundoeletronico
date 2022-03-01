@@ -19,7 +19,7 @@ export function DragNDrop ( props ) {
                         { Object.keys( atendimentos ).map( ( chave, index ) =>
                             <Draggable key={ chave } draggableId={ chave } index={ index }>
                                 { provided =>
-                                    <S.Atendimentos draggable={ true } ref={ provided.innerRef } { ...provided.draggableProps } { ...provided.dragHandleProps }>
+                                    < S.Atendimentos draggable={ true } ref={ provided.innerRef } { ...provided.draggableProps } { ...provided.dragHandleProps }>
                                         <Atendimento { ...{ ...props, atendimentos, chave, colors } } />
                                     </S.Atendimentos>
                                 }
@@ -29,7 +29,7 @@ export function DragNDrop ( props ) {
                     </S.Content>
                 ) }
             </Droppable>
-        </DragDropContext>
+        </DragDropContext >
     )
 }
 
@@ -55,12 +55,12 @@ function Atendimento ( { atendimentos, chave, feitos, colors, expandirCadastro, 
     // variaveis disponíveis no contexto
     const { cadastros } = state
     let atendimento = atendimentos[ chave ]
-    let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.chave ]
+    let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.id ]
 
     function getListaSuprimentos () {
         let motivo = ''
-        for ( let chave in atendimento.lista ) {
-            let suprimento = atendimento.lista[ chave ]
+        for ( let id in atendimento.lista ) {
+            let suprimento = atendimento.lista[ id ]
             motivo = `${ motivo } -${ suprimento.label }: ${ suprimento.quantidade }un`
         }
         return motivo
