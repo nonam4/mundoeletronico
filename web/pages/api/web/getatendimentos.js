@@ -35,11 +35,11 @@ export default async ( req, res ) => {
     listaAtendimentos.forEach( itemAtendimento => {
 
         let atendimento = itemAtendimento.data()
-        atendimento.id = itemAtendimento.id
+        atendimento.chave = itemAtendimento.chave
 
-        if ( atendimento.feito ) atendimentos[ 'Feitos' ] = { ...atendimentos[ 'Feitos' ], [ atendimento.id ]: atendimento }
-        if ( atendimento.responsavel === '' ) atendimentos[ 'Em aberto' ] = { ...atendimentos[ 'Em aberto' ], [ atendimento.id ]: atendimento }
-        if ( !atendimento.feito && atendimento.responsavel !== '' ) atendimentos[ 'Tecnicos' ][ atendimento.responsavel ] = { ...atendimentos[ 'Tecnicos' ][ atendimento.responsavel ], [ atendimento.id ]: atendimento }
+        if ( atendimento.feito ) atendimentos[ 'Feitos' ] = { ...atendimentos[ 'Feitos' ], [ atendimento.chave ]: atendimento }
+        if ( atendimento.responsavel === '' ) atendimentos[ 'Em aberto' ] = { ...atendimentos[ 'Em aberto' ], [ atendimento.chave ]: atendimento }
+        if ( !atendimento.feito && atendimento.responsavel !== '' ) atendimentos[ 'Tecnicos' ][ atendimento.responsavel ] = { ...atendimentos[ 'Tecnicos' ][ atendimento.responsavel ], [ atendimento.chave ]: atendimento }
     } )
 
     res.status( 200 ).send( { atendimentos, cadastros, tecnicos } )
