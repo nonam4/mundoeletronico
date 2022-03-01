@@ -37,7 +37,7 @@ export default async ( req, res ) => {
         let atendimento = itemAtendimento.data()
 
         if ( atendimento.feito ) atendimentos[ 'Feitos' ] = { ...atendimentos[ 'Feitos' ], [ atendimento.chave ]: atendimento }
-        if ( atendimento.responsavel === '' ) atendimentos[ 'Em aberto' ] = { ...atendimentos[ 'Em aberto' ], [ atendimento.chave ]: atendimento }
+        if ( !atendimento.feito && atendimento.responsavel === '' ) atendimentos[ 'Em aberto' ] = { ...atendimentos[ 'Em aberto' ], [ atendimento.chave ]: atendimento }
         if ( !atendimento.feito && atendimento.responsavel !== '' ) atendimentos[ 'Tecnicos' ][ atendimento.responsavel ] = { ...atendimentos[ 'Tecnicos' ][ atendimento.responsavel ], [ atendimento.chave ]: atendimento }
     } )
 

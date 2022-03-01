@@ -86,9 +86,6 @@ function AtendimentoExpandido () {
         setCliente( dados )
         setBuscaCliente( dados.nomefantasia )
         setEndereco( dados.endereco )
-
-        // por fim irá atualizar a data da última atualização
-        //if ( compareParentData() ) setEditado( set( 'dados.ultimaalteracao', timestamp, editado ) )
     }, [ editado ] )
 
     useEffect( () => {
@@ -117,11 +114,22 @@ function AtendimentoExpandido () {
         dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function setInAtendimentos () {
-        let payload = state.atendimentos
-        if ( editado.feito ) payload[ 'Feitos' ][ editado.chave ] = editado
-        if ( editado.responsavel === '' ) payload[ 'Em aberto' ][ editado.chave ] = editado
-        if ( !editado.feito && editado.responsavel !== '' ) payload[ 'Tecnicos' ][ editado.responsavel ][ editado.chave ] = editado
+    function setInAtendimentos ( alteracao ) {
+
+        console.log( 'alteração -> ', alteracao, 'payload antes -> ', state.atendimentos )
+
+        let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
+        // primeiro tenha certeza que nenhuma outra seção tenha o mesmo atendimento
+        // usará a variável cadastro pois ela contém todos os dados antes da alteração
+        delete payload[ 'Feitos' ][ cadastro.chave ]
+        delete payload[ 'Em aberto' ][ cadastro.chave ]
+        if ( cadastro.responsavel !== '' ) delete payload[ 'Tecnicos' ][ cadastro.responsavel ][ cadastro.chave ]
+        // depois define os dados alterados novamente
+        if ( alteracao.feito ) payload[ 'Feitos' ][ alteracao.chave ] = alteracao
+        if ( !alteracao.feito && alteracao.responsavel === '' ) payload[ 'Em aberto' ][ alteracao.chave ] = alteracao
+        if ( !alteracao.feito && alteracao.responsavel !== '' ) payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] = alteracao
+
+        console.log( 'payload depois -> ', payload )
 
         return dispatch( { type: 'setAtendimentos', payload } )
     }
@@ -149,11 +157,13 @@ function AtendimentoExpandido () {
         // depois notifica e grava
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
-        Database.salvarAtendimento( state.usuario, editado ).then( () => {
+        // altera a data da ultima modificação
+        const salvamento = { ...editado, dados: { ...editado.dados, ultimaalteracao: timestamp } }
+        Database.salvarAtendimento( state.usuario, salvamento ).then( () => {
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
-            setInAtendimentos()
+            setInAtendimentos( salvamento )
 
             // se tiver alguma chave na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
             // ou seja, não precisa reenviar os dados da url pois eles já estão lá
