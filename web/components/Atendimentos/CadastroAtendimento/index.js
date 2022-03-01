@@ -116,8 +116,6 @@ function AtendimentoExpandido () {
 
     function setInAtendimentos ( alteracao ) {
 
-        console.log( 'alteração -> ', alteracao, 'payload antes -> ', state.atendimentos )
-
         let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
         // primeiro tenha certeza que nenhuma outra seção tenha o mesmo atendimento
         // usará a variável cadastro pois ela contém todos os dados antes da alteração
@@ -128,8 +126,6 @@ function AtendimentoExpandido () {
         if ( alteracao.feito ) payload[ 'Feitos' ][ alteracao.chave ] = alteracao
         if ( !alteracao.feito && alteracao.responsavel === '' ) payload[ 'Em aberto' ][ alteracao.chave ] = alteracao
         if ( !alteracao.feito && alteracao.responsavel !== '' ) payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] = alteracao
-
-        console.log( 'payload depois -> ', payload )
 
         return dispatch( { type: 'setAtendimentos', payload } )
     }
