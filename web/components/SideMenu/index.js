@@ -110,7 +110,7 @@ function SideMenu () {
                     <S.MenuTitle>LOCAÇÃO</S.MenuTitle>
                     <S.MenuItem active={ active( 'impressoras' ) } onClick={ !active( 'impressoras' ) ? () => trocarListagem( pages.impressoras ) : () => { } }> <MenuIcon name={ 'status_nenhuma' } /> Listar Impressoras </S.MenuItem>
                     <S.MenuItem active={ active( 'atendimentos' ) } onClick={ !active( 'atendimentos' ) ? () => trocarListagem( pages.atendimentos ) : () => { } }> <MenuIcon name={ 'atendimento_listar' } /> Listar Atendimentos </S.MenuItem>
-                    <S.MenuItem active={ active( 'cadastroatendimento' ) } onClick={ !active( 'cadastroatendimento' ) ? () => trocarListagem( pages.cadastroatendimento ) : () => { } }> <MenuIcon name={ 'atendimento_adicionar' } /> Novo Atendimento </S.MenuItem>
+                    <S.MenuItem active={ active( 'cadastroatendimento' ) } onClick={ !active( 'cadastroatendimento' ) ? () => trocarListagem( pages.cadastroatendimento ) : () => { } }> <MenuIcon name={ 'atendimento_adicionar' } /> { router.query.chave ? 'Editar' : 'Novo' } Atendimento </S.MenuItem>
                 </S.MenuSection>
             </S.Actions>
 
