@@ -87,6 +87,7 @@ export const LinhaContainer = styled.div`
 `
 export const LinhaSubContainer = styled.div`
     width: 100%;
+    border-top: ${ ( { borderTop, theme } ) => borderTop == true && `solid 1px ${ theme.colors.borders }` }
 `
 export const Linha = styled.div`
     width: 100%;
@@ -275,24 +276,38 @@ export const SubContainerDadoCliente = styled.div`
     width: 100%;
     display: flex;
     align-items: flex-end;
+
+    @media only screen and (max-width: 600px) {
+        display: ${ ( { displayBlock } ) => displayBlock != true ? 'flex' : 'block' };
+    }
 `
 export const TextoDadoCliente = styled.div`
     width: fit-content;
     color: ${ ( { theme } ) => theme.colors.texts };
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: ${ ( { lineBreak } ) => lineBreak != true ? 'nowrap' : 'normal' };
+    overflow: ${ ( { overflow } ) => overflow != true ? 'visible' : 'hidden' };
+    text-overflow: ${ ( { overflow } ) => overflow != true ? 'clip' : 'ellipsis' };
     cursor: inherit;
 
     span {
+        overflow: hidden;
+        white-space: nowrap;
         font-size: 11px;
         color: ${ ( { theme } ) => theme.colors.azul };
         cursor: inherit;
         margin-right: 0.2rem;
+    }
+
+    @media only screen and (max-width: 600px) {
+        width: 100%;
     }
 `
 export const Separador = styled.div`
     border-left: ${ ( { border, theme } ) => border ? `solid 1px ${ theme.colors.borders }` : 'none' };
     margin: 0 0.8rem 3px 0.8rem;
     height: 10px;
+
+    @media only screen and (max-width: 600px) {
+        display: ${ ( { lineBreak } ) => lineBreak == true && 'none' };
+    }
 `

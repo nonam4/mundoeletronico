@@ -489,7 +489,7 @@ function AtendimentoExpandido () {
 
                         { cliente && buscaCliente === cliente.nomefantasia && <S.DadosCliente>
                             <S.ContainerDadoCliente>
-                                <S.TextoDadoCliente><span>Endereço: </span>{ `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }</S.TextoDadoCliente>
+                                <S.TextoDadoCliente lineBreak={ true }><span>Endereço: </span>{ `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }</S.TextoDadoCliente>
 
                                 <S.SubContainerDadoCliente>
                                     { cliente.contato.telefone && <S.TextoDadoCliente><span>Telefone: </span>{ cliente.contato.telefone }</S.TextoDadoCliente> }
@@ -498,13 +498,14 @@ function AtendimentoExpandido () {
                                     { cliente.contato.celular && <S.TextoDadoCliente >
                                         <span>Celular: </span>{ cliente.contato.celular }</S.TextoDadoCliente> }
                                 </S.SubContainerDadoCliente>
-                                <S.SubContainerDadoCliente>
+                                <S.SubContainerDadoCliente displayBlock={ true }>
                                     <S.TextoDadoCliente><span>Chave do cadastro: </span>{ cliente.id }</S.TextoDadoCliente>
                                     { cliente.tipo == 'locacao' && <>
-                                        <S.Separador border={ true } />
-                                        <S.TextoDadoCliente><span>Versão do coletor: </span>{ cliente.sistema.versao }</S.TextoDadoCliente>
-                                        <S.Separador border={ true } />
-                                        <S.TextoDadoCliente><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente> </> }
+                                        <S.Separador lineBreak={ true } border={ true } />
+                                        <S.TextoDadoCliente><span>Versão do coletor: </span>{ cliente.sistema.versao }</S.TextoDadoCliente> </> }
+                                    { cliente.tipo == 'locacao' && <>
+                                        <S.Separador lineBreak={ true } border={ true } />
+                                        <S.TextoDadoCliente overflow={ true }><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente> </> }
                                 </S.SubContainerDadoCliente>
                             </S.ContainerDadoCliente>
                         </S.DadosCliente> }
@@ -512,7 +513,7 @@ function AtendimentoExpandido () {
 
                     <S.VerticalSpacer />
 
-                    <S.LinhaSubContainer>
+                    <S.LinhaSubContainer borderTop={ true }>
                         <S.SobLinha>
 
                             <S.Linha minWidth={ '140px' } maxWidth={ '100%' } forceHover={ true }>
