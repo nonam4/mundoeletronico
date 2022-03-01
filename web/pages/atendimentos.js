@@ -102,13 +102,32 @@ function Atendimentos () {
             return false
         }
 
+        function getCadastro ( id ) {
+            let localizado = undefined
+            for ( let tipo in cadastros ) {
+                if ( cadastros[ tipo ][ id ] ) return localizado = cadastros[ tipo ][ id ]
+                continue
+            }
+            return localizado
+        }
+
         function comparar ( atendimento ) {
-            if ( compararString( limparString( atendimento.cliente.nomefantasia ), filtro )
-                || compararString( limparString( atendimento.cliente.razaosocial ), filtro )
-                || compararString( atendimento.cliente.cpfcnpj, filtro )
-                || compararString( atendimento.cliente.contato.email, filtro )
-                || compararString( atendimento.cliente.contato.telefone, filtro )
-                || compararString( atendimento.cliente.contato.celular, filtro ) ) return true
+
+            const cadastro = getCadastro( atendimento.cliente.id )
+            if ( !cadastro ) return false
+
+            // compara os dados do cliente do atendimento
+            if ( compararString( limparString( cadastro.nomefantasia ), filtro )
+                || compararString( limparString( cadastro.razaosocial ), filtro )
+                || compararString( cadastro.cpfcnpj, filtro )
+                || compararString( cadastro.contato.email, filtro )
+                || compararString( cadastro.contato.telefone, filtro )
+                || compararString( cadastro.contato.celular, filtro ) ) return true
+
+            // comapra os dados do atendimento
+            if ( compararString( Database.convertTimestamp( atendimento.dados.ultimaalteracao ), filtro )
+                || compararString( Database.convertTimestamp( atendimento.dados.inicio ), filtro ) ) return true
+            // se nenhuma opção for verdadeira então retorna falso
             return false
         }
 
