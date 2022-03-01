@@ -125,6 +125,8 @@ function AtendimentoExpandido () {
         // depois define os dados alterados novamente
         if ( alteracao.feito ) payload[ 'Feitos' ][ alteracao.chave ] = alteracao
         if ( !alteracao.feito && alteracao.responsavel === '' ) payload[ 'Em aberto' ][ alteracao.chave ] = alteracao
+        //evita que dê algum erro caso o responsável não exista na lista ainda
+        if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ alteracao.responsavel ] = {}
         if ( !alteracao.feito && alteracao.responsavel !== '' ) payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] = alteracao
 
         return dispatch( { type: 'setAtendimentos', payload } )
@@ -165,7 +167,6 @@ function AtendimentoExpandido () {
             // depois que salvou atualiza os dados localmente
             setInAtendimentos( salvamento )
             diminuirEstoqueSuprimentos( salvamento )
-
             // se tiver alguma chave na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
             // ou seja, não precisa reenviar os dados da url pois eles já estão lá
             if ( router.query.chave ) return
@@ -178,7 +179,6 @@ function AtendimentoExpandido () {
                     chave: editado.chave
                 }
             } )
-
         } ).catch( err => {
             Notification.removeNotification( aviso )
             console.error( err )

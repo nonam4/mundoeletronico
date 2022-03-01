@@ -69,7 +69,7 @@ function Atendimento ( props ) {
     }
 
     let customProps = { expandido, atendimentos, expandirCadastro, finalizarReabrirCadastro }
-    return (
+    if ( Object.keys( atendimentos ).length > 0 || props.tecnico === 'Em aberto' || props.tecnico === 'Feitos' ) return (
         <S.Container>
             <S.Header>
                 <S.HeaderName>{ props.tecnico }</S.HeaderName>
@@ -85,5 +85,6 @@ function Atendimento ( props ) {
                 : <L.Simple { ...{ ...props, ...customProps } } /> }
         </S.Container>
     )
+    return ( <></> )
 }
 export default Atendimento
