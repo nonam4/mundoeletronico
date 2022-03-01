@@ -87,7 +87,7 @@ export const LinhaContainer = styled.div`
 `
 export const LinhaSubContainer = styled.div`
     width: 100%;
-    border-top: ${ ( { borderTop, theme } ) => borderTop == true && `solid 1px ${ theme.colors.borders }` }
+    border-top: ${ ( { borderTop, theme } ) => borderTop == true && `solid 1px ${ theme.colors.borders }` };
 `
 export const Linha = styled.div`
     width: 100%;
@@ -310,4 +310,10 @@ export const Separador = styled.div`
     @media only screen and (max-width: 600px) {
         display: ${ ( { lineBreak } ) => lineBreak == true && 'none' };
     }
+`
+export const MotivoContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 `

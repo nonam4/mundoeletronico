@@ -293,7 +293,7 @@ function AtendimentoExpandido () {
 
         for ( let index in editado.motivos ) {
             views.push(
-                <S.SobLinha key={ index }>
+                <S.MotivoContainer key={ index }>
                     <S.Linha minWidth={ '140px' } maxWidth={ '100%' }>
                         <SimpleTextField onChange={ ( e ) => handleMotivoChange( e, index ) } value={ editado.motivos[ index ] } maxLength={ 50 } />
                     </S.Linha>
@@ -302,7 +302,7 @@ function AtendimentoExpandido () {
                         <S.Spacer />
                         <S.Botao onClick={ () => removerMotivo( index ) } hover={ colors.azul } title='Remover motivo'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
                     </> }
-                </S.SobLinha>
+                </S.MotivoContainer>
             )
         }
         return views
@@ -347,7 +347,7 @@ function AtendimentoExpandido () {
             let suprimento = editado.lista[ index ]
 
             views.push(
-                <S.SobLinha key={ index }>
+                <S.MotivoContainer key={ index }>
                     <S.Linha minWidth={ '140px' } maxWidth={ '100%' } forceHover={ true }>
                         <S.SubTitulo> Modelo </S.SubTitulo>
                         <Select valor={ suprimento.value } options={ converterArray( suprimentos ) } onChange={ ( e ) => selecionarSuprimento( e.target.value, index ) } />
@@ -355,7 +355,7 @@ function AtendimentoExpandido () {
 
                     <S.Spacer />
 
-                    <S.Linha minWidth={ '84px' } maxWidth={ '84px' } forceHover={ true }>
+                    <S.Linha important={ true } minWidth={ '76px' } maxWidth={ '76px' } forceHover={ true }>
                         <TextField placeholder={ 'Quantidade' } onBlur={ ( e ) => handleQuantidadeBlur( e.target.value, index ) } onChange={ ( e ) => handleQuantidadeChange( e.target.value, index ) } value={ suprimento.quantidade } icon={ false } maxLength={ 2 } />
                     </S.Linha>
 
@@ -363,7 +363,7 @@ function AtendimentoExpandido () {
                         <S.Spacer />
                         <S.Botao onClick={ () => removerSuprimento( index ) } hover={ colors.azul } title='Remover suprimento'> <MenuIcon name='fechar' margin='0' /> </S.Botao>
                     </> }
-                </S.SobLinha >
+                </S.MotivoContainer >
 
             )
         }
