@@ -86,6 +86,9 @@ function AtendimentoExpandido () {
         setCliente( dados )
         setBuscaCliente( dados.nomefantasia )
         setEndereco( dados.endereco )
+
+        // por fim irá atualizar a data da última atualização
+        //if ( compareParentData() ) setEditado( set( 'dados.ultimaalteracao', timestamp, editado ) )
     }, [ editado ] )
 
     useEffect( () => {
@@ -116,22 +119,22 @@ function AtendimentoExpandido () {
 
     function setInAtendimentos () {
         let payload = state.atendimentos
-        if ( editado.feito ) payload[ 'Feitos' ][ editado.id ] = editado
-        if ( editado.responsavel === '' ) payload[ 'Em aberto' ][ editado.id ] = editado
-        if ( !editado.feito && editado.responsavel !== '' ) payload[ 'Tecnicos' ][ editado.responsavel ][ editado.id ] = editado
+        if ( editado.feito ) payload[ 'Feitos' ][ editado.chave ] = editado
+        if ( editado.responsavel === '' ) payload[ 'Em aberto' ][ editado.chave ] = editado
+        if ( !editado.feito && editado.responsavel !== '' ) payload[ 'Tecnicos' ][ editado.responsavel ][ editado.chave ] = editado
 
         return dispatch( { type: 'setAtendimentos', payload } )
     }
 
-    function localizarAtendimento ( id ) {
+    function localizarAtendimento ( chave ) {
         let localizado = undefined
 
-        if ( atendimentos[ 'Em aberto' ] && atendimentos[ 'Em aberto' ][ id ] ) return atendimentos[ 'Em aberto' ][ id ]
-        if ( atendimentos[ 'Feitos' ] && atendimentos[ 'Feitos' ][ id ] ) return atendimentos[ 'Feitos' ][ id ]
+        if ( atendimentos[ 'Em aberto' ] && atendimentos[ 'Em aberto' ][ chave ] ) return atendimentos[ 'Em aberto' ][ chave ]
+        if ( atendimentos[ 'Feitos' ] && atendimentos[ 'Feitos' ][ chave ] ) return atendimentos[ 'Feitos' ][ chave ]
 
         //depois filtra os dos tecnicos
         for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
-            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ id ] ) localizado = atendimentos[ 'Tecnicos' ][ tecnico ][ id ]
+            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ chave ] ) localizado = atendimentos[ 'Tecnicos' ][ tecnico ][ chave ]
         }
 
         return localizado
@@ -143,7 +146,7 @@ function AtendimentoExpandido () {
         if ( !editado.cliente ) return Notification.notificate( 'Erro', 'Selecione o cliente a ser atendido!', 'danger' )
         // verifique se tem algum motivo ou se será entregue toner
         if ( editado.motivos.length <= 0 && !editado.suprimentos ) return Notification.notificate( 'Erro', 'Informe o motivo do atendimento!', 'danger' )
-        // caso esteja tudo ok
+        // depois notifica e grava
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
         Database.salvarAtendimento( state.usuario, editado ).then( () => {
@@ -152,16 +155,16 @@ function AtendimentoExpandido () {
             // depois que salvou atualiza os dados localmente
             setInAtendimentos()
 
-            // se tiver algum id na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
+            // se tiver alguma chave na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
             // ou seja, não precisa reenviar os dados da url pois eles já estão lá
-            if ( router.query.id ) return
+            if ( router.query.chave ) return
             // como é um cadastro novo o stack é a própria página de cadastro
             let paginaAtual = router.pathname.replace( '/', '' )
             router.push( {
                 pathname: paginaAtual,
                 query: {
                     stack: 'cadastroatendimento',
-                    chave: editado.id
+                    chave: editado.chave
                 }
             } )
 
@@ -249,15 +252,15 @@ function AtendimentoExpandido () {
         }
 
         for ( let tipo in cadastros ) {
-            for ( let id in cadastros[ tipo ] ) {
+            for ( let chave in cadastros[ tipo ] ) {
 
-                let cadastro = cadastros[ tipo ][ id ]
+                let cadastro = cadastros[ tipo ][ chave ]
                 let nome = undefined
 
                 if ( compare( cadastro.razaosocial ) ) nome = cadastro.razaosocial
                 if ( compare( cadastro.nomefantasia ) ) nome = cadastro.nomefantasia
 
-                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.id } onClick={ () => setClienteAtendimento( cadastro ) }> { nome } </S.ItemListaNomes> )
+                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.chave } onClick={ () => setClienteAtendimento( cadastro ) }> { nome } </S.ItemListaNomes> )
             }
         }
 
@@ -322,8 +325,8 @@ function AtendimentoExpandido () {
         function converterArray ( lista ) {
             let array = []
 
-            for ( let id in lista ) {
-                let item = lista[ id ]
+            for ( let chave in lista ) {
+                let item = lista[ chave ]
                 array.push( item )
             }
             return array
@@ -442,7 +445,7 @@ function AtendimentoExpandido () {
                 <S.TituloContainer>
                     <S.Titulo> { router.query.chave ? 'Editar' : 'Novo' } Atendimento </S.Titulo>
                     <div>
-                        <S.DadosCadastro>ID do atendimento: <b> { editado.id } </b></S.DadosCadastro>
+                        <S.DadosCadastro>ID do atendimento: <b> { editado.chave } </b></S.DadosCadastro>
                         <S.DadosCadastro>Data do cadastro: <b> { Database.convertTimestamp( editado.dados.inicio ) } </b></S.DadosCadastro>
                         <S.DadosCadastro>Última alteração: <b>  { Database.convertTimestamp( editado.dados.ultimaalteracao ) } </b></S.DadosCadastro>
                     </div>
