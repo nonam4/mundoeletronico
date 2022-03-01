@@ -130,6 +130,10 @@ function AtendimentoExpandido () {
         return dispatch( { type: 'setAtendimentos', payload } )
     }
 
+    function setInSuprimentos ( alteracao ) {
+        return dispatch( { type: 'setSuprimentos', payload: { ...alteracao } } )
+    }
+
     function localizarAtendimento ( chave ) {
         let localizado = undefined
 
@@ -160,6 +164,7 @@ function AtendimentoExpandido () {
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
             setInAtendimentos( salvamento )
+            diminuirEstoqueSuprimentos( salvamento )
 
             // se tiver alguma chave na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
             // ou seja, não precisa reenviar os dados da url pois eles já estão lá
@@ -436,6 +441,19 @@ function AtendimentoExpandido () {
 
     function setListaSuprimentos ( value ) {
         setEditado( set( 'lista', value, editado ) )
+    }
+
+    function diminuirEstoqueSuprimentos ( atendimento ) {
+        // se o atendimento não estiver concluído não irá baixar a quantidade
+        if ( !atendimento.feito ) return false
+        let suprimentosLocal = JSON.parse( JSON.stringify( suprimentos ) )
+        for ( let index in editado.lista ) {
+
+            let resto = suprimentosLocal[ index ].estoque - editado.lista[ index ].quantidade
+            suprimentosLocal[ index ].estoque = resto
+            if ( resto < 0 ) suprimentosLocal[ index ].estoque = 0
+        }
+        setInSuprimentos( suprimentosLocal )
     }
 
     return (
