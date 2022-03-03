@@ -14,7 +14,8 @@ export function recalcularDados ( data, dados ) {
         let mes = data.getMonth() + 1
 
         for ( var x = 0; x < 4; x += 1 ) {
-            datas.push( { value: `${ ano }-${ String( mes ).padStart( 2, '0' ) }`, label: `${ String( mes ).padStart( 2, '0' ) }/${ ano }` } )
+            const mesVisual = String( mes ).padStart( 2, '0' )
+            datas.push( { value: `${ ano }-${ mesVisual }`, label: `${ mesVisual }/${ ano }` } )
 
             mes -= 1
             if ( mes <= 1 ) {
@@ -46,7 +47,7 @@ export function recalcularDados ( data, dados ) {
         let mes = String( Number( split[ 1 ] ) - 1 ).padStart( 2, '0' )
 
         if ( Number( mes ) < 1 ) {
-            ano--
+            ano -= 1
             mes = 12
         }
 
