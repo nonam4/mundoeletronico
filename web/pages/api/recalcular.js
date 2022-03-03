@@ -13,14 +13,13 @@ export function recalcularDados ( data, dados ) {
         let ano = data.getFullYear()
         let mes = data.getMonth() + 1
 
-        for ( var x = 0; x < 4; x++ ) {
-            datas.push( { value: ano + '-' + ( mes < 10 ? `0${ mes }` : mes ), label: ( mes < 10 ? `0${ mes }` : mes ) + '/' + ano } )
+        for ( var x = 0; x < 4; x += 1 ) {
+            datas.push( { value: `${ ano }-${ String( mes ).padStart( 2, '0' ) }`, label: `${ String( mes ).padStart( 2, '0' ) }/${ ano }` } )
 
+            mes -= 1
             if ( mes <= 1 ) {
+                ano -= 1
                 mes = 12
-                ano = ano - 1
-            } else {
-                mes--
             }
         }
         return datas
@@ -39,22 +38,26 @@ export function recalcularDados ( data, dados ) {
     function getMesPassado ( impressora, data ) {
         let contadores = impressora.contadores[ data ]
         //se o contador do mês for válido e os dias dentro do prazo então está tudo ok
+        if ( impressora.serial == 'TH91F1719K' ) console.log( 'valido e dias ok?', contadores, getDiasPassados( data, contadores.ultimo.dia ), contadores && getDiasPassados( data, contadores.ultimo.dia ) )
         if ( contadores && getDiasPassados( data, contadores.ultimo.dia ) ) return true
 
         let split = data.split( '-' )
         let ano = Number( split[ 0 ] )
-        let mes = Number( split[ 1 ] ) - 1
+        let mes = String( Number( split[ 1 ] ) - 1 ).padStart( 2, '0' )
 
-        if ( mes < 1 ) ano = ano - 1
-        if ( mes < 1 ) mes = 12
-        if ( mes < 10 ) mes = `0${ mes }`
+        if ( Number( mes ) < 1 ) {
+            ano--
+            mes = 12
+        }
 
         let mesPassado = `${ ano }-${ mes }`
         contadores = impressora.contadores[ mesPassado ]
         //se o contador do mês passado for válido e os dias dentro do prazo então está tudo ok
+        if ( impressora.serial == 'TH91F1719K' ) console.log( 'valido e valido?', contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ), contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ) )
         if ( contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ) ) return true
 
         //se os filtros forem diferentes do mês atual
+        if ( impressora.serial == 'TH91F1719K' ) console.log( 'a != b?', getDatas()[ 0 ].value, data, getDatas()[ 0 ].value != data )
         if ( getDatas()[ 0 ].value != data ) return true
 
         return false
@@ -65,8 +68,7 @@ export function recalcularDados ( data, dados ) {
 
         function pegarMesAtualAnteriror ( dataHistorico ) {
             let dataMatriz = data.split( '-' ) // separa a data matriz
-            let mesAnteriror = Number( dataMatriz[ 1 ] ) - 1 // o mes anterior inicialmente será o mes matriz atual menos 1
-            if ( mesAnteriror < 10 ) mesAnteriror = `0${ mesAnteriror }` // se o valor do mes anterior for menor que 10 adiciona o zerio no começo
+            let mesAnteriror = String( Number( dataMatriz[ 1 ] ) - 1 ).padStart( 2, '0' ) // o mes anterior inicialmente será o mes matriz atual menos 1
             if ( Number( dataMatriz[ 1 ] ) <= 1 ) mesAnteriror = 12 // se o valor do mes atual for 1 define o mes anterior como 12
 
             // se a data atual for igual à data do historico ou se a data do historico for igual à data do mes anterior permite
@@ -115,9 +117,10 @@ export function recalcularDados ( data, dados ) {
 
         cadastro.impressorasAtivas += 1
 
-        if ( !impressora.contadores ) continue
+        if ( !impressora.contadores || !impressora.contadores[ data ] ) impressorasAtrasadas += 1
+        if ( !impressora.contadores || !impressora.contadores[ data ] ) continue
+
         let contadores = impressora.contadores[ data ]
-        if ( !contadores ) continue
         if ( !getMesPassado( impressora, data ) ) impressorasAtrasadas += 1
 
         //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
