@@ -39,7 +39,6 @@ export function recalcularDados ( data, dados ) {
     function getMesPassado ( impressora, data ) {
         let contadores = impressora.contadores[ data ]
         //se o contador do mês for válido e os dias dentro do prazo então está tudo ok
-        if ( impressora.serial == 'TH91F1719K' ) console.log( 'valido e dias ok?', contadores, getDiasPassados( data, contadores.ultimo.dia ), contadores && getDiasPassados( data, contadores.ultimo.dia ) )
         if ( contadores && getDiasPassados( data, contadores.ultimo.dia ) ) return true
 
         let split = data.split( '-' )
@@ -54,11 +53,9 @@ export function recalcularDados ( data, dados ) {
         let mesPassado = `${ ano }-${ mes }`
         contadores = impressora.contadores[ mesPassado ]
         //se o contador do mês passado for válido e os dias dentro do prazo então está tudo ok
-        if ( impressora.serial == 'TH91F1719K' ) console.log( 'valido e valido?', contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ), contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ) )
         if ( contadores && getDiasPassados( mesPassado, contadores.ultimo.dia ) ) return true
 
         //se os filtros forem diferentes do mês atual
-        if ( impressora.serial == 'TH91F1719K' ) console.log( 'a != b?', getDatas()[ 0 ].value, data, getDatas()[ 0 ].value != data )
         if ( getDatas()[ 0 ].value != data ) return true
 
         return false
