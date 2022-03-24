@@ -24,8 +24,8 @@ export async function getAtendimentos ( busca ) {
     return await axios.get( '/api/web/getatendimentos', { params: { busca } } )
 }
 
-export async function salvarAtendimento ( usuario, alterado ) {
-    return await axios.post( '/api/web/salvaratendimento', { usuario, atendimento: alterado } )
+export async function salvarAtendimento ( usuario, atendimento, suprimentos ) {
+    return await axios.post( '/api/web/salvaratendimento', { usuario, atendimento, suprimentos } )
 }
 
 export function getDatas () {

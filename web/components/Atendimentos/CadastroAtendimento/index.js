@@ -161,12 +161,11 @@ function AtendimentoExpandido () {
 
         // altera a data da ultima modificação
         const salvamento = { ...editado, dados: { ...editado.dados, ultimaalteracao: timestamp } }
-        Database.salvarAtendimento( state.usuario, salvamento ).then( () => {
+        Database.salvarAtendimento( state.usuario, salvamento, diminuirEstoqueSuprimentos( salvamento ) ).then( () => {
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
             // depois que salvou atualiza os dados localmente
             setInAtendimentos( salvamento )
-            diminuirEstoqueSuprimentos( salvamento )
             // se tiver alguma chave na url até aqui é sinal que é uma edição de cadastro não um cadastro novo
             // ou seja, não precisa reenviar os dados da url pois eles já estão lá
             if ( router.query.chave ) return
@@ -447,6 +446,7 @@ function AtendimentoExpandido () {
         // se o atendimento não estiver concluído não irá baixar a quantidade
         if ( !atendimento.feito ) return false
         let suprimentosLocal = JSON.parse( JSON.stringify( suprimentos ) )
+
         for ( let index in editado.lista ) {
 
             let resto = suprimentosLocal[ index ].estoque - editado.lista[ index ].quantidade
@@ -454,6 +454,7 @@ function AtendimentoExpandido () {
             if ( resto < 0 ) suprimentosLocal[ index ].estoque = 0
         }
         setInSuprimentos( suprimentosLocal )
+        return suprimentosLocal
     }
 
     return (
@@ -505,7 +506,7 @@ function AtendimentoExpandido () {
                                         <S.TextoDadoCliente><span>Versão do coletor: </span>{ cliente.sistema.versao }</S.TextoDadoCliente> </> }
                                     { cliente.tipo == 'locacao' && <>
                                         <S.Separador lineBreak={ true } border={ true } />
-                                        <S.TextoDadoCliente overflow={ true }><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente> </> }
+                                        <S.TextoDadoCliente over={ true }><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente> </> }
                                 </S.SubContainerDadoCliente>
                             </S.ContainerDadoCliente>
                         </S.DadosCliente> }
