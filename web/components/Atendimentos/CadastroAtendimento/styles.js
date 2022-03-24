@@ -285,8 +285,8 @@ export const TextoDadoCliente = styled.div`
     width: fit-content;
     color: ${ ( { theme } ) => theme.colors.texts };
     white-space: ${ ( { lineBreak } ) => lineBreak != true ? 'nowrap' : 'normal' };
-    overflow: ${ ( { overflow } ) => overflow != true ? 'visible' : 'hidden' };
-    text-overflow: ${ ( { overflow } ) => overflow != true ? 'clip' : 'ellipsis' };
+    overflow: ${ ( { over } ) => over != true ? 'visible' : 'hidden' };
+    text-overflow: ${ ( { over } ) => over != true ? 'clip' : 'ellipsis' };
     cursor: inherit;
 
     span {
