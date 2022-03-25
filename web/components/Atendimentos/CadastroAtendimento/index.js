@@ -29,7 +29,7 @@ function AtendimentoExpandido () {
     const data = new Date()
     const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
     // atendimento com todos os dados limpos
-    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, suprimentos: false, lista: {}, motivos: [ '' ], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp } }
+    const limpo = { chave: data.getTime(), cliente: undefined, feito: false, suprimentos: false, lista: {}, motivos: [ '' ], responsavel: '', dados: { inicio: timestamp, ultimaalteracao: timestamp }, ordem: 0 }
     // decide se vai voltar os dados para o padrão e desfazer as alterações
     const [ rollback, setRollback ] = useState( false )
     // valor padrão do cadastro, usado apenas para comparar para desfazer alterações

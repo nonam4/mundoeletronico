@@ -28,6 +28,11 @@ export async function salvarAtendimento ( usuario, atendimento, suprimentos ) {
     return await axios.post( '/api/web/salvaratendimento', { usuario, atendimento, suprimentos } )
 }
 
+// não precisa salvar suprimentos, apenas estamos mexendo na ordem dos atendimentos
+export async function salvarOrdemAtendimentos ( usuario, atendimentos ) {
+    return await axios.post( '/api/web/salvarordematendimentos', { usuario, atendimentos } )
+}
+
 export function getDatas () {
     let datas = []
     let data = new Date()
