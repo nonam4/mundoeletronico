@@ -4,30 +4,69 @@ import { useDados } from '../../../contexts/DadosContext'
 import { useRouter } from 'next/router'
 
 import * as Database from '../../../workers/database'
+import * as Notification from '../../../workers/notification'
 
 import MenuIcon from '../../../components/Icons/MenuIcon'
 import * as L from '../Lists'
 import * as S from './styles'
 
 function Atendimento ( props ) {
-    const { dispatch } = useDados()
+    const { state, dispatch } = useDados()
     const router = useRouter()
     const { colors } = useContext( ThemeContext )
-    const [ atendimentos, setAtendimentos ] = useState( {} )
+    const [ atendimentosRollback, setAtendimentosRollback ] = useState( [] )
+    const [ atendimentos, setAtendimentos ] = useState( [] )
     const [ expandido, setExpandido ] = useState( props.expandido ? props.expandido : false )
     const [ ordenado, setOrdenado ] = useState( false )
 
     useEffect( () => {
-        props.atendimentos && setAtendimentos( JSON.parse( JSON.stringify( props.atendimentos ) ) )
+        if ( props.atendimentos ) setAtendimentosRollback( convertToArray( props.atendimentos ) )
     }, [ props.atendimentos ] )
 
     useEffect( () => {
-        console.log( 'ordenados -> ', atendimentos )
+        setAtendimentos( atendimentosRollback )
+    }, [ atendimentosRollback ] )
+
+    useEffect( () => {
+        setOrdenado( JSON.stringify( atendimentos ) !== JSON.stringify( atendimentosRollback ) )
     }, [ atendimentos ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
         dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function convertToArray ( object ) {
+        let arr = []
+
+        function compare ( a, b ) {
+            if ( a.ordem < b.ordem ) {
+                return -1
+            }
+            if ( a.ordem > b.ordem ) {
+                return 1
+            }
+            return 0
+        }
+
+        for ( let key in object ) {
+            arr.push( object[ key ] )
+        }
+
+        arr.sort( compare )
+        return arr
+    }
+
+    function setInAtendimentos ( alteracoes ) {
+
+        let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
+
+        for ( let chave in alteracoes ) {
+            let alteracao = alteracoes[ chave ]
+            payload[ 'Tecnicos' ][ alteracao.responsavel ][ chave ] = alteracao
+        }
+
+        return dispatch( { type: 'setAtendimentos', payload } )
     }
 
     function expandirCadastro ( chave ) {
@@ -49,53 +88,59 @@ function Atendimento ( props ) {
     }
 
     function handleOnDragEnd ( result ) {
-        const { destination } = result
+        const { destination, source } = result
+        const atendimentosOrdenados = Array.from( JSON.parse( JSON.stringify( atendimentos ) ) )
+
+        // se o item for soltado fora da área correta então ignora
         if ( !destination ) return
+        // se o item for soltado no mesmo lugar que ele estava então ignora
+        if ( destination.droppableId === source.droppableId &&
+            destination.index == source.index ) return
 
-
-        let source = Object.keys( atendimentos )[ result.source.index ]
-        let ordered = {}
-
-        Object.keys( atendimentos ).forEach( ( key, index ) => {
-
-            if ( key === source ) return
-
-            //se o destino for maior que a origem - adiciona os outros elementos antes
-            if ( source.index < destination.index ) ordered[ key ] = atendimentos[ key ]
-
-
-            if ( destination.index === index ) ordered[ source ] = atendimentos[ source ]
-
-
-            //se o destino for menor que a origem - adiciona os outros elementos depois
-            if ( source.index > destination.index ) ordered[ key ] = atendimentos[ key ]
-        } )
-
-        //se o usuario apenas mexer um item sem tirar de posição, esse return evita que o sistema limpe totalmente a lista
-        if ( Object.keys( ordered ).length <= 0 ) return
-        setOrdenado( true )
-
-        setAtendimentos( JSON.parse( JSON.stringify( ordered ) ) )
+        // primeiro remove da lista o item que foi mexido
+        atendimentosOrdenados.splice( source.index, 1 )
+        // depois readiciona ele no novo index
+        atendimentosOrdenados.splice( destination.index, 0, atendimentos[ source.index ] )
+        setAtendimentos( atendimentosOrdenados )
     }
 
     function rollbackOrders () {
-        setAtendimentos( JSON.parse( JSON.stringify( props.atendimentos ) ) )
-        setOrdenado( false )
+        setAtendimentos( atendimentosRollback )
     }
 
     function salvarOrdem () {
-        console.log( 'ordenados -> ', atendimentos )
-        //Database.salvarOrdemAtendimentos( atendimentos )
+
+        let object = {}
+        atendimentos.forEach( ( atendimento, index ) => {
+            atendimento.ordem = index + 1
+
+            object[ atendimento.chave ] = atendimento
+        } )
+
+        // notifica a gravação da ordem dos atendimentos
+        let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
+        Database.salvarOrdemAtendimentos( state.usuario, object ).then( () => {
+            Notification.removeNotification( aviso )
+            Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
+            // depois que salvou atualiza os dados localmente
+            setInAtendimentos( object )
+        } ).catch( err => {
+            Notification.removeNotification( aviso )
+            console.error( err )
+            Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
+        } )
     }
 
-    let customProps = { expandido, atendimentos, expandirCadastro, finalizarReabrirCadastro }
-    if ( Object.keys( atendimentos ).length > 0 || props.tecnico === 'Em aberto' || props.tecnico === 'Feitos' ) return (
+    let customProps = { expandido, ordenacao: atendimentos, expandirCadastro, finalizarReabrirCadastro }
+    if ( props.atendimentos && ( Object.keys( props.atendimentos ).length > 0 || props.tecnico === 'Em aberto' || props.tecnico === 'Feitos' ) ) return (
         <S.Container>
             <S.Header>
                 <S.HeaderName>{ props.tecnico }</S.HeaderName>
                 <S.HeaderButtons>
-                    { ordenado && <S.Button onClick={ rollbackOrders } hover={ colors.azul } title={ 'Desfazer' }> <MenuIcon name='desfazer' margin='0.5' /> </S.Button> }
-                    { ordenado && <S.Button onClick={ salvarOrdem } hover={ colors.azul } title={ 'Salvar' }> <MenuIcon name='salvar' margin='0.5' /> </S.Button> }
+                    { ordenado && <>
+                        <S.Button onClick={ rollbackOrders } hover={ colors.azul } title={ 'Desfazer' }> <MenuIcon name='desfazer' margin='0.5' /> </S.Button>
+                        <S.Button onClick={ salvarOrdem } hover={ colors.azul } title={ 'Salvar' }> <MenuIcon name='salvar' margin='0.5' /> </S.Button>
+                    </> }
                     <S.Button onClick={ () => setExpandido( !expandido ) } hover={ colors.azul } title={ expandido ? 'Recolher' : 'Expandir' }>
                         <MenuIcon name={ expandido ? 'arrow_up' : 'arrow_dwn' } margin='0' />
                     </S.Button>

@@ -9,18 +9,18 @@ import * as Database from '../../../workers/database'
 
 export function DragNDrop ( props ) {
     const { colors } = useContext( ThemeContext )
-    const atendimentos = props.atendimentos
+    const atendimentos = props.ordenacao
 
     return (
         <DragDropContext onDragEnd={ props.handleOnDragEnd }>
             <Droppable droppableId={ props.tecnico }>
                 { provided => (
                     <S.Content { ...provided.droppableProps } ref={ provided.innerRef } expandido={ props.expandido }>
-                        { Object.keys( atendimentos ).map( ( chave, index ) =>
-                            <Draggable key={ chave } draggableId={ chave } index={ index }>
+                        { atendimentos.map( ( atendimento, index ) =>
+                            <Draggable key={ String( atendimento.chave ) } draggableId={ String( atendimento.chave ) } index={ index }>
                                 { provided =>
                                     < S.Atendimentos draggable={ true } ref={ provided.innerRef } { ...provided.draggableProps } { ...provided.dragHandleProps }>
-                                        <Atendimento { ...{ ...props, atendimentos, chave, colors } } />
+                                        <Atendimento { ...{ ...props, chave: atendimento.chave, colors } } />
                                     </S.Atendimentos>
                                 }
                             </Draggable>
@@ -35,14 +35,13 @@ export function DragNDrop ( props ) {
 
 export function Simple ( props ) {
     const { colors } = useContext( ThemeContext )
-    const atendimentos = props.atendimentos
+    const atendimentos = props.ordenacao
 
     return (
         <S.Content expandido={ props.expandido }>
-            { Object.keys( atendimentos ).map( ( chave ) =>
-
-                <S.Atendimentos draggable={ false } key={ chave }>
-                    <Atendimento { ...{ ...props, atendimentos, chave, colors } } />
+            { atendimentos.map( atendimento =>
+                <S.Atendimentos draggable={ false } key={ atendimento.chave }>
+                    <Atendimento { ...{ ...props, chave: atendimento.chave, colors } } />
                 </S.Atendimentos>
             ) }
         </S.Content>
