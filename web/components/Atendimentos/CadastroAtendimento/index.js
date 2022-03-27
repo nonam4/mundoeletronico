@@ -278,7 +278,8 @@ function AtendimentoExpandido () {
                 if ( compare( cadastro.razaosocial ) ) nome = cadastro.razaosocial
                 if ( compare( cadastro.nomefantasia ) ) nome = cadastro.nomefantasia
 
-                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.chave } onClick={ () => setClienteAtendimento( cadastro ) }> { nome } </S.ItemListaNomes> )
+                // o cadastro aqui são os clientes, a chave é a ID
+                if ( nome ) views.push( <S.ItemListaNomes key={ cadastro.id } onClick={ () => setClienteAtendimento( cadastro ) }> { nome } </S.ItemListaNomes> )
             }
         }
 
