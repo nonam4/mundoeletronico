@@ -548,22 +548,23 @@ function AtendimentoExpandido () {
                     </S.LinhaSubContainer>
                 </S.LinhaContainer>
 
-                <S.TituloContainer>
-                    <S.Titulo> Suprimentos </S.Titulo>
-                </S.TituloContainer>
+                { /*<>
+                    <S.TituloContainer>
+                        <S.Titulo> Suprimentos </S.Titulo>
+                    </S.TituloContainer>
 
-                <S.LinhaContainer>
-                    <S.Linha>
-                        <Checkbox text={ 'Entregar toners?' } changeReturn={ ( checked ) => setEntregaSuprimentos( checked ) } checked={ editado.suprimentos } paddingLeft={ '0' } />
-                    </S.Linha>
-                    { editado.suprimentos && <S.LinhaSubContainer>
-                        { renderListaSuprimentos() }
+                    <S.LinhaContainer>
+                        <S.Linha>
+                            <Checkbox text={ 'Entregar toners?' } changeReturn={ ( checked ) => setEntregaSuprimentos( checked ) } checked={ editado.suprimentos } paddingLeft={ '0' } />
+                        </S.Linha>
+                        { editado.suprimentos && <S.LinhaSubContainer>
+                            { renderListaSuprimentos() }
 
-                        { Object.keys( suprimentosDisponiveis ).length > 0 && <S.Linha>
-                            <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='add' margin='0' /> </S.Botao>
-                        </S.Linha> }
-                    </S.LinhaSubContainer> }
-                </S.LinhaContainer>
+                            { Object.keys( suprimentosDisponiveis ).length > 0 && <S.Linha>
+                                <S.Botao onClick={ () => adicionarSuprimento() } hover={ colors.azul } title='Adicionar suprimento'> <MenuIcon name='add' margin='0' /> </S.Botao>
+                            </S.Linha> }
+                        </S.LinhaSubContainer> }
+                            </S.LinhaContainer> </> */}
             </S.View>
         </S.Container >
     )
