@@ -156,6 +156,14 @@ function AtendimentoExpandido () {
         if ( !editado.cliente ) return Notification.notificate( 'Erro', 'Selecione o cliente a ser atendido!', 'danger' )
         // verifique se tem algum motivo ou se será entregue toner
         if ( editado.motivos.length <= 0 && !editado.suprimentos ) return Notification.notificate( 'Erro', 'Informe o motivo do atendimento!', 'danger' )
+        let motivoVazio = false
+        editado.motivos.forEach( motivo => {
+            console.log( motivo )
+            let limpo = motivo.replace( /\(|\)|\-|\s/g, '' )
+            if ( limpo.length <= 4 ) motivoVazio = true
+        } )
+        if ( motivoVazio ) return Notification.notificate( 'Erro', 'Motivo de atendimento muito curto ou vazio!', 'danger' )
+
         // depois notifica e grava
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
 
