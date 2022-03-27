@@ -500,7 +500,7 @@ function AtendimentoExpandido () {
                         { cliente && buscaCliente === cliente.nomefantasia && <S.DadosCliente>
                             <S.ContainerDadoCliente>
                                 <S.TextoDadoCliente lineBreak={ true }><span>Endereço: </span>
-                                    <a target='_blank'
+                                    <a target='_blank' rel='noreferrer'
                                         href={ `http://maps.google.com/maps?q=${ endereco.rua }+${ endereco.numero }+${ endereco.cidade }+${ endereco.cidade }` }>
                                         { `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }
                                     </a></S.TextoDadoCliente>
