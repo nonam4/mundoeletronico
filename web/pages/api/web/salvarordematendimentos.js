@@ -1,5 +1,6 @@
 import database from '../_database.js'
 import bcrypt from 'bcryptjs'
+import axios from 'axios'
 
 export default async ( req, res ) => {
 
@@ -19,6 +20,10 @@ export default async ( req, res ) => {
         let batch = database.batch()
         for ( let id in atendimentos ) {
             batch.set( database.doc( `/atendimentos/${ id }` ), atendimentos[ id ] )
+
+            // grava o atendimento no sistema antigo
+            axios.post( 'https://us-central1-ioi-printers.cloudfunctions.net/gravarAtendimentoV2',
+                { usuario: process.env.USER, senha: process.env.PASS, atendimento: atendimentos[ id ] } )
         }
 
         return batch.commit().then( () => {
