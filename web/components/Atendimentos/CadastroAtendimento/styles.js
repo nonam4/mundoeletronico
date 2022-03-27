@@ -298,6 +298,11 @@ export const TextoDadoCliente = styled.div`
         margin-right: 0.2rem;
     }
 
+    a {
+        text-decoration: none;
+        color: ${ ( { theme } ) => theme.colors.texts };
+    }
+
     @media only screen and (max-width: 600px) {
         width: 100%;
     }
