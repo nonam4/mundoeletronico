@@ -49,7 +49,7 @@ function AtendimentoExpandido () {
 
     // quando iniciar o sistema
     useEffect( () => {
-        if ( !router.query.chave || !state.atendimentos ) return
+        if ( !router.query.chave || !state.atendimentos ) return setLoad( false )
         // se alguma id for passada como parâmetro na URL
         // definirá que é um cadastro para ser editado
         let localizado = localizarAtendimento( router.query.chave )
@@ -520,9 +520,9 @@ function AtendimentoExpandido () {
                         </S.DadosCliente> }
                     </S.LinhaSubContainer>
 
-                    <S.VerticalSpacer />
+                    { cliente && buscaCliente === cliente.nomefantasia && <S.VerticalSpacer /> }
 
-                    <S.LinhaSubContainer borderTop={ true }>
+                    <S.LinhaSubContainer borderTop={ cliente && buscaCliente === cliente.nomefantasia }>
                         <S.SobLinha>
 
                             <S.Linha minWidth={ '140px' } maxWidth={ '100%' } forceHover={ true }>
