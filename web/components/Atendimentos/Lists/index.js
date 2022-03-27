@@ -9,7 +9,7 @@ import * as Database from '../../../workers/database'
 
 export function DragNDrop ( props ) {
     const { colors } = useContext( ThemeContext )
-    const atendimentos = props.ordenacao
+    const atendimentos = props.atendimentos
 
     return (
         <DragDropContext onDragEnd={ props.handleOnDragEnd }>
@@ -35,7 +35,7 @@ export function DragNDrop ( props ) {
 
 export function Simple ( props ) {
     const { colors } = useContext( ThemeContext )
-    const atendimentos = props.ordenacao
+    const atendimentos = props.atendimentos
 
     return (
         <S.Content expandido={ props.expandido }>
@@ -48,13 +48,22 @@ export function Simple ( props ) {
     )
 }
 
-function Atendimento ( { atendimentos, chave, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
+function Atendimento ( { chave, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
     // variaveis do contexto, disponível em todo o sistema
     const { state } = useDados()
     // variaveis disponíveis no contexto
-    const { cadastros } = state
-    let atendimento = atendimentos[ chave ]
+    const { cadastros, atendimentos } = state
+
+    let atendimento = localizarAtendimento( chave )
     let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.id ]
+
+    function localizarAtendimento ( chave ) {
+        if ( atendimentos[ 'Em aberto' ][ chave ] ) return atendimentos[ 'Em aberto' ][ chave ]
+        if ( atendimentos[ 'Feitos' ][ chave ] ) return atendimentos[ 'Feitos' ][ chave ]
+        for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
+            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ chave ] ) return atendimentos[ 'Tecnicos' ][ tecnico ][ chave ]
+        }
+    }
 
     function getListaSuprimentos () {
         let motivo = ''

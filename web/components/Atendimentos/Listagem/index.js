@@ -37,6 +37,7 @@ function Atendimento ( props ) {
     }
 
     function convertToArray ( object ) {
+        let newObject = JSON.parse( JSON.stringify( object ) )
         let arr = []
 
         function compare ( a, b ) {
@@ -49,8 +50,8 @@ function Atendimento ( props ) {
             return 0
         }
 
-        for ( let key in object ) {
-            arr.push( object[ key ] )
+        for ( let key in newObject ) {
+            arr.push( newObject[ key ] )
         }
 
         arr.sort( compare )
@@ -131,8 +132,8 @@ function Atendimento ( props ) {
         } )
     }
 
-    let customProps = { expandido, ordenacao: atendimentos, expandirCadastro, finalizarReabrirCadastro }
-    if ( props.atendimentos && ( Object.keys( props.atendimentos ).length > 0 || props.tecnico === 'Em aberto' || props.tecnico === 'Feitos' ) ) return (
+    let customProps = { expandido, atendimentos, expandirCadastro, finalizarReabrirCadastro }
+    if ( atendimentos.length > 0 || props.tecnico === 'Em aberto' || props.tecnico === 'Feitos' ) return (
         <S.Container>
             <S.Header>
                 <S.HeaderName>{ props.tecnico }</S.HeaderName>

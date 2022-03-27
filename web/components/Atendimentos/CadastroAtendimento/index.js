@@ -117,17 +117,17 @@ function AtendimentoExpandido () {
     function setInAtendimentos ( alteracao ) {
 
         let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
-        // primeiro tenha certeza que nenhuma outra seção tenha o mesmo atendimento
+        // primeiro tenha certeza que nenhuma tenha o atendimento
         // usará a variável cadastro pois ela contém todos os dados antes da alteração
-        delete payload[ 'Feitos' ][ cadastro.chave ]
         delete payload[ 'Em aberto' ][ cadastro.chave ]
+        delete payload[ 'Feitos' ][ cadastro.chave ]
         if ( cadastro.responsavel !== '' ) delete payload[ 'Tecnicos' ][ cadastro.responsavel ][ cadastro.chave ]
         // depois define os dados alterados novamente
-        if ( alteracao.feito ) payload[ 'Feitos' ][ alteracao.chave ] = alteracao
-        if ( !alteracao.feito && alteracao.responsavel === '' ) payload[ 'Em aberto' ][ alteracao.chave ] = alteracao
+        if ( alteracao.feito ) payload[ 'Feitos' ][ cadastro.chave ] = alteracao
+        if ( !alteracao.feito && alteracao.responsavel === '' ) payload[ 'Em aberto' ][ cadastro.chave ] = alteracao
         //evita que dê algum erro caso o responsável não exista na lista ainda
-        if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ alteracao.responsavel ] = {}
-        if ( !alteracao.feito && alteracao.responsavel !== '' ) payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] = alteracao
+        if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ cadastro.responsavel ] = {}
+        if ( !alteracao.feito && alteracao.responsavel !== '' ) payload[ 'Tecnicos' ][ alteracao.responsavel ][ cadastro.chave ] = alteracao
 
         return dispatch( { type: 'setAtendimentos', payload } )
     }
