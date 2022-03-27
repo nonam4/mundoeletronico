@@ -158,7 +158,6 @@ function AtendimentoExpandido () {
         if ( editado.motivos.length <= 0 && !editado.suprimentos ) return Notification.notificate( 'Erro', 'Informe o motivo do atendimento!', 'danger' )
         let motivoVazio = false
         editado.motivos.forEach( motivo => {
-            console.log( motivo )
             let limpo = motivo.replace( /\(|\)|\-|\s/g, '' )
             if ( limpo.length <= 4 ) motivoVazio = true
         } )
