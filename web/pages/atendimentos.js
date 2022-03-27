@@ -43,7 +43,8 @@ function Atendimentos () {
 
     // garante que o load será fechado quando o stack mudar
     useEffect( () => {
-        if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ) setLoad( false )
+        if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ||
+            state.tecnicos ) setLoad( false )
     }, [ router.query.stack ] )
 
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database ou busca local
@@ -57,6 +58,7 @@ function Atendimentos () {
 
     // garante que o load será escondido somente após filtrar todos os dados
     useEffect( () => {
+
         if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ||
             state.tecnicos ) setLoad( false )
     }, [ atendimentosFiltrados ] )
