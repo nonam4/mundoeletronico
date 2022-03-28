@@ -117,7 +117,6 @@ function AtendimentoExpandido () {
     function setInAtendimentos ( alteracao ) {
 
         let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
-        console.log( 'initial -> ', payload )
         // primeiro tenha certeza que nenhuma tenha o atendimento
         // usará a variável cadastro pois ela contém todos os dados antes da alteração
         delete payload[ 'Em aberto' ][ cadastro.chave ]

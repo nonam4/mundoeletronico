@@ -12,6 +12,7 @@ import DropDown from '../components/Atendimentos/DropDown'
 import Listagem from '../components/Atendimentos/Listagem'
 
 function Atendimentos () {
+    const filtradosPadrao = { 'Tecnicos': {} }
     const router = useRouter()
     // variaveis do contexto, disponível em todo o sistema
     const { state, dispatch } = useDados()
@@ -24,7 +25,7 @@ function Atendimentos () {
     // busca nos atendimentos
     const [ busca, setBusca ] = useState( '' )
     //  array de atendimentos filtrados pelo campo de busca, item loca, não interfere no contexto
-    const [ atendimentosFiltrados, setAtendimentosFiltrados ] = useState( { 'Tecnicos': {} } )
+    const [ atendimentosFiltrados, setAtendimentosFiltrados ] = useState( filtradosPadrao )
 
     useEffect( () => {
         // adiciona os listeners do ctrl + f
@@ -41,15 +42,8 @@ function Atendimentos () {
         solicitarDados()
     }, [] )
 
-    // garante que o load será fechado quando o stack mudar
-    useEffect( () => {
-        if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ||
-            state.tecnicos ) setLoad( false )
-    }, [ router.query.stack ] )
-
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database ou busca local
     useEffect( () => {
-        console.log( 'state -> ', atendimentos )
         // primeiro busca localmente, se não encontrar nenhuma correspondência então passa para a busca no database
         // busca por nome de cliente, data ou palavra chave
         if ( busca === '' ) return setAtendimentosFiltrados( atendimentos )
@@ -57,14 +51,10 @@ function Atendimentos () {
     }, [ busca, atendimentos ] )
 
     // garante que o load será escondido somente após filtrar todos os dados
+    // ou quando o stack mudar
     useEffect( () => {
-        console.log( 'atendimentos filtrados -> ', atendimentosFiltrados )
-
-        if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ||
-            state.tecnicos ) setLoad( false )
-
-
-    }, [ atendimentosFiltrados ] )
+        if ( JSON.stringify( filtradosPadrao ) !== JSON.stringify( atendimentosFiltrados ) ) setLoad( false )
+    }, [ atendimentosFiltrados, router.query.stack ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
