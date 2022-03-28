@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 import { useDados } from '../../../contexts/DadosContext'
 import { useRouter } from 'next/router'
+import set from 'lodash/fp/set'
 
 import * as Database from '../../../workers/database'
 import * as Notification from '../../../workers/notification'
@@ -58,18 +59,6 @@ function Atendimento ( props ) {
         return arr
     }
 
-    function setInAtendimentos ( alteracoes ) {
-
-        let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
-
-        for ( let chave in alteracoes ) {
-            let alteracao = alteracoes[ chave ]
-            payload[ 'Tecnicos' ][ alteracao.responsavel ][ chave ] = alteracao
-        }
-
-        return dispatch( { type: 'setAtendimentos', payload } )
-    }
-
     function expandirCadastro ( chave ) {
         let paginaAtual = router.pathname.replace( '/', '' )
         setLoad( true )
@@ -84,8 +73,84 @@ function Atendimento ( props ) {
         }, 200 )
     }
 
-    function finalizarReabrirCadastro ( chave ) {
-        console.log( `atendimento ${ chave } finalizado` )
+    function localizarAtendimento ( chave ) {
+        const atendimentos = state.atendimentos
+        let localizado = undefined
+
+        if ( atendimentos[ 'Em aberto' ] && atendimentos[ 'Em aberto' ][ chave ] ) return atendimentos[ 'Em aberto' ][ chave ]
+        if ( atendimentos[ 'Feitos' ] && atendimentos[ 'Feitos' ][ chave ] ) return atendimentos[ 'Feitos' ][ chave ]
+
+        //depois filtra os dos tecnicos
+        for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
+            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ chave ] ) localizado = atendimentos[ 'Tecnicos' ][ tecnico ][ chave ]
+        }
+
+        return localizado
+    }
+
+    function diminuirEstoqueSuprimentos ( atendimento ) {
+
+        function setInSuprimentos ( alteracao ) {
+            return dispatch( { type: 'setSuprimentos', payload: { ...alteracao } } )
+        }
+
+        // se o atendimento não estiver concluído não irá baixar a quantidade
+        if ( !atendimento.feito ) return false
+        let suprimentosLocal = JSON.parse( JSON.stringify( state.suprimentos ) )
+
+        for ( let index in atendimento.lista ) {
+
+            let resto = suprimentosLocal[ index ].estoque - editado.lista[ index ].quantidade
+            suprimentosLocal[ index ].estoque = resto
+            if ( resto < 0 ) suprimentosLocal[ index ].estoque = 0
+        }
+        setInSuprimentos( suprimentosLocal )
+        return suprimentosLocal
+    }
+
+    function finalizarReabrirCadastro ( chave, status ) {
+
+        function setInAtendimentos ( alteracao ) {
+
+            let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
+            // primeiro tenha certeza que nenhuma tenha o atendimento
+            delete payload[ 'Em aberto' ][ alteracao.chave ]
+            delete payload[ 'Feitos' ][ alteracao.chave ]
+
+            // caso o técnico não exista no payload ainda transforma ele em objeto, evita erros
+            if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ alteracao.responsavel ] = {}
+            if ( payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] ) delete payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ]
+
+            // depois define os dados alterados novamente
+            // se estiver feito
+            if ( alteracao.feito ) payload = { ...set( `Feitos.${ alteracao.chave }`, alteracao, payload ) }
+
+            // se o responsável for em branco - em aberto
+            if ( !alteracao.feito && alteracao.responsavel === '' ) payload = { ...set( `Em aberto.${ alteracao.chave }`, alteracao, payload ) }
+
+
+            // caso tenha algum responsável informado
+            if ( !alteracao.feito && alteracao.responsavel !== '' ) payload = { ...set( `Tecnicos.${ alteracao.responsavel }.${ alteracao.chave }`, alteracao, payload ) }
+
+            return dispatch( { type: 'setAtendimentos', payload } )
+        }
+
+        const data = new Date()
+        const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
+        const localizado = localizarAtendimento( chave )
+
+        let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
+        let finalizado = { ...localizado, feito: !status, dados: { ...localizado.dados, ultimaalteracao: timestamp } }
+        Database.salvarAtendimento( state.usuario, finalizado, diminuirEstoqueSuprimentos( finalizado ) ).then( () => {
+            Notification.removeNotification( aviso )
+            Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
+            // depois que salvou atualiza os dados localmente
+            setInAtendimentos( finalizado )
+        } ).catch( err => {
+            Notification.removeNotification( aviso )
+            console.error( err )
+            Notification.notificate( 'Erro', 'Tivemos um problema, tente novamente!', 'danger' )
+        } )
     }
 
     function handleOnDragEnd ( result ) {
@@ -110,6 +175,18 @@ function Atendimento ( props ) {
     }
 
     function salvarOrdem () {
+
+        function setInAtendimentos ( alteracoes ) {
+
+            let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
+
+            for ( let chave in alteracoes ) {
+                let alteracao = alteracoes[ chave ]
+                payload[ 'Tecnicos' ][ alteracao.responsavel ][ chave ] = alteracao
+            }
+
+            return dispatch( { type: 'setAtendimentos', payload } )
+        }
 
         let object = {}
         atendimentos.forEach( ( atendimento, index ) => {

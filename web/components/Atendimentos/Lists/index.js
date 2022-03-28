@@ -95,7 +95,7 @@ function Atendimento ( { chave, feitos, colors, expandirCadastro, finalizarReabr
         </S.AtendimentoContent>
         <S.Settings>
             <S.Button onClick={ () => expandirCadastro( chave ) } hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
-            <S.Button onClick={ () => { finalizarReabrirCadastro( chave ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
+            <S.Button onClick={ () => { finalizarReabrirCadastro( chave, feitos ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
                 <MenuIcon name={ feitos ? 'atendimento_reabrir' : 'atendimento_finalizar' } margin='0' />
             </S.Button>
         </S.Settings>

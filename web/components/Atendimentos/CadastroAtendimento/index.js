@@ -462,7 +462,7 @@ function AtendimentoExpandido () {
         if ( !atendimento.feito ) return false
         let suprimentosLocal = JSON.parse( JSON.stringify( suprimentos ) )
 
-        for ( let index in editado.lista ) {
+        for ( let index in atendimento.lista ) {
 
             let resto = suprimentosLocal[ index ].estoque - editado.lista[ index ].quantidade
             suprimentosLocal[ index ].estoque = resto
