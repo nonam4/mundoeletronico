@@ -117,17 +117,25 @@ function AtendimentoExpandido () {
     function setInAtendimentos ( alteracao ) {
 
         let payload = JSON.parse( JSON.stringify( state.atendimentos ) )
+        console.log( 'initial -> ', payload )
         // primeiro tenha certeza que nenhuma tenha o atendimento
         // usará a variável cadastro pois ela contém todos os dados antes da alteração
         delete payload[ 'Em aberto' ][ cadastro.chave ]
         delete payload[ 'Feitos' ][ cadastro.chave ]
+        // se o atendimento antes de mudar estava definido para algum técnico
         if ( cadastro.responsavel !== '' ) delete payload[ 'Tecnicos' ][ cadastro.responsavel ][ cadastro.chave ]
+
         // depois define os dados alterados novamente
-        if ( alteracao.feito ) payload[ 'Feitos' ][ cadastro.chave ] = alteracao
-        if ( !alteracao.feito && alteracao.responsavel === '' ) payload[ 'Em aberto' ][ cadastro.chave ] = alteracao
-        //evita que dê algum erro caso o responsável não exista na lista ainda
-        if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ cadastro.responsavel ] = {}
-        if ( !alteracao.feito && alteracao.responsavel !== '' ) payload[ 'Tecnicos' ][ alteracao.responsavel ][ cadastro.chave ] = alteracao
+        // se estiver feito
+        if ( alteracao.feito ) payload = { ...set( `Feitos.${ cadastro.chave }`, alteracao, payload ) }
+
+        // se o responsável for em branco - em aberto
+        if ( !alteracao.feito && alteracao.responsavel === '' ) payload = { ...set( `Em aberto.${ cadastro.chave }`, alteracao, payload ) }
+
+        // caso o técnico não exista no payload ainda transforma ele em objeto, evita erros
+        if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ alteracao.responsavel ] = {}
+        // caso tenha algum responsável informado
+        if ( !alteracao.feito && alteracao.responsavel !== '' ) payload = { ...set( `Tecnicos.${ alteracao.responsavel }.${ cadastro.chave }`, alteracao, payload ) }
 
         return dispatch( { type: 'setAtendimentos', payload } )
     }
@@ -502,7 +510,7 @@ function AtendimentoExpandido () {
                                     <a target='_blank' rel='noreferrer'
                                         href={ `http://maps.google.com/maps?q=${ endereco.rua }+${ endereco.numero }+${ endereco.cidade }+${ endereco.cidade }` }>
                                         { `${ endereco.rua }, ${ endereco.numero }, ${ endereco.complemento !== '' ? `${ endereco.complemento }, ` : '' } ${ endereco.cidade }, ${ endereco.estado }` }
-                                    </a></S.TextoDadoCliente>
+                                    </a ></S.TextoDadoCliente >
 
                                 <S.SubContainerDadoCliente>
                                     { cliente.contato.telefone && <S.TextoDadoCliente><span>Telefone: </span>{ cliente.contato.telefone }</S.TextoDadoCliente> }
@@ -520,9 +528,9 @@ function AtendimentoExpandido () {
                                         <S.Separador lineBreak={ true } border={ true } />
                                         <S.TextoDadoCliente over={ true }><span>PC com coletor: </span>{ window.atob( cliente.sistema.local ) }</S.TextoDadoCliente> </> }
                                 </S.SubContainerDadoCliente>
-                            </S.ContainerDadoCliente>
-                        </S.DadosCliente> }
-                    </S.LinhaSubContainer>
+                            </S.ContainerDadoCliente >
+                        </S.DadosCliente > }
+                    </S.LinhaSubContainer >
 
                     { cliente && buscaCliente === cliente.nomefantasia && <S.VerticalSpacer /> }
 
@@ -543,7 +551,7 @@ function AtendimentoExpandido () {
 
                         </S.SobLinha>
                     </S.LinhaSubContainer>
-                </S.LinhaContainer>
+                </S.LinhaContainer >
 
                 <S.TituloContainer>
                     <S.Titulo> Motivos </S.Titulo>
@@ -577,7 +585,7 @@ function AtendimentoExpandido () {
                             </S.Linha> }
                         </S.LinhaSubContainer> }
                             </S.LinhaContainer> </> */}
-            </S.View>
+            </S.View >
         </S.Container >
     )
 }

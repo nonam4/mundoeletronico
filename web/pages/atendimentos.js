@@ -49,7 +49,7 @@ function Atendimentos () {
 
     // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database ou busca local
     useEffect( () => {
-
+        console.log( 'state -> ', atendimentos )
         // primeiro busca localmente, se não encontrar nenhuma correspondência então passa para a busca no database
         // busca por nome de cliente, data ou palavra chave
         if ( busca === '' ) return setAtendimentosFiltrados( atendimentos )
@@ -58,9 +58,12 @@ function Atendimentos () {
 
     // garante que o load será escondido somente após filtrar todos os dados
     useEffect( () => {
+        console.log( 'atendimentos filtrados -> ', atendimentosFiltrados )
 
         if ( Object.keys( atendimentosFiltrados[ 'Tecnicos' ] ).length > 0 ||
             state.tecnicos ) setLoad( false )
+
+
     }, [ atendimentosFiltrados ] )
 
     function setLoad ( valor ) {
