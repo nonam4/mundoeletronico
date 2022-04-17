@@ -5,6 +5,7 @@ export async function autenticar ( username, password ) {
 }
 
 export async function getAll () {
+
 }
 
 export async function getImpressoras ( filtros ) {
