@@ -1,6 +1,5 @@
 import database from '../_database.js'
 import bcrypt from 'bcryptjs'
-import axios from 'axios'
 
 export default async ( req, res ) => {
 
