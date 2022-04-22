@@ -31,7 +31,7 @@ export default async ( req, res ) => {
         if ( cadastro.tipo === 'locacao' ) return cadastros[ 'locacao' ][ cadastro.id ] = cadastro
     } )
 
-    let listaAtendimentos = await database.collection( '/atendimentos/' ).get()
+    let listaAtendimentos = await database.collection( '/atendimentos/' ).limit( 150 ).get()
     listaAtendimentos.forEach( itemAtendimento => {
 
         let atendimento = itemAtendimento.data()
