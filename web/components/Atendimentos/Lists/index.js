@@ -20,7 +20,7 @@ export function DragNDrop ( props ) {
                             <Draggable key={ String( atendimento.chave ) } draggableId={ String( atendimento.chave ) } index={ index }>
                                 { provided =>
                                     < S.Atendimentos draggable={ true } ref={ provided.innerRef } { ...provided.draggableProps } { ...provided.dragHandleProps }>
-                                        <Atendimento { ...{ ...props, chave: atendimento.chave, colors } } />
+                                        <Atendimento { ...{ ...props, atendimento, colors } } />
                                     </S.Atendimentos>
                                 }
                             </Draggable>
@@ -41,29 +41,20 @@ export function Simple ( props ) {
         <S.Content expandido={ props.expandido }>
             { atendimentos.map( atendimento =>
                 <S.Atendimentos draggable={ false } key={ atendimento.chave }>
-                    <Atendimento { ...{ ...props, chave: atendimento.chave, colors } } />
+                    <Atendimento { ...{ ...props, atendimento, colors } } />
                 </S.Atendimentos>
             ) }
         </S.Content>
     )
 }
 
-function Atendimento ( { chave, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
+function Atendimento ( { chave, atendimento, feitos, colors, expandirCadastro, finalizarReabrirCadastro } ) {
     // variaveis do contexto, disponível em todo o sistema
     const { state } = useDados()
     // variaveis disponíveis no contexto
-    const { cadastros, atendimentos } = state
+    const { cadastros } = state
 
-    let atendimento = localizarAtendimento( chave )
     let cliente = cadastros[ atendimento.cliente.tipo ][ atendimento.cliente.id ]
-
-    function localizarAtendimento ( chave ) {
-        if ( atendimentos[ 'Em aberto' ][ chave ] ) return atendimentos[ 'Em aberto' ][ chave ]
-        if ( atendimentos[ 'Feitos' ][ chave ] ) return atendimentos[ 'Feitos' ][ chave ]
-        for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
-            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ chave ] ) return atendimentos[ 'Tecnicos' ][ tecnico ][ chave ]
-        }
-    }
 
     function getListaSuprimentos () {
         let motivo = ''
@@ -94,8 +85,8 @@ function Atendimento ( { chave, feitos, colors, expandirCadastro, finalizarReabr
             </S.AtendimentoField>
         </S.AtendimentoContent>
         <S.Settings>
-            <S.Button onClick={ () => expandirCadastro( chave ) } hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
-            <S.Button onClick={ () => { finalizarReabrirCadastro( chave, feitos ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
+            <S.Button onClick={ () => expandirCadastro( atendimento.chave ) } hover={ colors.azul } title={ 'Editar' }> <MenuIcon name='atendimento_editar' margin='0' /> </S.Button>
+            <S.Button onClick={ () => { finalizarReabrirCadastro( atendimento, feitos ) } } hover={ feitos ? colors.vermelho : colors.verde } title={ feitos ? 'Reabrir' : 'Finalizar' }>
                 <MenuIcon name={ feitos ? 'atendimento_reabrir' : 'atendimento_finalizar' } margin='0' />
             </S.Button>
         </S.Settings>

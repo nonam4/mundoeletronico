@@ -73,21 +73,6 @@ function Atendimento ( props ) {
         }, 200 )
     }
 
-    function localizarAtendimento ( chave ) {
-        const atendimentos = state.atendimentos
-        let localizado = undefined
-
-        if ( atendimentos[ 'Em aberto' ] && atendimentos[ 'Em aberto' ][ chave ] ) return atendimentos[ 'Em aberto' ][ chave ]
-        if ( atendimentos[ 'Feitos' ] && atendimentos[ 'Feitos' ][ chave ] ) return atendimentos[ 'Feitos' ][ chave ]
-
-        //depois filtra os dos tecnicos
-        for ( let tecnico in atendimentos[ 'Tecnicos' ] ) {
-            if ( atendimentos[ 'Tecnicos' ][ tecnico ][ chave ] ) localizado = atendimentos[ 'Tecnicos' ][ tecnico ][ chave ]
-        }
-
-        return localizado
-    }
-
     function diminuirEstoqueSuprimentos ( atendimento ) {
 
         function setInSuprimentos ( alteracao ) {
@@ -108,7 +93,7 @@ function Atendimento ( props ) {
         return suprimentosLocal
     }
 
-    function finalizarReabrirCadastro ( chave, status ) {
+    function finalizarReabrirCadastro ( atendimento, status ) {
 
         function setInAtendimentos ( alteracao ) {
 
@@ -119,7 +104,7 @@ function Atendimento ( props ) {
 
             // caso o técnico não exista no payload ainda transforma ele em objeto, evita erros
             if ( alteracao.responsavel !== '' && !payload[ 'Tecnicos' ][ alteracao.responsavel ] ) payload[ 'Tecnicos' ][ alteracao.responsavel ] = {}
-            if ( payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] ) delete payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ]
+            if ( alteracao.responsavel !== '' && payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ] ) delete payload[ 'Tecnicos' ][ alteracao.responsavel ][ alteracao.chave ]
 
             // depois define os dados alterados novamente
             // se estiver feito
@@ -137,10 +122,9 @@ function Atendimento ( props ) {
 
         const data = new Date()
         const timestamp = { _seconds: data.getTime() / 1000, _nanoseconds: data.getTime() }
-        const localizado = localizarAtendimento( chave )
 
         let aviso = Notification.notificate( 'Aviso', 'Salvando dados, aguarde...', 'info' )
-        let finalizado = { ...localizado, feito: !status, dados: { ...localizado.dados, ultimaalteracao: timestamp } }
+        let finalizado = { ...atendimento, feito: !status, dados: { ...atendimento.dados, ultimaalteracao: timestamp } }
         Database.salvarAtendimento( state.usuario, finalizado, diminuirEstoqueSuprimentos( finalizado ) ).then( () => {
             Notification.removeNotification( aviso )
             Notification.notificate( 'Sucesso', 'Todos os dados foram salvos!', 'success' )
