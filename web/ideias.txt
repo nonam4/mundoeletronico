@@ -38,3 +38,12 @@ finalização de atendimentos
 
 listagem de impressoras
 -mostrar as impressoras excluidas, trocadas e não contabilizadas em uma parte separada na tela expandida do cadastro
+
+relatórios
+-colocar opção de gerar relatório de clientes e máquinas 
+    -razão social
+    -nome fantasia
+    -lista contabilizada
+        -modelo de impressoras
+    -lista não contabilizada
+        -modelo de impressoras - se substituida colocar serial e modelo juntos
