@@ -47,3 +47,13 @@ relatórios
         -modelo de impressoras
     -lista não contabilizada
         -modelo de impressoras - se substituida colocar serial e modelo juntos
+
+
+alterar organização de dados
+-cadastros
+-impressoras
+--id do cadastro
+---data1
+----contadores
+---data2
+----contadores
