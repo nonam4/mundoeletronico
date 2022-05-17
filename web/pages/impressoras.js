@@ -24,7 +24,7 @@ function Impressoras () {
     // controle de interfaces na tela
     const [ terminaEm, setTerminaEm ] = useState( 24 )
     // cadastros disponíveis no contexto, 
-    const cadastros = state.cadastros[ 'locacao' ]
+    const [ cadastros, setCadastros ] = useState( {} )
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( undefined )
 
@@ -61,6 +61,9 @@ function Impressoras () {
 
     // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
     useEffect( () => {
+        // se os dados ainda não tiverem sido recebidos do DB
+        if ( JSON.stringify( cadastros ) == JSON.stringify( {} ) ) return
+
         // se a data dos filtros mudar e o cadastro de impressoras estiver em stack, atualiza a url
         if ( router.query.data !== filtros.data && router.query.stack === 'cadastroimpressoras' ) {
             let paginaAtual = router.pathname.replace( '/', '' )
@@ -90,10 +93,6 @@ function Impressoras () {
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
         dispatch( { type: 'setLoad', payload: valor } )
-    }
-
-    function setCadastros ( dados ) {
-        dispatch( { type: 'setCadastros', payload: dados } )
     }
 
     function setVersao ( dados ) {
