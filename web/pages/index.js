@@ -10,7 +10,14 @@ export default function Index () {
     }, [] )
 
     return (
-        <div>home page</div>
+        <>
+            <Head>
+                <title>Mundo Eletrônico</title>
+                <link rel='icon' href='/icon.png' />
+                <meta name='theme-color' content={ colors.background }></meta>
+            </Head>
+            <div>Dashboard</div>
+        </>
     )
 }
 
