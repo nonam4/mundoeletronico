@@ -24,7 +24,7 @@ function Impressoras () {
     // controle de interfaces na tela
     const [ terminaEm, setTerminaEm ] = useState( 24 )
     // cadastros disponíveis no contexto, 
-    const [ cadastros, setCadastros ] = useState( {} )
+    const cadastros = state.impressoras
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( undefined )
 
@@ -93,6 +93,10 @@ function Impressoras () {
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
         dispatch( { type: 'setLoad', payload: valor } )
+    }
+
+    function setCadastros ( dados ) {
+        dispatch( { type: 'setImpressoras', payload: dados } )
     }
 
     function setVersao ( dados ) {

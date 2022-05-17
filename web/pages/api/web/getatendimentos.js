@@ -25,7 +25,7 @@ export default async ( req, res ) => {
     listaCadastros.forEach( itemCadastro => {
 
         let cadastro = itemCadastro.data()
-        cadastro.impressoras = {}
+        delete cadastro.impressoras
 
         if ( cadastro.tipo === 'fornecedor' ) return cadastros[ 'fornecedor' ][ cadastro.id ] = cadastro
         if ( cadastro.tipo === 'particular' ) return cadastros[ 'particular' ][ cadastro.id ] = cadastro

@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer } from 'react'
 
 
 const initialData = {
+    impressoras: {},
     cadastros: {},
     tecnicos: [],
     suprimentos: {
@@ -28,6 +29,8 @@ const DadosContext = createContext( undefined )
 function dadosReducer ( state, action ) {
     let { payload } = action
     switch ( action.type ) {
+        case 'setImpressoras':
+            return { ...state, impressoras: payload }
         case 'setCadastros':
             return { ...state, cadastros: payload }
         case 'setTecnicos':

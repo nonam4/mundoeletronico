@@ -47,9 +47,9 @@ function CadastroExpandido () {
     }, [ router.query ] )
 
     useEffect( () => {
-        if ( !router.query.id || !state.cadastros[ 'locacao' ] ) return
+        if ( !router.query.id || !state.impressoras ) return
         setFiltros( { data: router.query.data } )
-        setExpandido( state.cadastros[ 'locacao' ][ router.query.id ] )
+        setExpandido( state.impressoras[ router.query.id ] )
     }, [ router.query, state.cadastros ] )
 
     useEffect( () => {
