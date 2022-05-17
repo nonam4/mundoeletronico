@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useDados } from '../contexts/DadosContext'
-import packageInfo from '../package.json'
 import { useRouter } from 'next/router'
 
 import * as S from '../styles/impressoras'
-
 import * as Notification from '../workers/notification'
 import * as Database from '../workers/database'
 
@@ -26,9 +24,10 @@ function Impressoras () {
     // controle de interfaces na tela
     const [ terminaEm, setTerminaEm ] = useState( 24 )
     // cadastros disponíveis no contexto, 
-    const { cadastros } = state
+    const cadastros = state.cadastros[ 'locacao' ]
     // array de cadastros filtrados pelo campo de busca, item local, sem referencia ao contexto
     const [ cadastrosFiltrados, setCadastrosFiltrados ] = useState( undefined )
+
     // controle do ctrl F, se pressionados com stack não faz nada
     function keyPressedListener ( e ) {
         if ( e.ctrlKey && e.key === 'f' ) {
@@ -44,27 +43,24 @@ function Impressoras () {
 
     // adiciona ou remove os listeners do ctrl + f
     useEffect( () => {
-
-        if ( !router.query.stack ) {
-            window.addEventListener( 'keydown', memoizedListener )
-        } else {
-            window.removeEventListener( 'keydown', memoizedListener )
-        }
+        if ( !router.query.stack ) return window.addEventListener( 'keydown', memoizedListener )
+        window.removeEventListener( 'keydown', memoizedListener )
     }, [ router.query.stack ] )
 
-    // como qualquer alteração precisa mudar os filtros então eles são os controladores de busca no database
+    // como qualquer alteração precisará mudar os filtros
+    //então eles são os controladores de busca no database
     useEffect( () => {
-        // define que só mostrarão 24 resultados a não ser que o usuário role a tela
-        setTerminaEm( 24 )
         // solicita os dados ao banco de dados
         solicitarDados()
     }, [ filtros.listando, filtros.data ] )
 
-    // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
     useEffect( () => {
         // definir o numero de interfaces na tela de volta para o padrão
         setTerminaEm( 24 )
+    }, [ filtros, cadastros ] )
 
+    // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
+    useEffect( () => {
         // se a data dos filtros mudar e o cadastro de impressoras estiver em stack, atualiza a url
         if ( router.query.data !== filtros.data && router.query.stack === 'cadastroimpressoras' ) {
             let paginaAtual = router.pathname.replace( '/', '' )
@@ -79,21 +75,17 @@ function Impressoras () {
         }
 
         // se a busca estiver vazia vai definir os cadastros filtrados com os dados do contexto
-        if ( filtros.busca === '' ) return setCadastrosFiltrados( cadastros[ 'locacao' ] )
+        if ( filtros.busca === '' ) return setCadastrosFiltrados( cadastros )
 
         // se estiver buscando algo vai definir os cadastros baseado na busca
         setCadastrosFiltrados( filtrarCadastrosPorBusca() )
     }, [ filtros.busca, cadastros ] )
 
     // garante que o load será fechado quando o stack mudar
+    // ou quando filtrar tudo certinho
     useEffect( () => {
         if ( cadastrosFiltrados ) setLoad( false )
-    }, [ router.query.stack ] )
-
-    // esconde o load quando filtrar tudo certinho
-    useEffect( () => {
-        if ( cadastrosFiltrados ) setLoad( false )
-    }, [ cadastrosFiltrados ] )
+    }, [ router.query.stack, cadastrosFiltrados ] )
 
     function setLoad ( valor ) {
         if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
@@ -114,6 +106,9 @@ function Impressoras () {
         // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
             setCadastros( res.data.cadastros )
+
+            console.log( res.data.cadastros )
+
             setVersao( res.data.versao )
         } ).catch( err => {
             setLoad( false )
@@ -140,8 +135,8 @@ function Impressoras () {
         return () => {
             let filtrados = {}
 
-            for ( let id in cadastros[ 'locacao' ] ) {
-                let cliente = cadastros[ 'locacao' ][ id ]
+            for ( let id in cadastros ) {
+                let cliente = cadastros[ id ]
 
                 if ( compararString( limparString( cliente.nomefantasia ) )
                     || compararString( limparString( cliente.razaosocial ) )
