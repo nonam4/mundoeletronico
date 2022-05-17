@@ -50,7 +50,7 @@ function CadastroExpandido () {
         if ( !router.query.id || !state.impressoras ) return
         setFiltros( { data: router.query.data } )
         setExpandido( state.impressoras[ router.query.id ] )
-    }, [ router.query, state.cadastros ] )
+    }, [ router.query, state.impressoras ] )
 
     useEffect( () => {
         // toda vez que o valor do expandido for alterado irá definir o cadastro local
@@ -83,7 +83,7 @@ function CadastroExpandido () {
 
     function setInCadastros ( cadastro ) {
         // atualiza o cadastro no state para atualizar os dados em todas as outras telas
-        dispatch( { type: 'setCadastros', payload: set( `${ cadastro.tipo }.${ cadastro.id }`, cadastro, state.cadastros ) } )
+        dispatch( { type: 'setImpressoras', payload: set( `${ cadastro.id }`, cadastro, state.impressoras ) } )
     }
 
     function editarCadastro ( editado ) {

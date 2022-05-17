@@ -124,9 +124,6 @@ export function recalcularDados ( data, dados ) {
         let contadores = impressora.contadores[ data ]
         if ( !getMesPassado( impressora, data ) ) impressorasAtrasadas += 1
 
-        //remove os contadores de outros meses e trabalha apenas com os da data escolhida
-        impressora.contadores = { [ data ]: { ...contadores } }
-
         //precisa sempre resetar os excedentes dos contadores para evitar bugs ao alterar a franquia no site
         contadores.excedentes = 0
         contadores.adicionaltroca = 0
@@ -164,6 +161,9 @@ export function recalcularDados ( data, dados ) {
                 cadastro.excedentes = cadastro.impresso
                 break
         }
+
+        //remove os contadores de outros meses e trabalha apenas com os da data escolhida
+        impressora.contadores = { [ data ]: { ...contadores } }
 
         // pegará o histórico local dentro da impressora
         // ele já é gravado corretamente e legível
