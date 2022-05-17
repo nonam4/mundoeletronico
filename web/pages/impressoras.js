@@ -61,6 +61,8 @@ function Impressoras () {
 
     // se o campo de busca ou os dados dos cadastros mudarem o sistema vai:
     useEffect( () => {
+        if ( !dadosSolicitados ) return
+
         // se a data dos filtros mudar e o cadastro de impressoras estiver em stack, atualiza a url
         if ( router.query.data !== filtros.data && router.query.stack === 'cadastroimpressoras' ) {
             let paginaAtual = router.pathname.replace( '/', '' )
@@ -106,10 +108,8 @@ function Impressoras () {
         // não defina o load depois de receber os dados pois irá filtrar e atualizar os cadastros antes
         Database.getImpressoras( filtros ).then( res => {
             setCadastros( res.data.cadastros )
-
-            console.log( res.data.cadastros )
-
             setVersao( res.data.versao )
+            setDadosSolicitados( true )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
