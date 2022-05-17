@@ -51,7 +51,7 @@ function Impressoras () {
     //então eles são os controladores de busca no database
     useEffect( () => {
         // solicita os dados ao banco de dados
-        solicitarDados()
+        if ( state.usuario && state.autenticado ) solicitarDados()
     }, [ filtros.listando, filtros.data ] )
 
     useEffect( () => {
@@ -198,7 +198,6 @@ function Impressoras () {
                 <S.View show={ showView() } onScroll={ e => rolarTela( e ) }> { renderViews() } </S.View>
             </S.Container>
         </MainFrame>
-
     )
 }
 

@@ -62,8 +62,8 @@ function Login () {
         setAutenticado( false )
 
         Database.autenticar( username, password ).then( res => {
-            setUsuario( { ...res.data, password, temporario: usuario.temporario } )
             setAutenticado( true )
+            setUsuario( { ...res.data, password, temporario: usuario.temporario } )
         } ).catch( err => {
             // em caso de erro, define que não está mais autenticado
             Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )
@@ -79,8 +79,8 @@ function Login () {
         setAutenticado( false )
 
         Database.autenticar( username, password ).then( res => {
-            setUsuario( { ...res.data, password, temporario } )
             setAutenticado( true )
+            setUsuario( { ...res.data, password, temporario } )
         } ).catch( err => {
             // em caso de erro, define que não está mais autenticado
             Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )

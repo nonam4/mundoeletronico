@@ -44,30 +44,10 @@ export default function Index ( { children } ) {
         // usuario no state é valido, reautentica
         if ( state.usuario && !state.autenticado ) return router.replace( `/login?fallback=${ router.asPath.replace( '/', '' ).replace( /&/g, '_' ) }` )
 
-        // usuario certo e autenticado
-        if ( state.usuario && state.autenticado ) prepararApp()
-
         // state definido totalmente como null, logoff
         if ( !state.usuario && !state.autenticado ) return setUsuario( null )
 
     }, [ state.usuario, state.autenticado ] )
-
-
-    function prepararApp () {
-        /*
-        Database.getAll().then( res => {
-
-            setHistorico( res.data.historico )
-            setCadastros( res.data.cadastros )
-            setAtendimentos( res.data.atendimentos )
-
-        } ).catch( err => {
-            setLoad( false )
-            Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
-            console.error( err )
-        } )
-        */
-    }
 
     return (
         <>
