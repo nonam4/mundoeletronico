@@ -18,7 +18,7 @@ export const Container = styled.div`
     @media only screen and (max-width: 1679px) {
         width: calc(33.33% - 0.8rem);
     }
-    @media only screen and (max-width: 1213px) {
+    @media only screen and (max-width: 1218px) {
         width: calc(50% - 0.8rem);
     }
     @media only screen and (max-width: 905px) {
