@@ -107,7 +107,6 @@ function Impressoras () {
         Database.getImpressoras( filtros ).then( res => {
             setCadastros( res.data.cadastros )
             setVersao( res.data.versao )
-            setDadosSolicitados( true )
         } ).catch( err => {
             setLoad( false )
             Notification.notificate( 'Erro', 'Recarregue a página e tente novamente!', 'danger' )
