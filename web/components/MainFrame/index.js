@@ -26,32 +26,34 @@ export default function Index ( { children } ) {
     }
 
     useEffect( () => {
-        // inicialmente o usuário será undefined então espera o proximo ciclo
+        // usuario local ainda não pegou os dados salvos
+        // aguarda o proximo ciclo
         if ( usuario === undefined ) return
 
-        // se não tiver nenhum dado do usuário salvo localmente ou o valor for null vá para login
+        // usuario local é inválido ou vazio, vá para login
         if ( !usuario ) return router.replace( '/login' )
 
-        // se não estiver autenticado mas tem usuário salvo tente login automático
-        if ( usuario && !state.autenticado ) return router.replace( `/login?fallback=${ router.asPath.replace( '/', '' ).replace( /&/g, '_' ) }` )
-
-        // se estiver autenticado e salvo, prepare o app
-        if ( usuario && state.autenticado ) return prepararApp()
+        // o usuário local não é inválido nem vazio, define ele no state
+        if ( usuario ) dispatch( { type: 'setUsuario', payload: usuario } )
     }, [ usuario ] )
 
     useEffect( () => {
         // se estiver no valor inicial (undefined) não faz nada
         if ( state.usuario === undefined ) return
 
-        // se o state for definido como null limpa os dados locais e o useEffect do usuário se encarrega de redirecionar para o login
+        // usuario no state é valido, reautentica
+        if ( state.usuario && !state.autenticado ) return router.replace( `/login?fallback=${ router.asPath.replace( '/', '' ).replace( /&/g, '_' ) }` )
+
+        // usuario certo e autenticado
+        if ( state.usuario && state.autenticado ) prepararApp()
+
+        // state definido totalmente como null, logoff
         if ( !state.usuario && !state.autenticado ) return setUsuario( null )
-    }, [ state.autenticado ] )
+
+    }, [ state.usuario, state.autenticado ] )
 
 
     function prepararApp () {
-        // primeiro tenta atualizar o usuário nas variáveis de ambiente
-        // sempre que precisar buscaremos o login aqui ao invés do localstorage
-        dispatch( { type: 'setUsuario', payload: usuario } )
         /*
         Database.getAll().then( res => {
 
