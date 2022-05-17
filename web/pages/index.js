@@ -1,9 +1,10 @@
 import Head from 'next/head'
-import { useEffect } from 'react'
+import { ThemeContext } from 'styled-components'
+import { useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
 
 export default function Index () {
-
+    const { colors } = useContext( ThemeContext )
     const router = useRouter()
 
     useEffect( () => {
