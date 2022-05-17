@@ -25,6 +25,7 @@ export default async ( req, res ) => {
     listaCadastros.forEach( itemCadastro => {
 
         let cadastro = itemCadastro.data()
+        cadastro.impressoras = {}
 
         if ( cadastro.tipo === 'fornecedor' ) return cadastros[ 'fornecedor' ][ cadastro.id ] = cadastro
         if ( cadastro.tipo === 'particular' ) return cadastros[ 'particular' ][ cadastro.id ] = cadastro
@@ -40,6 +41,12 @@ export default async ( req, res ) => {
         if ( !atendimento.feito && atendimento.responsavel === '' ) atendimentos[ 'Em aberto' ] = { ...atendimentos[ 'Em aberto' ], [ atendimento.chave ]: atendimento }
         if ( !atendimento.feito && atendimento.responsavel !== '' ) atendimentos[ 'Tecnicos' ][ atendimento.responsavel ] = { ...atendimentos[ 'Tecnicos' ][ atendimento.responsavel ], [ atendimento.chave ]: atendimento }
     } )
+
+    const size = new TextEncoder().encode( JSON.stringify( { atendimentos, cadastros, tecnicos } ) ).length
+    const kiloBytes = size / 1024
+    const megaBytes = kiloBytes / 1024
+
+    console.log( `atendimentos -> tamanho em MB -> ${ megaBytes }` )
 
     res.status( 200 ).send( { atendimentos, cadastros, tecnicos } )
 }
