@@ -12,6 +12,7 @@ export default {
         borders: '#dbdbdb',
         floating: '#9f9f9f',
         azul: '#0070f3',
+        azulEscurecido: '#02418b',
         vermelho: '#a70505',
         verde: '#00b221',
         amarelo: '#f1c40f',

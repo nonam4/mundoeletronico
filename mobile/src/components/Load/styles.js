@@ -8,7 +8,6 @@ export const Container = styled.View`
     align-items: center;
     justify-content: center;
     background: ${ ( { theme } ) => theme.colors.background };
-
     opacity: ${ ( { opacity } ) => opacity };
     position: absolute;
 `
@@ -19,5 +18,4 @@ export const Logo = styled.Image`
 `
 export const Loader = styled.ActivityIndicator`
     color: ${ ( { theme } ) => theme.colors.hover };
-    width: 60%;
 `

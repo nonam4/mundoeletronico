@@ -1,8 +1,8 @@
 
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
-import { useColorScheme } from 'react-native'
-//import ReactNotification from 'react-notifications-component'
+import { useColorScheme, StatusBar } from 'react-native'
+import { DadosProvider, useDados } from './contexts/DadosContext'
 
 import MainFrame from './components/MainFrame'
 import Load from './components/Load'
@@ -10,18 +10,29 @@ import Load from './components/Load'
 import claro from './styles/temas/claro'
 import escuro from './styles/temas/escuro'
 
-
 function App () {
-    const theme = useColorScheme() === 'dark' ? escuro : claro
+    return (
+        <DadosProvider>
+            <View />
+        </DadosProvider>
+    )
+}
+
+function View () {
+    const { state } = useDados()
+    const isDarkTheme = useColorScheme() === 'dark'
+    const theme = isDarkTheme ? escuro : claro
 
     return (
         <ThemeProvider { ...{ theme } }>
-            <Load show={ true } />
-
+            <StatusBar
+                barStyle={ isDarkTheme ? 'light-content' : 'dark-content' }
+                backgroundColor={ theme.colors.background }
+            />
+            <Load show={ state.load } />
+            <MainFrame />
         </ThemeProvider>
     )
 }
-//<ReactNotification />
-<MainFrame />
 
 export default App
