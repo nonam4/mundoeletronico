@@ -4,9 +4,14 @@
     "description": "Aplicativo de coleta de dados (modelo, serial, IP, contadores) de impressoras locadas",
     "version": "0.1.0",
     "private": true,
-    "repository": "https://github.com/nonam4/mundoeletronico",
-    "bugs": "https://github.com/nonam4/mundoeletronico/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nonam4/mundoeletronico"
+    },
     "author": "Mundo Eletrônico",
+    "bugs": {
+        "url": "https://github.com/nonam4/mundoeletronico/issues"
+    },
     "main": "public/electron.js",
     "homepage": "./",
     "scripts": {
