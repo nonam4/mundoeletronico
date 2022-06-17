@@ -106,7 +106,9 @@ export function recalcularDados ( data, dados ) {
 
         let impresso = 0
         let impressora = impressoras[ serial ]
-        if ( !impressora ) continue //se a impressora estiver invalida pulará para a proxima            
+        //se a impressora estiver invalida remove ela e pulará para a proxima
+        if ( !impressora ) delete impressoras[ serial ]
+        if ( !impressora ) continue
 
         impressora.serial = impressora.serial.replace( /\(|\)|\-|\s/g, '' ) // remove parenteses, traços e espaços vazios
         if ( !impressora.contabilizar ) cadastro.impressorasInativas += 1
@@ -116,6 +118,7 @@ export function recalcularDados ( data, dados ) {
         cadastro.impressorasAtivas += 1
 
         if ( !impressora.contadores || !impressora.contadores[ data ] ) impressorasAtrasadas += 1
+        if ( !impressora.contadores || !impressora.contadores[ data ] ) impressora.contadores = {}
         if ( !impressora.contadores || !impressora.contadores[ data ] ) continue
 
         let contadores = impressora.contadores[ data ]
@@ -130,7 +133,9 @@ export function recalcularDados ( data, dados ) {
                 let serialSubstituido = impressora.substituindo[ index ]
                 let impressoraSubstituida = cadastro.impressoras[ serialSubstituido ]
 
-                if ( !impressoraSubstituida || !impressoraSubstituida.contadores[ data ] ) continue //se a impressora substituida não existir ou não tiver leitura ela será ignorada
+                //se a impressora substituida não existir ou não tiver leitura ela será ignorada
+                if ( !impressoraSubstituida || !impressoraSubstituida.contadores[ data ] ) delete cadastro.impressoras[ serialSubstituido ]
+                if ( !impressoraSubstituida || !impressoraSubstituida.contadores[ data ] ) continue
 
                 impresso += impressoraSubstituida.contadores[ data ].impresso //incrementa com o total impresso das maquinas que sairam
                 contadores.adicionaltroca += impressoraSubstituida.contadores[ data ].impresso
@@ -162,8 +167,9 @@ export function recalcularDados ( data, dados ) {
 
         // pegará o histórico local dentro da impressora
         // ele já é gravado corretamente e legível
-        if ( impressora.historico ) impressora.historico = filtrarHistorico( impressora, data )
-        if ( !impressora.historico ) impressora.historico = {}
+        //if ( impressora.historico ) impressora.historico = filtrarHistorico( impressora, data )
+        //if ( !impressora.historico ) impressora.historico = {}
+        impressora.historico = {}
     }
     //se apenas uma impressora apenas estiver com atraso não irá dizer que o sistema não está coletando para esse cadastro
     //e não o marcará como um cadastro com atraso, mas se o numero de impressoras ativas for igual que o numero de impressoras

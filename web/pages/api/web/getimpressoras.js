@@ -7,7 +7,7 @@ export default async ( req, res ) => {
     const listaCadastros = await database.collection( '/cadastros/' ).where( 'ativo', '==', true ).where( 'tipo', '==', 'locacao' ).orderBy( 'nomefantasia' ).get()
     const dadosDesktop = await database.doc( '/sistema/desktop/' ).get()
 
-    let cadastros = { locacao: {} }
+    let cadastros = {}
     let versao = dadosDesktop.data().versaoatual
 
     listaCadastros.forEach( itemCadastro => {
@@ -15,16 +15,16 @@ export default async ( req, res ) => {
         let cadastro = recalcularDados( data, itemCadastro.data() )
         switch ( listando ) {
             case 'todos':
-                cadastros[ 'locacao' ][ cadastro.id ] = cadastro
+                cadastros[ cadastro.id ] = cadastro
                 break
             case 'excedentes':
-                if ( cadastro.excedentes > 0 ) cadastros[ 'locacao' ][ cadastro.id ] = cadastro
+                if ( cadastro.excedentes > 0 ) cadastros[ cadastro.id ] = cadastro
                 break
             case 'atrasos':
-                if ( cadastro.atraso ) cadastros[ 'locacao' ][ cadastro.id ] = cadastro
+                if ( cadastro.atraso ) cadastros[ cadastro.id ] = cadastro
                 break
             case 'abastecimentos':
-                if ( cadastro.abastecimento ) cadastros[ 'locacao' ][ cadastro.id ] = cadastro
+                if ( cadastro.abastecimento ) cadastros[ cadastro.id ] = cadastro
                 break
         }
     } )

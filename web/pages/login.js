@@ -25,39 +25,47 @@ function Login () {
     const [ temporario, setTemporario ] = useState( true ) //username temporário ou definitivo?
 
     useEffect( () => {
-        // inicialmente o usuário será undefined então espera o proximo ciclo
-        if ( usuario === undefined ) return
+        // state não foi definido, usuario ainda não pegou dados locais
+        // aguarde proximo ciclo
+        if ( state.usuario === undefined && usuario === undefined ) return
 
-        // se não tiver usuário salvo mostre o formulário de login
-        if ( !usuario ) return setLoad( false )
+        // usuário não existe nos dados locais
+        // libere o formulário de login
+        if ( !usuario && !state.usuario ) return setLoad( false )
 
-        // se os dados estiverem salvos mas não estiver autenticado (quando recarregando a página por exemplo) tente login automático
-        if ( usuario && !state.autenticado ) return reautenticar()
+        // usuario local valido, define no state
+        if ( usuario && !state.usuario && !state.autenticado ) dispatch( { type: 'setUsuario', payload: usuario } )
 
-        // se o usuário estiver salvo e autenticado volte para de onde parou ou para adm
-        if ( router.query.fallback && usuario && state.autenticado ) return router.replace( `/${ router.query.fallback.replace( /_/g, '&' ) }` )
-        if ( usuario && state.autenticado ) return router.replace( '/impressoras' )
-    }, [ usuario ] )
+        // usuario no state válido, tentando reautenticar
+        if ( state.usuario && !state.autenticado ) return reautenticar( state.usuario )
+
+        // autenticado, volta para de onde veio
+        if ( state.usuario && state.autenticado && router.query.fallback ) return router.replace( `/${ router.query.fallback.replace( /_/g, '&' ) }` )
+
+        // autenticado, volta para a página padrão
+        if ( state.usuario && state.autenticado ) return router.replace( '/impressoras' )
+
+    }, [ state.usuario, usuario ] )
 
     function setLoad ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
         dispatch( { type: 'setLoad', payload: valor } )
     }
 
-    function toggleAutenticado () {
-        dispatch( { type: 'setAutenticado', payload: !state.autenticado } )
+    function setAutenticado ( valor ) {
+        if ( typeof valor !== 'boolean' ) throw new Error( 'Valor para "Load" deve ser TRUE ou FALSE' )
+        dispatch( { type: 'setAutenticado', payload: valor } )
     }
 
-    function reautenticar () {
+    function reautenticar ( usuario ) {
         let { username, password } = usuario
-
-        // define que está autenticado antes de tentar fazer o login
-        toggleAutenticado()
+        setAutenticado( false )
 
         Database.autenticar( username, password ).then( res => {
+            setAutenticado( true )
             setUsuario( { ...res.data, password, temporario: usuario.temporario } )
         } ).catch( err => {
             // em caso de erro, define que não está mais autenticado
-            toggleAutenticado()
             Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )
             setLoad( false )
             console.error( err )
@@ -67,15 +75,14 @@ function Login () {
     function handleLogin () {
         if ( !formularioValido() ) return
 
-        // define que está autenticado antes de tentar fazer o login
-        toggleAutenticado()
         setLoad( true )
+        setAutenticado( false )
 
         Database.autenticar( username, password ).then( res => {
+            setAutenticado( true )
             setUsuario( { ...res.data, password, temporario } )
         } ).catch( err => {
             // em caso de erro, define que não está mais autenticado
-            toggleAutenticado()
             Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )
             setLoad( false )
             console.error( err )
