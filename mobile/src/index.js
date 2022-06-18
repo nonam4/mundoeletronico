@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useColorScheme, StatusBar } from 'react-native'
 import { DadosProvider, useDados } from './contexts/DadosContext'
+import DropdownNotification from 'react-native-dropdownalert'
 
 import MainFrame from './components/MainFrame'
 import Login from './components/Login'
@@ -10,6 +11,7 @@ import Load from './components/Load'
 
 import * as Database from './workers/database'
 import * as Storage from './workers/storage'
+import Notification from './workers/notification'
 
 import claro from './styles/temas/claro'
 import escuro from './styles/temas/escuro'
@@ -45,16 +47,18 @@ function View () {
         Database.autenticar( username, password ).then( res => {
             setAutenticado( true )
             setUsuario( { ...res.data, password } )
+
+            Notification.notificate( 'success', 'Sucesso', 'Usuário e senha corretos!' )
+
         } ).catch( err => {
-            //Notification.notificate( 'Erro', 'Usuário ou senha incorretos!', 'danger' )
+            Notification.notificate( 'error', 'Erro', 'Usuário ou senha incorretos!' )
             setLoad( false )
             console.error( err )
         } )
     }
 
     useEffect( () => {
-        Storage.storeData( { username: 'carlos', password: '123456' }, 'user' )
-
+        // tenta pegar os dados do usuário no armazenamento interno
         Storage.getData( 'user' ).then( value => {
             setUsuario( value )
         } )
@@ -85,6 +89,9 @@ function View () {
                 barStyle={ isDarkTheme ? 'light-content' : 'dark-content' }
                 backgroundColor={ theme.colors.background }
             />
+
+            <DropdownNotification ref={ ref => { if ( ref ) Notification.setDropDown( ref ) } } />
+
             <Load show={ state.load } />
             { state.autenticado && <MainFrame /> }
             { !state.autenticado && <Login /> }
