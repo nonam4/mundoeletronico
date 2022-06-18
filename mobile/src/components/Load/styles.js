@@ -12,7 +12,7 @@ export const Container = styled.View`
 `
 export const Logo = styled.Image`
     width: ${ ( { size } ) => `${ size }px` };
-    height: ${ ( { size } ) => `${ size }px` };;
+    height: ${ ( { size } ) => `${ size }px` };
     margin-bottom: 50px;
 `
 export const Loader = styled.ActivityIndicator`

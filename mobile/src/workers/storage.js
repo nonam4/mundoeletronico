@@ -12,7 +12,7 @@ export async function storeData ( value, key ) {
 export async function getData ( key ) {
     try {
         const value = await AsyncStorage.getItem( key )
-        if ( value !== null ) return JSON.parse( value )
+        if ( value !== null && value !== '{}' ) return JSON.parse( value )
         return null
     } catch ( e ) {
         // error reading value

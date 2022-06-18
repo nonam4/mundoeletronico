@@ -47,10 +47,10 @@ function View () {
         Database.autenticar( username, password ).then( res => {
             setAutenticado( true )
             setUsuario( { ...res.data, password } )
-
-            Notification.notificate( 'success', 'Sucesso', 'Usuário e senha corretos!' )
-
         } ).catch( err => {
+            // se o usuário estiver incorreto invalida os dados locais
+            // e solicita o login novamente
+            Storage.storeData( {}, 'user' )
             Notification.notificate( 'error', 'Erro', 'Usuário ou senha incorretos!' )
             setLoad( false )
             console.error( err )

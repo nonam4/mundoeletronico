@@ -8,8 +8,11 @@ export const Container = styled.View`
     justify-content: center;
     background: ${ ( { theme } ) => theme.colors.background };
 `
-
-export const Text = styled.Text`
-    font-size: 14px;
-    color: ${ ( { theme } ) => theme.colors.texts };
-`;
+export const Logo = styled.Image`
+    width: ${ ( { size } ) => `${ size }px` };
+    height: ${ ( { size } ) => `${ size }px` };
+    margin-bottom: 50px;
+`
+export const Content = styled.View`
+    width: 60%;
+`
