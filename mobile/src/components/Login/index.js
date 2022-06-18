@@ -1,15 +1,15 @@
 import React from 'react'
 import * as S from './styles'
 
-function MainFrame () {
+function Login () {
 
     return (
         <S.Container>
             <S.Text>
-                Main Frame
+                Página de login
             </S.Text>
         </S.Container>
     )
 }
 
-export default MainFrame
+export default Login
