@@ -14,7 +14,7 @@ export const Input = styled.TextInput`
     font-size: 16px;
     border-bottom-width: 1px;
     border-bottom-color: ${ ( { theme } ) => theme.colors.borders };
-    padding: ${ ( { icon } ) => icon !== false ? `${ Sizes.getPxSize( 8 ) } ${ Sizes.getPxSize( 15 ) } ${ Sizes.getPxSize( 3 ) } ${ Sizes.getPxSize( 15 ) }` : `${ Sizes.getPxSize( 8 ) } ${ Sizes.getPxSize( 3 ) } ${ Sizes.getPxSize( 3 ) } ${ Sizes.getPxSize( 3 ) }` };
+    padding: ${ ( { icon } ) => icon !== false ? `${ Sizes.getPxSize( 8 ) } ${ Sizes.getPxSize( 15 ) } ${ Sizes.getPxSize( 3 ) } ${ Sizes.getPxSize( 17 ) }` : `${ Sizes.getPxSize( 8 ) } ${ Sizes.getPxSize( 3 ) } ${ Sizes.getPxSize( 3 ) } ${ Sizes.getPxSize( 3 ) }` };
 `;
 export const Content = styled.View`
     width: 100%;
@@ -35,11 +35,11 @@ export const Highlight = styled.View`
 `
 export const Label = styled.Text`
     position: absolute;
-    left: ${ ( { icon } ) => icon !== false ? `${ Sizes.getPxSize( 15 ) }` : `${ Sizes.getPxSize( 4 ) } ` };
+    left: ${ ( { icon } ) => icon !== false ? `${ Sizes.getPxSize( 17 ) }` : `${ Sizes.getPxSize( 4 ) } ` };
     pointer-events: none !important;
 `
 export const Viewer = styled.TouchableHighlight`
-    width: ${ Sizes.getPxSize( 10 ) };
+    width: ${ Sizes.getPxSize( 9 ) };
     position: absolute;
     right: ${ Sizes.getPxSize( 2 ) };
 `

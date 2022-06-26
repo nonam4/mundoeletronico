@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import Animated, { withTiming, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import Animated, { withTiming, useAnimatedStyle, useSharedValue, color } from 'react-native-reanimated'
 import { ThemeContext } from 'styled-components'
 
 import Icon from '../../Icons/MenuIcon'
@@ -78,7 +78,7 @@ function TextField ( props ) {
             </S.Content>
             <S.Highlight as={ Animated.View } style={ [ highlightStyle ] } />
             <S.Input ref={ props.useRef } onFocus={ () => onFocus( props.onFocus ) } onBlur={ () => onBlur( props.onBlur ) } textContentType={ type } icon={ props.icon } onChangeText={ e => onChangeText( e, props.onChangeText ) } value={ props.value } maxLength={ props.maxLength || settings.maxLength } placeholder={ ' ' } />
-            { props.type === 'password' && <S.Viewer onPress={ () => setShown( !shown ) }>
+            { props.type === 'password' && <S.Viewer underlayColor={ colors.background } onPress={ () => setShown( !shown ) }>
                 <Icon name={ shown ? 'senha_esconder' : 'senha_mostrar' } />
             </S.Viewer> }
         </S.Container >

@@ -9,7 +9,7 @@ import * as Sizes from '../../workers/sizes'
 function UnderlineIcon ( props ) {
     const { colors } = useContext( ThemeContext )
     const settings = {
-        size: 10,
+        size: 9,
         margin: 12,
         color: colors.texts,
         name: 'undefined'
@@ -24,11 +24,3 @@ function UnderlineIcon ( props ) {
 }
 
 export default UnderlineIcon
-
-/*
-<Svg viewBox="0 0 200 200" height={ props.size || settings.size } width={ props.size || settings.size }
-            margin={ props.margin || settings.margin } onClick={ props.onClick }>
-            <Path fill={ props.color || settings.color } d={ icons[ props.name || settings.name ] } />
-            { props.title && <title>{ props.title }</title> }
-        </Svg>
-*/
