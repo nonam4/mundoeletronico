@@ -1,4 +1,5 @@
 import styled from 'styled-components/native'
+import * as Sizes from '../../workers/sizes'
 
 export const Container = styled.View`
     width: 100%;
@@ -9,10 +10,10 @@ export const Container = styled.View`
     background: ${ ( { theme } ) => theme.colors.background };
 `
 export const Logo = styled.Image`
-    width: ${ ( { size } ) => `${ size }px` };
-    height: ${ ( { size } ) => `${ size }px` };
-    margin-bottom: 50px;
+    width: ${ ( { size } ) => Sizes.widthPercentage( `${ size }%` ) };
+    height: ${ ( { size } ) => Sizes.widthPercentage( `${ size }%` ) };
+    margin-bottom: ${ ( { marginBottom } ) => Sizes.getPxSize( marginBottom ) };
 `
 export const Content = styled.View`
-    width: 60%;
+    width: 65%;
 `

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Animated } from 'react-native'
+import { Animated } from 'react-native'
 
 import * as S from './styles'
 
 function Load ( props ) {
 
-    const windowWidth = Dimensions.get( 'window' )
     const opacity = useState( new Animated.Value( 0 ) )[ 0 ]
     const [ zindex, setZindex ] = useState( 99 )
 
@@ -25,7 +24,7 @@ function Load ( props ) {
     return (
         <S.Container elevation={ zindex } zIndex={ zindex }>
             <Animated.View style={ [ { opacity } ] }>
-                <S.Logo size={ windowWidth.width * 0.6 } resizeMode={ 'center' } source={ require( '../../images/icon.png' ) } />
+                <S.Logo size={ 60 } marginBottom={ 20 } resizeMode={ 'center' } source={ require( '../../images/icon.png' ) } />
                 <S.Loader size='large' />
             </Animated.View>
         </S.Container >

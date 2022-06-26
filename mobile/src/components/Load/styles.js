@@ -1,4 +1,5 @@
 import styled from 'styled-components/native'
+import * as Sizes from '../../workers/sizes'
 
 export const Container = styled.View`
     width: 100%;
@@ -10,10 +11,11 @@ export const Container = styled.View`
     background: ${ ( { theme } ) => theme.colors.background };
     position: absolute;
 `
+// width e height são do mesmo tamanho então mantemos os dois com o widthPercentage
 export const Logo = styled.Image`
-    width: ${ ( { size } ) => `${ size }px` };
-    height: ${ ( { size } ) => `${ size }px` };
-    margin-bottom: 50px;
+    width: ${ ( { size } ) => Sizes.widthPercentage( `${ size }%` ) };
+    height: ${ ( { size } ) => Sizes.widthPercentage( `${ size }%` ) };
+    margin-bottom: ${ ( { marginBottom } ) => Sizes.getPxSize( marginBottom ) };
 `
 export const Loader = styled.ActivityIndicator`
     color: ${ ( { theme } ) => theme.colors.hover };
