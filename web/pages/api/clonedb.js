@@ -67,6 +67,8 @@ export default async ( req, res ) => {
                 for ( let serial in velho.impressoras ) {
 
                     let velha = velho.impressoras[ serial ]
+                    if ( !velha.ativa ) continue
+
                     let impressora = {}
 
                     // limpa o serial mas tenha certeza que não será passado nenhum serial vazio
