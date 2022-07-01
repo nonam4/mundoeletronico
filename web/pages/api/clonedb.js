@@ -95,11 +95,10 @@ export default async ( req, res ) => {
 
                     if ( velha.leituras && Object.keys( velha.leituras ).length > 0 ) {
 
-                        const leiturasOrdenadas = Object.keys( velha.leituras ).sort().reduce(
-                            ( obj, key ) => {
-                                obj[ key ] = velha.leituras[ key ]
-                                return obj
-                            }, {} )
+                        const leiturasOrdenadas = Object.keys( velha.leituras ).sort().reduce( ( obj, key ) => {
+                            obj[ key ] = velha.leituras[ key ]
+                            return obj
+                        }, {} )
 
                         // define a data de instalação
                         let primeiraChave = Object.keys( leiturasOrdenadas )[ 0 ]
