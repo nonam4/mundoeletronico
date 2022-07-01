@@ -7,6 +7,9 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
+    const dadosDesktop = await database.doc( '/sistema/desktop/' ).get()
+    let versao = dadosDesktop.data().versaoatual
+
     let velho = req.body.cadastro
     let cadastro = {}
 
@@ -24,6 +27,7 @@ export default async ( req, res ) => {
     cadastro.sistema = velho.sistema
     // 'Ti9J' = N/I já convertido em Base64
     if ( !velho.sistema || String( velho.sistema.versao ).toLowerCase() === 'não instalado' ) cadastro.sistema.versao = 'Ti9J'
+    if ( String( velho.sistema.versao ).toLowerCase() !== 'não instalado' ) cadastro.sistema.versao = versao
 
     // define os horários para o novo sistema com base nos horários antigos cadastrados
     cadastro.horarios = { segunda: { aberto: false }, terca: { aberto: false }, quarta: { aberto: false }, quinta: { aberto: false }, sexta: { aberto: false }, sabado: { aberto: false } }
