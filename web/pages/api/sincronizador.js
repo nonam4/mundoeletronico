@@ -89,11 +89,21 @@ export default async ( req, res ) => {
 
             if ( velha.leituras && Object.keys( velha.leituras ).length > 0 ) {
 
+                let primeiraChave = Object.keys( velha.leituras )[ 0 ]
+                let primeiraLeitura = velha.leituras[ primeiraChave ]
+                let primeiroAnoMes = primeiraChave.split( '-' )
+                impressora.instalada = `${ primeiraLeitura.inicial.dia }/${ primeiroAnoMes[ 1 ] }/${ primeiroAnoMes[ 0 ] }`
+
                 for ( let key in velha.leituras ) {
                     let leitura = velha.leituras[ key ]
+                    let anoMes = key.split( '-' )
 
-                    //define o contador como o ultimo possível
+                    // define o contador como o ultimo possível
                     if ( leitura.final.valor > impressora.contador ) impressora.contador = leitura.final.valor
+
+                    // define o visto por ultimo
+                    if ( leitura.final.valor > impressora.contador ) impressora.vistoporultimo = `${ leitura.final.dia }/${ anoMes[ 1 ] }/${ anoMes[ 0 ] }`
+
                     let contadores = {}
 
                     contadores.primeiro = {
