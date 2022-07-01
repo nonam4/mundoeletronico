@@ -34,7 +34,7 @@ function Login () {
         if ( !usuario && !state.usuario ) return setLoad( false )
 
         // usuario local valido, define no state
-        if ( usuario && !state.usuario && !state.autenticado ) dispatch( { type: 'setUsuario', payload: usuario } )
+        if ( usuario && !state.usuario ) dispatch( { type: 'setUsuario', payload: usuario } )
 
         // usuario no state válido, tentando reautenticar
         if ( state.usuario && !state.autenticado ) return reautenticar( state.usuario )
