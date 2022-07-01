@@ -48,11 +48,16 @@ export default async ( req, res ) => {
 
             function getUltimoMes ( impressora ) {
                 const mesAtual = new Date( dataAtual )
-                // se não tiver nem contador o visto por últimos erá o mes atual
+                // se não tiver nem contador o visto por último será o mes atual
+                if ( !impressora.vistoporultimo && !impressora.contadores ) console.log( `se não tiver nem contador o visto por último será o mes atual -> ${ mesAtual }` )
                 if ( !impressora.vistoporultimo && !impressora.contadores ) return mesAtual
+
                 // se não tiver apenas o visto por último então pegue a última chave dos contadores
+                if ( !impressora.vistoporultimo && impressora.contadores ) console.log( `se não tiver apenas o visto por último então pegue a última chave dos contadores -> ${ new Date( Object.keys( impressora.contadores )[ Object.keys( impressora.contadores ).length - 1 ] ) } - ultima chave -> ${ Object.keys( impressora.contadores )[ Object.keys( impressora.contadores ).length - 1 ] }` )
                 if ( !impressora.vistoporultimo && impressora.contadores ) return new Date( Object.keys( impressora.contadores )[ Object.keys( impressora.contadores ).length - 1 ] )
+
                 // se tiver o visto por último use ele
+                if ( impressora.vistoporultimo && !impressora.contadores ) console.log( `se tiver o visto por último use ele -> ${ new Date( `${ split[ 2 ] }-${ split[ 1 ] }` ) } - visto por ultimo -> ${ impressora.vistoporultimo }` )
                 if ( impressora.vistoporultimo && !impressora.contadores ) {
                     const split = impressora.vistoporultimo.split( '/' )
                     return new Date( `${ split[ 2 ] }-${ split[ 1 ] }` )
