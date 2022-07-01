@@ -7,51 +7,68 @@
 import database from './_database.js'
 
 export default async ( req, res ) => {
-    let velho = req.body.cliente
+    let velho = req.body.cadastro
+    let cadastro = {}
 
-    if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cliente não estiver mais ativo, delete
-    let cliente = {}
-    let franquia = {}
+    if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cadastro não estiver mais ativo, delete
 
-    cliente.id = velho.id
-    cliente.ativo = velho.ativo
-    cliente.tipo = 'locacao'
-    cliente.contato = velho.contato
-    cliente.cpfcnpj = velho.cpfcnpj
-    cliente.endereco = velho.endereco
-    cliente.nomefantasia = velho.nomefantasia
-    cliente.razaosocial = velho.razaosocial
+    cadastro.id = velho.id
+    cadastro.ativo = velho.ativo
+    cadastro.contato = velho.contato
+    cadastro.cpfcnpj = velho.cpfcnpj
+    cadastro.endereco = velho.endereco
+    cadastro.nomefantasia = velho.nomefantasia
+    cadastro.razaosocial = velho.razaosocial
 
-    cliente.sistema = velho.sistema
+    cadastro.tipo = 'locacao'
+    cadastro.sistema = velho.sistema
     // 'Ti9J' = N/I já convertido em Base64
-    if ( !velho.sistema || String( velho.sistema.versao ).toLowerCase() === 'não instalado' ) cliente.sistema.versao = 'Ti9J'
+    if ( !velho.sistema || String( velho.sistema.versao ).toLowerCase() === 'não instalado' ) cadastro.sistema.versao = 'Ti9J'
 
-    cliente.horarios = { segunda: { aberto: false }, terca: { aberto: false }, quarta: { aberto: false }, quinta: { aberto: false }, sexta: { aberto: false }, sabado: { aberto: false } }
+    // define os horários para o novo sistema com base nos horários antigos cadastrados
+    cadastro.horarios = { segunda: { aberto: false }, terca: { aberto: false }, quarta: { aberto: false }, quinta: { aberto: false }, sexta: { aberto: false }, sabado: { aberto: false } }
+    for ( let dia in velho.horarios ) {
+        let horario = velho.horarios[ dia ]
+        let horarios = horario.horario
 
-    franquia.limite = velho.franquia.valor || 0
-    franquia.tipo = velho.franquia.tipo || 'ilimitado'
-    franquia.vpe = velho.franquia.preco || 0
-    cliente.franquia = franquia
+        if ( dia === 'domingo' ) continue
+        if ( !horarios ) continue
 
-    cliente.impresso = 0
-    cliente.excedentes = 0
+        let a = horarios[ 0 ].split( ' - ' )
+        let b = horarios[ 1 ].split( ' - ' )
+
+        cadastro.horarios[ dia ] = {
+            aberto: horario.aberto,
+            horarios: { 0: a[ 0 ], 1: a[ 1 ], 2: b[ 0 ], 3: b[ 1 ] }
+        }
+    }
+
+    // atualiza as franquias para o novo formato
+    cadastro.franquia = {
+        limite: velho.franquia.valor || 0,
+        tipo: velho.franquia.tipo || 'ilimitado',
+        vpe: velho.franquia.preco || 0
+    }
+
+    cadastro.impresso = 0
+    cadastro.excedentes = 0
 
     let impressoras = {}
-    if ( !velho.impressoras ) cliente.tipo = 'particular'
-    if ( velho.fornecedor ) cliente.tipo = 'fornecedor'
+    if ( velho.fornecedor ) cadastro.tipo = 'fornecedor'
+    if ( !velho.impressoras ) cadastro.tipo = 'particular'
 
     if ( velho.impressoras && Object.keys( velho.impressoras ).length > 0 ) {
         for ( let serial in velho.impressoras ) {
 
             let velha = velho.impressoras[ serial ]
-            if ( !velha.ativa ) continue
             let impressora = {}
 
-            impressora.contabilizar = velha.ativa
-            if ( serial.replace( /\(|\)|\-|\s/g, '' ) !== '' ) impressora.serial = serial.replace( /\(|\)|\-|\s/g, '' )
-            if ( serial.replace( /\(|\)|\-|\s/g, '' ) === '' ) impressora.serial = serial
-            impressora.ip = velha.ip
+            // limpa o serial mas tenha certeza que não será passado nenhum serial vazio
+            const replaced = serial.replace( /\(|\)|\-|\s/g, '' )
+            impressora.serial = replaced === '' ? serial : replaced
             impressora.modelo = velha.modelo
+            impressora.ip = velha.ip
+            impressora.contabilizar = velha.ativa
             impressora.setor = velha.setor
             impressora.substituida = velha.trocada || false
             impressora.substituindo = []
@@ -62,18 +79,16 @@ export default async ( req, res ) => {
                 vpe: velho.franquia.preco || 0
             }
 
-            impressora.tintas = {
-                capacidade: 0,
-                abastecido: 0
-            }
             if ( velha.tinta ) impressora.tintas = {
-                capacidade: velha.tinta.capacidade,
-                abastecido: velha.tinta.cheio
+                capacidade: velha.tinta.capacidade || 0,
+                abastecido: velha.tinta.cheio || 0
             }
 
             impressora.contador = 0
             impressora.contadores = {}
+
             if ( velha.leituras && Object.keys( velha.leituras ).length > 0 ) {
+
                 for ( let key in velha.leituras ) {
                     let leitura = velha.leituras[ key ]
 
@@ -91,27 +106,14 @@ export default async ( req, res ) => {
                     }
 
                     contadores.impresso = leitura.final.valor - leitura.inicial.valor
-                    contadores.excedentes = 0
-                    if ( contadores.impresso > impressora.franquia.limite ) contadores.excedentes = contadores.impresso - impressora.franquia.limite
-                    switch ( cliente.franquia.tipo ) {
-                        case 'maquina':
-                            cliente.excedentes += contadores.excedentes
-                            break
-                        case 'pagina':
-                            if ( contadores.impresso > cliente.franquia.limite ) cliente.excedentes += contadores.impresso - cliente.franquia.limite
-                            break
-                        case 'ilimitado':
-                            cliente.excedentes = contadores.impresso
-                            break
-                    }
                     impressora.contadores[ key ] = contadores
                 }
             }
             impressoras[ impressora.serial ] = impressora
         }
     }
-    cliente.impressoras = impressoras
-    await database.doc( `/cadastros/${ cliente.id }` ).set( cliente, { merge: true } ).then( () => {
+    cadastro.impressoras = impressoras
+    await database.doc( `/cadastros/${ cadastro.id }` ).set( cadastro, { merge: true } ).then( () => {
         res.status( 200 ).send( 'Sincronizado' )
     } )
 }

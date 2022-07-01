@@ -28,6 +28,8 @@ export default async ( req, res ) => {
 
             cadastro.tipo = 'locacao'
             cadastro.sistema = velho.sistema
+            // 'Ti9J' = N/I já convertido em Base64
+            if ( !velho.sistema || String( velho.sistema.versao ).toLowerCase() === 'não instalado' ) cadastro.sistema.versao = 'Ti9J'
 
             // define os horários para o novo sistema com base nos horários antigos cadastrados
             cadastro.horarios = { segunda: { aberto: false }, terca: { aberto: false }, quarta: { aberto: false }, quinta: { aberto: false }, sexta: { aberto: false }, sabado: { aberto: false } }
@@ -51,12 +53,8 @@ export default async ( req, res ) => {
             cadastro.franquia = {
                 limite: velho.franquia.valor || 0,
                 tipo: velho.franquia.tipo || 'ilimitado',
-                vpe: velho.franquia.preco || 0,
-
+                vpe: velho.franquia.preco || 0
             }
-
-            cadastro.sistema.versao = 'N/I'
-            if ( String( cadastro.sistema.versao ).toLowerCase() !== 'não instalado' ) cadastro.sistema.versao = '0.1.0'
 
             cadastro.impresso = 0
             cadastro.excedentes = 0
