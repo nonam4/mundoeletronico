@@ -61,6 +61,7 @@ export function recalcularDados ( data, dados ) {
         return false
     }
 
+    /*
     function filtrarHistorico ( impressora, data ) {
         let historico = {}
 
@@ -90,6 +91,7 @@ export function recalcularDados ( data, dados ) {
 
         return ordenarHistorico( historico )
     }
+    */
 
     let cadastro = JSON.parse( JSON.stringify( dados ) )
     cadastro.impresso = 0
