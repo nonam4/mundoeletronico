@@ -115,9 +115,9 @@ export default async ( req, res ) => {
                 // define o contador como o ultimo possível
                 impressora.contador = ultimaLeitura.final.valor
 
-                let contadores = {}
                 for ( let key in velha.leituras ) {
                     let leitura = velha.leituras[ key ]
+                    let contadores = {}
 
                     contadores.primeiro = {
                         contador: leitura.inicial.valor,
