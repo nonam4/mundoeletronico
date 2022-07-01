@@ -13,6 +13,7 @@ export default async ( req, res ) => {
     let velho = req.body.cadastro
     let cadastro = {}
 
+    // se o cadastro velho não estiver mais ativo
     if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cadastro não estiver mais ativo, delete
 
     cadastro.id = velho.id
@@ -65,6 +66,8 @@ export default async ( req, res ) => {
         for ( let serial in velho.impressoras ) {
 
             let velha = velho.impressoras[ serial ]
+            if ( !velha.ativa ) continue
+
             let impressora = {}
 
             // limpa o serial mas tenha certeza que não será passado nenhum serial vazio
