@@ -13,6 +13,8 @@ export default async ( req, res ) => {
     let velho = req.body.cadastro
     let cadastro = {}
 
+    console.log( `sincronizando cliente ID ${ velho.id }` )
+
     // se o cadastro velho não estiver mais ativo
     if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cadastro não estiver mais ativo, delete
 
