@@ -10,7 +10,7 @@ export default async ( req, res ) => {
     const dadosDesktop = await database.doc( '/sistema/desktop/' ).get()
     let versao = dadosDesktop.data().versaoatual
 
-    let velho = req.body.cadastro
+    let velho = req.body.cliente
     let cadastro = {}
 
     console.log( `sincronizando cliente ID ${ velho.id }` )
