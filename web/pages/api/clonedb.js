@@ -145,12 +145,11 @@ export default async ( req, res ) => {
                 }
             }
             cadastro.impressoras = impressoras
-            //batch.set( database.doc( `/cadastros/${ id }` ), cadastro, { merge: true } )
             batch.set( database.doc( `/cadastros/${ id }` ), cadastro )
         }
         batch.commit()
     } ).catch( err => {
-        res.status( 400 ).send( `Não clonou.Usando usuario ${ process.env.USER } - erro ${ err } ` )
+        res.status( 400 ).send( `Clone de DB não foi realizado. Usuário utilizado -> ${ process.env.USER } - Erro -> ${ err } ` )
     } )
-    res.status( 200 ).send( `Clonado usando usuario ${ process.env.USER } ` )
+    res.status( 200 ).send( `DB clonado com sucesso - Usuário utilizado -> ${ process.env.USER }` )
 }
