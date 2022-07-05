@@ -15,8 +15,10 @@ export default async ( req, res ) => {
 
     console.log( `sincronizando cliente ID ${ velho.id }` )
 
-    // se o cadastro velho não estiver mais ativo
-    if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete() //se o cadastro não estiver mais ativo, delete
+    // se o cadastro não estiver mais ativo, delete
+    if ( !velho.ativo ) return await database.doc( `/cadastros/${ velho.id }` ).delete().then( () => {
+        res.status( 200 ).send( `Sincronizado - cadastro de ID ${ velho.id } excluído` )
+    } )
 
     cadastro.id = velho.id
     cadastro.ativo = velho.ativo
@@ -143,7 +145,7 @@ export default async ( req, res ) => {
     }
     cadastro.impressoras = impressoras
     await database.doc( `/cadastros/${ cadastro.id }` ).set( cadastro, { merge: true } ).then( () => {
-        res.status( 200 ).send( 'Sincronizado' )
+        res.status( 200 ).send( 'Sincronizado - dados atualizados com sucesso' )
     } )
 }
 
